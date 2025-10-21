@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlkm5yul1wv44"]
+
+[ext_resource type="PackedScene" uid="uid://b6emrpo8jmal0" path="res://models/face_module.glb" id="1_eccqu"]
+
+[node name="face_module" instance=ExtResource("1_eccqu")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dp5c6bv7tawwy"]
+
+[ext_resource type="PackedScene" uid="uid://beq0dh2apf8pl" path="res://models/edge_module.glb" id="1_hyoh5"]
+
+[node name="edge_module" instance=ExtResource("1_hyoh5")]
+transform = Transform3D(0.49999997, -0.86602545, 0, -3.7855173e-08, -2.1855692e-08, 1, -0.86602545, -0.49999997, -4.371139e-08, 0, 0, 0)
