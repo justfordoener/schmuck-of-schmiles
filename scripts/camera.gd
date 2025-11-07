@@ -1,5 +1,3 @@
-# handle camera controlling
-
 extends Node3D
 
 @export var move_speed := 20.0
