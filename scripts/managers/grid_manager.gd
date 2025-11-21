@@ -1,10 +1,6 @@
 extends Node
 
-@onready var play_layer = $grid_layers/play_layer
-@onready var dual_layer = $grid_layers/dual_layer
-@onready var face_layer = $grid_layers/face_layer
-@onready var edge_layer = $grid_layers/edge_layer
-@onready var corn_layer = $grid_layers/corn_layer
+@onready var camera_controller = $"../CameraController"
 
 @onready var grid_layers = {
 	"play_layer" : $grid_layers/play_layer,
@@ -34,7 +30,7 @@ var preview_instance : Node3D
 var camera : Camera3D
 
 func _ready():
-	camera = get_node(camera_path) as Camera3D
+	camera = camera_controller.camera
 	set_process(false)
 
 func _create_preview_instance():
@@ -53,7 +49,7 @@ func _create_preview_instance():
 	
 func _process(_delta):
 	if !camera or !preview_instance or !active_layer.current_module:
-		push_warning("WARNING: camera or preview_instance or current_module is not assigned.")
+		push_warning("WARNING: camera_path or preview_instance or current_module is not assigned.")
 		return
 	var mouse_pos = get_viewport().get_mouse_position()
 	var ray_origin = camera.project_ray_origin(mouse_pos)

@@ -1,13 +1,16 @@
 extends Node3D
 
-@export var move_speed := 20.0
-@export var rotation_speed := 120  # Degrees per second
-@export var smoothness := 5.0       # Higher = faster interpolation
+@export var move_speed: float 		= 20.0
+@export var rotation_speed: float 	= 120  # Degrees per second
+@export var smoothness: float 		= 5.0       # Higher = faster interpolation
+@export var zoom_speed: float 		= 3.0
+@export var min_zoom: float			= 3.0
+@export var max_zoom: float			= 10.0
+@onready var camera: Node			= $Camera3D
 
-@onready var camera := $Camera3D
-
-var _target_position: Vector3
-var _target_rotation_y := 0.0
+var _target_position: Vector3 		= Vector3.ZERO
+var _target_rotation_y: float 		= 0.0
+var _zoom_target: float 			= 0.0
 
 func _ready():
 	_target_position = global_position
@@ -19,9 +22,8 @@ func _process(delta):
 
 func smooth_update(delta):
 	global_position = global_position.lerp(_target_position, delta * smoothness)
-	var current_y = _target_rotation_y
-	current_y = lerp_angle(current_y, _target_rotation_y, delta * smoothness)
-	rotation_degrees = Vector3(0, current_y, 0)
+	rotation_degrees.y = lerp_angle(_target_rotation_y, _target_rotation_y, delta * smoothness)
+	camera.position.y = lerp(camera.position.y, _zoom_target, delta * smoothness)
 	
 func handle_input(delta):
 	var input_dir := Vector3.ZERO
@@ -36,10 +38,13 @@ func handle_input(delta):
 	if input_dir != Vector3.ZERO:
 		input_dir = input_dir.normalized()
 		var move_dir = transform.basis * input_dir
-		move_dir.y = 0
 		_target_position += move_dir * move_speed * delta
 	
 	if Input.is_action_pressed("rotate_left"):
 		_target_rotation_y -= rotation_speed * delta
 	if Input.is_action_pressed("rotate_right"):
 		_target_rotation_y += rotation_speed * delta
+	
+	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
+	_zoom_target += zoom_speed * zoom_direction
+	_zoom_target = clamp(_zoom_target, min_zoom, max_zoom)

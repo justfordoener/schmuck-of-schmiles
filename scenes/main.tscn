@@ -1,25 +1,15 @@
 [gd_scene load_steps=5 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/main_manager.gd" id="1_o6xl0"]
-[ext_resource type="Script" uid="uid://bg6hpcnpykqce" path="res://scripts/camera.gd" id="3_sugp2"]
-[ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://models/sand.png" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://dgrm4us3hm1kg" path="res://scenes/camera.tscn" id="4_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="5_tbgi4"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_o6xl0")
 
-[node name="Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.35254, 2.28655, 1.74966)
-
-[node name="Camera" type="Node3D" parent="."]
-script = ExtResource("3_sugp2")
-
-[node name="Camera3D" type="Camera3D" parent="Camera"]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 10)
-current = true
-
-[node name="grid_manager" parent="." instance=ExtResource("1_o5qli")]
-camera_path = NodePath("../Camera/Camera3D")
+[node name="Light" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -99,6 +89,10 @@ stretch_mode = 3
 layout_mode = 2
 text = "edge"
 horizontal_alignment = 1
+
+[node name="CameraController" parent="." instance=ExtResource("4_jyhfs")]
+
+[node name="GridManager" parent="." instance=ExtResource("1_o5qli")]
 
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer/dual_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["dual_layer"]]
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer2/face_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["face_layer"]]
