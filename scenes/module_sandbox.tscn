@@ -1,12 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://c80oiohis4dk6"]
 
-[ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_o6xl0"]
-[ext_resource type="PackedScene" uid="uid://dgrm4us3hm1kg" path="res://scenes/camera.tscn" id="4_jyhfs"]
-[ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
+[ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="2_c2dvl"]
+[ext_resource type="PackedScene" uid="uid://dgrm4us3hm1kg" path="res://scenes/camera.tscn" id="3_wgu8i"]
+[ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="4_jed05"]
 
-[node name="Main" type="Node"]
-script = ExtResource("1_o6xl0")
+[node name="ModuleSandbox" type="Node"]
+script = ExtResource("1_6o6k0")
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
@@ -40,7 +40,7 @@ layout_mode = 2
 [node name="dual_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-texture_normal = ExtResource("5_tbgi4")
+texture_normal = ExtResource("2_c2dvl")
 stretch_mode = 3
 
 [node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer"]
@@ -54,7 +54,7 @@ layout_mode = 2
 [node name="face_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-texture_normal = ExtResource("5_tbgi4")
+texture_normal = ExtResource("2_c2dvl")
 stretch_mode = 3
 
 [node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer2"]
@@ -68,7 +68,7 @@ layout_mode = 2
 [node name="corn_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer3"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-texture_normal = ExtResource("5_tbgi4")
+texture_normal = ExtResource("2_c2dvl")
 stretch_mode = 3
 
 [node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer3"]
@@ -82,7 +82,7 @@ layout_mode = 2
 [node name="edge_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer4"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-texture_normal = ExtResource("5_tbgi4")
+texture_normal = ExtResource("2_c2dvl")
 stretch_mode = 3
 
 [node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer4"]
@@ -90,9 +90,11 @@ layout_mode = 2
 text = "edge"
 horizontal_alignment = 1
 
-[node name="CameraController" parent="." instance=ExtResource("4_jyhfs")]
+[node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.452)
 
-[node name="GridManager" parent="." instance=ExtResource("1_o5qli")]
+[node name="GridManager" parent="." instance=ExtResource("4_jed05")]
+camera_path = NodePath("../CameraController")
 
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer/dual_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["dual_layer"]]
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer2/face_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["face_layer"]]

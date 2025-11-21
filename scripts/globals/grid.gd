@@ -8,7 +8,7 @@ extends Node
 class play_cell:
 	var state : int
 class dual_cell:
-	var state : int  #bitwise superposition of cell states (63 = 111111)?????
+	var state : int  #bitwise superposition of module options (63 = 111111)?????
 class face_cell:
 	var state : int
 class edge_cell:
@@ -16,7 +16,7 @@ class edge_cell:
 class corn_cell:
 	var state : int
 
-var CELL_SIZE := 1 # length of a triangle edge
+var CELL_SIZE := 1 # length of a triangle cell edge on the trigrid 
 var GRID_RADIUS := 15
 var GRID_HEIGHT := 0.5
 var CENTER_TILE_EUCLIDIC := Vector3(0,0,0)
@@ -37,7 +37,6 @@ var TILE_ROTATION_VALUE := {
 	120:  CUBIC_DIRECTION[4],	# facing bottom left
 	60:   CUBIC_DIRECTION[5]	# facing top left
 }
-var grid_state = 0 # 0 = dualgrid, 1 = trigrid, 2 = playgrid
 
 var dual_layer_snap_points = {} 
 var face_layer_snap_points = {} 
@@ -198,21 +197,21 @@ func get_euclicdic_dual_corner(euclidic_center : Vector3, direction : int) -> Ve
 		CELL_SIZE * sin(angle_radian)
 	)
 
-func cubic_distance_from_to(from: Vector3, to: Vector3):
+func cubic_distance_from_to(from: Vector3, to: Vector3) -> Vector3:
 	var distance : Vector3 = Vector3.ZERO
 	distance.x = to.x - from.x
 	distance.y = to.y - from.y
 	distance.z = to.z - from.z
 	return distance
 
-func euclidic_to_cubic(point: Vector3):
+func euclidic_to_cubic(point: Vector3) -> Vector3:
 	var cube_coord : Vector3 = Vector3.ZERO
 	cube_coord.x = ( 2./3 * point.z) / CELL_SIZE
 	cube_coord.y = (-1./3 * point.z + sqrt(3)/3 * point.x) / CELL_SIZE
 	cube_coord.z = -cube_coord.x-cube_coord.y
 	return cubic_round(cube_coord)
 	
-func cubic_to_euclidic(cube_coord: Vector3):
+func cubic_to_euclidic(cube_coord: Vector3) -> Vector3:
 	var point : Vector3 = Vector3.ZERO
 	point.x = CELL_SIZE * (sqrt(3)/2 * cube_coord.x + sqrt(3) * cube_coord.y)
 	point.y = 0
@@ -234,7 +233,7 @@ func cubic_round(frac_cube_coord: Vector3) -> Vector3:
 		round_z = -round_x-round_y
 	return Vector3(round_x, round_y, round_z)
 
-func cubic_ring(center : Vector3, radius : int):
+func cubic_ring(center : Vector3, radius : int) -> Array:
 	var results = []
 	var point = center + CUBIC_DIRECTION[4] * radius * CELL_SIZE
 	for i in range(6):
@@ -243,13 +242,13 @@ func cubic_ring(center : Vector3, radius : int):
 			point = point + CUBIC_DIRECTION[i]
 	return results
 
-func cubic_spiral(center : Vector3, radius : int):
+func cubic_spiral(center : Vector3, radius : int) -> Array:
 	var results = [center]
 	for i in range(radius):
 		results.append(cubic_ring(center, i))
 	return results
 
-func convert_to_int(bits : String):
+func convert_to_int(bits : String) -> int:
 	var result = 0
 	for bit_index in range(bits.length()):
 		if (int(bits[bit_index]) == 1):

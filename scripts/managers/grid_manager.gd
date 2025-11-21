@@ -1,5 +1,7 @@
 extends Node
 
+#WARNING needs CameraController node to be located above the GridManager node.
+#TODO fix this fragile dependency
 @onready var camera_controller = $"../CameraController"
 
 @onready var grid_layers = {
