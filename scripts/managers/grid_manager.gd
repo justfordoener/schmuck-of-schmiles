@@ -50,7 +50,7 @@ func _create_preview_instance():
 	add_child(preview_instance)
 	
 func _process(_delta):
-	if !camera or !preview_instance or !active_layer.current_module:
+	if not camera or not preview_instance or not active_layer.current_module:
 		push_warning("WARNING: camera_path or preview_instance or current_module is not assigned.")
 		return
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -69,7 +69,7 @@ func _process(_delta):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
 
 func _spawn_instance(position: Vector3, rotation : float):
-	if !active_layer.current_module:
+	if not active_layer.current_module:
 		push_warning("active_module is not assigned.")
 		return
 	var instance = active_layer.current_module.instantiate()

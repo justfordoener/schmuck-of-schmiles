@@ -59,7 +59,7 @@ func initialize_grid_layers() -> void:
 	for point in dual_layer_snap_points:
 		for direction in range(6):
 			var corner = get_euclicdic_dual_corner(cubic_to_euclidic(point), direction)
-			if !face_layer_snap_points.has(corner):
+			if not face_layer_snap_points.has(corner):
 				var new_cell = face_cell.new()
 				new_cell.state = 0
 				face_layer_snap_points[corner] = new_cell
@@ -227,7 +227,7 @@ func cubic_round(frac_cube_coord: Vector3) -> Vector3:
 	var diff_z = abs(round_z - frac_cube_coord.z)
 	if diff_x > diff_y and diff_x > diff_z:
 		round_x = -round_y-round_z
-	else: if diff_y > diff_z:
+	elif diff_y > diff_z:
 		round_y = -round_x-round_z
 	else:
 		round_z = -round_x-round_y

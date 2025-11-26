@@ -40,7 +40,7 @@ func _input(event: InputEvent) -> void:
 		rotation_x.rotation_degrees.x = clamp(rotation_x.rotation_degrees.x, -40, 10)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("rotate"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if Input.is_action_just_released("rotate"):
