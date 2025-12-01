@@ -1,10 +1,5 @@
 extends Node3D
 
-
-@onready var rotation_x = $CameraRotX
-@onready var zoom_pivot = $CameraRotX/CameraZoomPivot
-@onready var camera = $CameraRotX/CameraZoomPivot/Camera3D
-
 @export var path = camera
 
 # variables
@@ -17,13 +12,17 @@ var move_target: Vector3
 var rotate_keys_target: float
 
 # zoom
-var zoom_target: float
 @export var zoom_speed = 3.0
 @export var min_zoom = -35.0
 @export var max_zoom = -10.0
+var zoom_target: float
 
 # mouse
 @export var mouse_sensitivity = 0.3
+
+@onready var rotation_x = $CameraRotX
+@onready var zoom_pivot = $CameraRotX/CameraZoomPivot
+@onready var camera = $CameraRotX/CameraZoomPivot/Camera3D
 
 
 func _ready() -> void:
