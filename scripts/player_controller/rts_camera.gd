@@ -16,6 +16,8 @@ var rotate_keys_target: float
 @export var min_zoom = -35.0
 @export var max_zoom = -10.0
 var zoom_target: float
+@export var min_pitch := -40.0   # weit rausgezoomt
+@export var max_pitch :=  -5.0   # nah rangezoomt
 
 # mouse
 @export var mouse_sensitivity = 0.3
@@ -47,12 +49,19 @@ func _process(_delta: float) -> void:
 	
 	# get input directions
 	var input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	var movement_direction = (transform.basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
+	var horizontal_basis = Basis(Vector3.UP, deg_to_rad(rotation_degrees.y))
+	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
+	#var movement_direction = (transform.basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
 	
+	# normalize zoom range between 0 and 1
+	var current_zoom = 1 - inverse_lerp(min_zoom, max_zoom, zoom_target)
+	
 	# set movement targets
-	move_target += move_speed * movement_direction
+	var zoom_move_factor = 1.0 - current_zoom + 0.2 #vorher: 1.0 - current_zoom
+	move_target += move_speed * zoom_move_factor * movement_direction
+	#move_target += move_speed * movement_direction
 	rotate_keys_target += rotate_keys_speed * rotate_keys_direction
 	zoom_target += zoom_speed * zoom_direction
 	zoom_target = clamp(zoom_target, min_zoom, max_zoom)
@@ -61,3 +70,13 @@ func _process(_delta: float) -> void:
 	position = lerp(position, move_target, floatyness)
 	rotation_degrees.y = lerp(rotation_degrees.y, rotate_keys_target, floatyness)
 	camera.position.z = lerp(camera.position.z, zoom_target, floatyness)
+	
+	# compute new pitch between min_pitch and max_pitch
+	var target_pitch = lerp(min_pitch, max_pitch, current_zoom)
+	
+	# apply smoothed rotation
+	rotation_x.rotation_degrees.x = lerp(
+		rotation_x.rotation_degrees.x,
+		target_pitch,
+		floatyness
+	)
