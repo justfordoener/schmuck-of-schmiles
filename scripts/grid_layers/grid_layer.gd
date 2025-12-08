@@ -1,5 +1,6 @@
 class_name GridLayer extends Node3D
 
+@export var FULL_LAYER_COLOR := Color.BLACK
 @export var PLAY_LAYER_COLOR := Color.ORANGE
 @export var DUAL_LAYER_COLOR := Color.DARK_RED
 @export var FACE_LAYER_COLOR := Color.CYAN

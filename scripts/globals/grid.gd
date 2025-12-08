@@ -74,8 +74,26 @@ func initialize_grid_layers() -> void:
 	
 	# play layer
 	
+	# full layer
+	
 # ------------------- grid mesh functions --------------------
 # ref: https://docs.godotengine.org/en/stable/tutorials/3d/procedural_geometry/arraymesh.html#doc-arraymesh
+
+func get_full_layer_array_mesh() -> ArrayMesh:
+	var full_layer_array_mesh: ArrayMesh = ArrayMesh.new()
+	var surface_array = []
+	surface_array.resize(Mesh.ARRAY_MAX)
+	var verts = PackedVector3Array()
+	var indices = PackedInt32Array()
+	for point in corn_layer_snap_points:
+		# draw corn hexagon
+		var corners = []
+		for direction in range(6):
+			pass
+		# draw halfway lines towards adjacent corns
+	return full_layer_array_mesh	
+	
+	
 
 func get_dual_layer_array_mesh() -> ArrayMesh:
 	var dualgrid_array_mesh : ArrayMesh = ArrayMesh.new()
@@ -132,6 +150,9 @@ func get_play_layer_array_mesh() -> ArrayMesh:
 	return playgrid_array_mesh
 
 # ------------------- snap to grid layer -----------------
+
+func snap_to_full_layer(point: Vector3) -> Vector3:
+	return snap_to_dual_layer(point)
 	
 func snap_to_dual_layer(point : Vector3) -> Vector3:
 	var cube_coordinate_rounded : Vector3 = Grid.cubic_round(Grid.euclidic_to_cubic(point))

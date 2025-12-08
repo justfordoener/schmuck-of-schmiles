@@ -9,7 +9,8 @@ extends Node
 	"dual_layer" : $grid_layers/dual_layer,
 	"face_layer" : $grid_layers/face_layer,
 	"edge_layer" : $grid_layers/edge_layer,
-	"corn_layer" : $grid_layers/corn_layer
+	"corn_layer" : $grid_layers/corn_layer,
+	"full_layer" : $grid_layers/full_layer
 }
 
 @onready var layer_modules = {

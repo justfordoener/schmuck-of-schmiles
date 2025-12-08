@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dshxsrgqjwt67"]
+[gd_scene load_steps=15 format=3 uid="uid://dshxsrgqjwt67"]
 
 [ext_resource type="Script" uid="uid://ro671wmm71md" path="res://scripts/managers/grid_manager.gd" id="1_2btm2"]
 [ext_resource type="Script" uid="uid://cqeqix7xk2nmf" path="res://scripts/grid_layers/grid_layer.gd" id="2_2s7k2"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dp5c6bv7tawwy" path="res://scenes/modules/edge_module.tscn" id="4_4hvkd"]
 [ext_resource type="Script" uid="uid://cxb0sqjo5cxy3" path="res://scripts/grid_layers/dual_layer.gd" id="4_gnlqp"]
 [ext_resource type="PackedScene" uid="uid://bnxu3624x5ln5" path="res://scenes/modules/corn_module.tscn" id="5_bm8mr"]
+[ext_resource type="Script" uid="uid://djswraymgnrbm" path="res://scripts/grid_layers/full_layer.gd" id="7_abhab"]
 [ext_resource type="Script" uid="uid://dg27qxgcl41t7" path="res://scripts/grid_layers/face_layer.gd" id="8_ns5hy"]
 [ext_resource type="Script" uid="uid://cu3j3oei780q8" path="res://scripts/grid_layers/corn_layer.gd" id="8_uwaop"]
 [ext_resource type="Script" uid="uid://dihax5yv7m05a" path="res://scripts/grid_layers/edge_layer.gd" id="10_bm8mr"]
@@ -29,6 +30,12 @@ corn_module = ExtResource("5_bm8mr")
 
 [node name="grid_layers" type="Node3D" parent="."]
 script = ExtResource("2_2s7k2")
+
+[node name="full_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("7_abhab")
+
+[node name="full_layer_mesh" type="MeshInstance3D" parent="grid_layers/full_layer"]
+visible = false
 
 [node name="play_layer" type="Node3D" parent="grid_layers"]
 script = ExtResource("3_gnlqp")
