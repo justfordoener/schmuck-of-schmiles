@@ -85,12 +85,18 @@ func get_full_layer_array_mesh() -> ArrayMesh:
 	surface_array.resize(Mesh.ARRAY_MAX)
 	var verts = PackedVector3Array()
 	var indices = PackedInt32Array()
+	var base_index = 0
 	for point in corn_layer_snap_points:
-		# draw corn hexagon
-		var corners = []
-		for direction in range(6):
-			pass
-		# draw halfway lines towards adjacent corns
+		var corner
+		for index in range(6):
+			corner = get_euclicdic_corn_corner(cubic_to_euclidic(point), index)
+			verts.append(corner)
+			indices.append(base_index + index)
+			indices.append(base_index + ((index + 1) % 6))
+		base_index += 6
+	surface_array[Mesh.ARRAY_VERTEX] = verts
+	surface_array[Mesh.ARRAY_INDEX] = indices
+	full_layer_array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, surface_array)
 	return full_layer_array_mesh	
 	
 	
@@ -217,7 +223,16 @@ func get_euclicdic_dual_corner(euclidic_center : Vector3, direction : int) -> Ve
 		0,
 		CELL_SIZE * sin(angle_radian)
 	)
-
+	
+func get_euclicdic_corn_corner(euclidic_center : Vector3, direction : int) -> Vector3:
+	var angle_degree = 60 * direction + 30
+	var angle_radian = deg_to_rad(angle_degree)
+	return euclidic_center + Vector3(
+		0.5 * CELL_SIZE * cos(angle_radian),
+		0,
+		0.5 * CELL_SIZE * sin(angle_radian)
+	)
+	
 func cubic_distance_from_to(from: Vector3, to: Vector3) -> Vector3:
 	var distance : Vector3 = Vector3.ZERO
 	distance.x = to.x - from.x
