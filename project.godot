@@ -18,6 +18,8 @@ boot_splash/show_image=false
 [autoload]
 
 Grid="*res://scripts/globals/grid.gd"
+Cell="*res://scripts/globals/cell.gd"
+Layout="*res://scripts/globals/layout.gd"
 
 [display]
 
