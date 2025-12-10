@@ -13,11 +13,11 @@ var rotate_keys_target: float
 
 # zoom
 @export var zoom_speed = 3.0
-@export var min_zoom = -35.0
-@export var max_zoom = -10.0
+@export var min_zoom = -28.0 
+@export var max_zoom = 10.0
 var zoom_target: float
-@export var min_pitch := -40.0   # weit rausgezoomt
-@export var max_pitch :=  -5.0   # nah rangezoomt
+@export var min_pitch := -25.0   # weit rausgezoomt
+@export var max_pitch :=  10.0   # nah rangezoomt
 
 # mouse
 @export var mouse_sensitivity = 0.3

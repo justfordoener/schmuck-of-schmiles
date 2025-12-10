@@ -92,10 +92,6 @@ horizontal_alignment = 1
 
 [node name="RTSCamera" parent="." instance=ExtResource("3_6o6k0")]
 transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 12.550121, 15.068786)
-min_zoom = -38.0
-max_zoom = 10.0
-min_pitch = -5.0
-max_pitch = 15.0
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../RTSCamera")
