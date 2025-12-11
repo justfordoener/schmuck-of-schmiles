@@ -32,7 +32,8 @@ var preview_instance : Node3D
 var camera : Camera3D
 
 func _ready():
-	camera = camera_controller.find_child("Camera3D", true, false)
+	#camera = camera_controller.find_child("Camera3D", true, false)
+	camera = camera_controller.camera
 	set_process(false)
 
 func _create_preview_instance():

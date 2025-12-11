@@ -15,9 +15,10 @@ var rotate_keys_target: float
 @export var zoom_speed = 3.0
 @export var min_zoom = -28.0 
 @export var max_zoom = 10.0
+@export var min_zoom_speed = 0.15 # as % of max speed (max_speed = 1.0)
 var zoom_target: float
-@export var min_pitch := -25.0   # weit rausgezoomt
-@export var max_pitch :=  10.0   # nah rangezoomt
+@export var min_pitch := -25.0   # when zoomed out
+@export var max_pitch :=  10.0   # when zoomed in
 
 # mouse
 @export var mouse_sensitivity = 0.3
@@ -26,6 +27,8 @@ var zoom_target: float
 @onready var zoom_pivot = $CameraRotX/CameraZoomPivot
 @onready var camera = $CameraRotX/CameraZoomPivot/Camera3D
 
+# orbit pivot (The space the camera is currently looking at) -> Not in use atm
+#var orbit_point: Vector3
 
 func _ready() -> void:
 	move_target = position
@@ -34,11 +37,13 @@ func _ready() -> void:
 	
 	#camera.look_at(position)
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and Input.is_action_pressed("rotate"):
-		rotate_keys_target -= event.relative.x * mouse_sensitivity
-		rotation_x.rotation_degrees.x -= event.relative.y * mouse_sensitivity
-		rotation_x.rotation_degrees.x = clamp(rotation_x.rotation_degrees.x, -40, 10)
+#func _input(event: InputEvent) -> void:
+	#if event is InputEventMouseMotion and Input.is_action_pressed("rotate"):
+	#	rotate_keys_target -= event.relative.x * mouse_sensitivity
+	#	rotation_x.rotation_degrees.x -= event.relative.y * mouse_sensitivity
+	#	rotation_x.rotation_degrees.x = clamp(rotation_x.rotation_degrees.x, -40, 10)
+
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -59,11 +64,14 @@ func _process(_delta: float) -> void:
 	var current_zoom = 1 - inverse_lerp(min_zoom, max_zoom, zoom_target)
 	
 	# set movement targets
-	var zoom_move_factor = 1.0 - current_zoom + 0.2 #vorher: 1.0 - current_zoom
+	var zoom_move_factor = 1.0 - current_zoom + 0.2
 	move_target += move_speed * zoom_move_factor * movement_direction
-	#move_target += move_speed * movement_direction
 	rotate_keys_target += rotate_keys_speed * rotate_keys_direction
-	zoom_target += zoom_speed * zoom_direction
+	
+	# Zoom - fast in the middle, slow at edges
+	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
+	zoom_curve = clamp(zoom_curve, min_zoom_speed, 1.0)
+	zoom_target += zoom_speed * zoom_direction * zoom_curve
 	zoom_target = clamp(zoom_target, min_zoom, max_zoom)
 	
 	# lerp to movement targets
@@ -80,3 +88,21 @@ func _process(_delta: float) -> void:
 		target_pitch,
 		floatyness
 	)
+# Raycast testing stuff (not working yet)
+#func get_camera_look_point() -> Vector3:
+#	var from = camera.global_transform.origin
+#	var dir = -camera.global_transform.basis.z.normalized()
+#	
+#	var space = get_world_3d().direct_space_state
+#	
+#	# Raycast
+#	var query = PhysicsRayQueryParameters3D.create(from, from + dir * 5000)
+#	var result = space.intersect_ray(query)
+#	
+#	if result.size() > 0:
+#		print (result)
+#		return result.position
+#	else:
+#		print (result)
+#		return from + dir * 10.0
+		
