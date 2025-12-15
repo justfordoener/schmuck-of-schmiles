@@ -2,7 +2,7 @@ extends Node
 
 #WARNING needs CameraController node to be located above the GridManager node.
 #TODO fix this fragile dependency
-@onready var camera_controller = $"../RTSCamera"
+@onready var camera_controller = $"../CameraController"
 
 @onready var grid_layers = {
 	"play_layer" : $grid_layers/play_layer,
@@ -32,7 +32,6 @@ var preview_instance : Node3D
 var camera : Camera3D
 
 func _ready():
-	#camera = camera_controller.find_child("Camera3D", true, false)
 	camera = camera_controller.camera
 	set_process(false)
 
