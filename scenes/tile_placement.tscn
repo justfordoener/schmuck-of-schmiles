@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ii4y5g1on1ne"]
+
+[ext_resource type="Script" uid="uid://enpg5604of14" path="res://scripts/managers/placement_manager.gd" id="1_73hk6"]
+
+[node name="TilePlacement" type="Node3D"]
+script = ExtResource("1_73hk6")

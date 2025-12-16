@@ -146,11 +146,15 @@ func snap_to_dual_layer(point : Vector3) -> Vector3:
 	var point_new : Vector3 = Grid.cubic_to_euclidic(cube_coordinate_rounded)
 	return Vector3(point_new.x, point.y, point_new.z)
 
-func snap_to_face_layer(point : Vector3) -> Vector3:
+func snap_to_face_layer(point : Vector3, tile_rotation : int) -> Vector3:
 	var dual_cell_center = snap_to_dual_layer(point)
 	var min_dist = INF
 	var closest_corner : Vector3 = Vector3.ZERO
 	for direction in range(6):
+		if (direction % 2 == 0) && (tile_rotation % 120 == 0):
+			continue
+		elif (direction % 2 == 1) && (tile_rotation % 120 == 60):
+			continue
 		var corner = get_euclicdic_dual_corner(dual_cell_center, direction)
 		var dist = point.distance_to(corner)
 		if dist < min_dist:

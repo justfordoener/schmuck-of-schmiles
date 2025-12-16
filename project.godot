@@ -20,6 +20,7 @@ boot_splash/show_image=false
 Grid="*res://scripts/globals/grid.gd"
 Cell="*res://scripts/globals/cell.gd"
 Layout="*res://scripts/globals/layout.gd"
+Parameters="*res://scripts/globals/parameters.gd"
 
 [display]
 

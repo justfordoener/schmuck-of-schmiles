@@ -1,4 +1,6 @@
-[gd_scene load_steps=10 format=4 uid="uid://ovn7tdf8w2bo"]
+[gd_scene load_steps=14 format=4 uid="uid://bu2qbtogh7kq"]
+
+[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_vtbnk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6rkop"]
 
@@ -32,9 +34,9 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_urlyy")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t5n05"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ne7gm"]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_fptrj"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_hwl76"]
 _surfaces = [{
 "aabb": AABB(-0.4330127, -0.25, 0, 0.8660254, 0.75, 0.5),
 "format": 34896613377,
@@ -47,7 +49,7 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_s6t3t"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_ex0ci"]
 resource_name = "face_module_Cylinder_027"
 _surfaces = [{
 "aabb": AABB(-0.4330127, -0.25, 0, 0.8660254, 0.75, 0.5),
@@ -55,14 +57,14 @@ _surfaces = [{
 "format": 34896613399,
 "index_count": 24,
 "index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACwAMAA0ACwAOAAwADwAQABEA"),
-"material": SubResource("StandardMaterial3D_t5n05"),
+"material": SubResource("StandardMaterial3D_ne7gm"),
 "primitive": 3,
 "uv_scale": Vector4(2, 1.74, 0, 0),
 "vertex_count": 18,
 "vertex_data": PackedByteArray("/3///wAAjOL//wAA//+M4v9//////4zi//8AAAAAjOL//wAAAAD/vwAAAAD///+///8AAP///78AAAAAAAD/v///AAD//wCAAAAAAP//AID/f/////8AgAAAAAAAAIzi/3//////jOIAAAAA//+M4v9///8AAIzi/3///wAAAAAAAAAAAAAAAP//AAAAAAAAqTGsHKkxrBypMawcqTGsHAAA/38AAP9/AAD/fwAA/3//f////3////9///9TY6mxU2OpsVNjqbFTY6mx////f////3////9/")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_fptrj")
+shadow_mesh = SubResource("ArrayMesh_hwl76")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xh4bp"]
 
@@ -96,26 +98,49 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_0alkg")
 
-[node name="long_structure" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tcw1o"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_q10d0"]
+_surfaces = [{
+"aabb": AABB(-0.4330127, -0.5, 0, 0.8660254, 1, 0.5),
+"format": 34896613377,
+"index_count": 60,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAACAAEAAwAEAAEABQAAAAIABQADAAAABQACAAYAAwAHAAQACAAFAAYAAwAFAAkACQAFAAgAAwAJAAcABwAKAAQABwAJAAoAAgAEAAsAAgALAAYACwAEAAoACAAGAAsACQALAAoACQAIAAsA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("/3///wAAAAD///+///8AAP9//////wAA////vwAAAAD///8///8AAAAA/78AAAAAAAD/v///AAD///8/AAAAAAAA/z8AAAAA/38AAAAAAAD/fwAA//8AAAAA/z///wAA")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ne7gm"]
+resource_name = "corn_module_Cylinder_003"
+_surfaces = [{
+"aabb": AABB(-0.4330127, -0.5, 0, 0.8660254, 1, 0.5),
+"attribute_data": PackedByteArray("//+kwKnq/3////9/qeqkwKnqpMBU1f9/qer/f1TVpMBU1aTA/7//f1TV/3//v6TA/7+kwKmq/3//v/9/qaqkwJm6e/D/n+/Bmbpz0WSFe/D/n///ZIVz0amqpMBUlf9/qar/f1SVpMBUlaTA/3//f1SV/3//f6TAZMVz0Zn6c9H/3+/B/9///2TFe/CZ+nvw"),
+"format": 34896613399,
+"index_count": 60,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEQAQABMAEwAQABQAEQATABUAFgAXABgAFgAZABcAGgAbABwAGgAdABsAHgAfACAAHwAeACEAIQAeACIAHwAhACMA"),
+"material": SubResource("StandardMaterial3D_tcw1o"),
+"primitive": 3,
+"uv_scale": Vector4(2, 1.98, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("/3///wAA//D///+/////8P9////////w////vwAA//D///+/AABU1f///z///1TV////v///VNX///8/AABU1f///z8AALrC/38AAP//usL///8///+6wv9/AAAAALrC/38AAAAAusIAAP8///+6wv9/AAD//7rCAAD/PwAAusL///8///8AgP9//////wCA////v///AIAAAP8///8AgP9/AAD//wCAAAD/v///AIAAAP8/AABU1QAA/7///1TVAAD/P///VNUAAP+/AABU1QAA/78AAP/w/3////////AAAP+/////8P9///8AAP/wAAD/vwAAAAD///+/AAAAAP9///8AAAAA/38AAAAAAAAAAP8/AAAAAP///z8AAAAAcDgfD3A4Hw9wOB8PcDgfD6oqqiqqKqoqqiqqKqoqqipUFlZTVBZWU1QWVlNUFlZTqSxUlqksVJapLFSWqSxUlv9/////f////3////9/////f////3///1RVqqpUVaqqVFWqqlRVqqrgcG+44HBvuOBwb7jgcG+4////f////3////9/////f////3////9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_q10d0")
+
+[node name="BlobTile" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+script = ExtResource("1_vtbnk")
 
 [node name="tri_face" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
 
-[node name="tri_face3" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.49999997, -0.86602545, 0, 0.86602545, 0.49999997, 0, 0, 0, 1, 0.866, 0.5, 0)
-mesh = SubResource("ArrayMesh_cf4sw")
-skeleton = NodePath("")
-
 [node name="tri_face2" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, -1, 0)
-mesh = SubResource("ArrayMesh_s6t3t")
-skeleton = NodePath("")
-
-[node name="tri_face4" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.866, 1.5, 0)
-mesh = SubResource("ArrayMesh_s6t3t")
+mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
 
 [node name="tri_edge" type="MeshInstance3D" parent="."]
@@ -123,12 +148,52 @@ transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 
-[node name="tri_edge3" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0.866, 1, 0)
+[node name="tri_edge4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 1.732, -0.5, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 
-[node name="tri_edge2" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0.43287897, 0.24981153, 3.2775308e-08)
+[node name="tri_edge5" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, 0.433, -1.25, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
+skeleton = NodePath("")
+
+[node name="tri_edge6" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.99999994, 8.742277e-08, 0, -8.742277e-08, -0.99999994, 0, 0, 0, 1, 0.433, 0.25, 0)
+mesh = SubResource("ArrayMesh_5ivdm")
+skeleton = NodePath("")
+
+[node name="tri_face3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5020391, -0.8648449, -3.7803574e-08, 0.8648449, 0.5020391, -2.1766564e-08, 3.7803574e-08, -2.1766564e-08, 1, 0.866, 0.4978722, -9.300827e-11)
+mesh = SubResource("ArrayMesh_cf4sw")
+skeleton = NodePath("")
+
+[node name="tri_face4" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.502039, 0.864845, -3.7803574e-08, -0.864845, -0.502039, -2.1766564e-08, -3.780357e-08, 2.1766565e-08, 1, 1.731, -0.003, 0)
+mesh = SubResource("ArrayMesh_ex0ci")
+skeleton = NodePath("")
+
+[node name="tri_edge2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.49795815, -0.867201, -3.7803574e-08, 0.867201, -0.49795815, -2.1766565e-08, 5.1382898e-11, -4.3622137e-08, 1, 1.2985525, 0.248, 0)
+mesh = SubResource("ArrayMesh_5ivdm")
+skeleton = NodePath("")
+
+[node name="tri_face5" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, 0.866, -1.5, 0)
+mesh = SubResource("ArrayMesh_cf4sw")
+skeleton = NodePath("")
+
+[node name="tri_face6" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0, 1, 1.732, -1, 0)
+mesh = SubResource("ArrayMesh_ex0ci")
+skeleton = NodePath("")
+
+[node name="tri_edge3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.99999994, 8.742277e-08, 0, -8.742277e-08, -0.99999994, 0, 0, 0, 1, 1.299, -1.25, 0)
+mesh = SubResource("ArrayMesh_5ivdm")
+skeleton = NodePath("")
+
+[node name="tri_corner" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.866, -0.5, 0)
+mesh = SubResource("ArrayMesh_ne7gm")
 skeleton = NodePath("")

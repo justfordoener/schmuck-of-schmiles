@@ -9,7 +9,6 @@ class_name GridLayer extends Node3D
 
 var layer_color = Color.BLACK
 var layer_mesh : ArrayMesh
-var current_module : PackedScene
 
 func _ready():
 	pass
