@@ -24,7 +24,9 @@ func refill_tiles():
 		printerr("ERROR, hand not empty!")
 		return
 	for i in Parameters.HAND_SIZE:
-		add_card_to_hand(i)
+		var rng_tile_index = randi_range(0, tile_cards.size()-1)
+		var card = tile_cards[rng_tile_index]
+		add_card_to_hand(i, card)
 	_check_visibility()
 	cards_played_today = []
 
@@ -38,9 +40,7 @@ func remove_card_from_hand(index : int):
 	hand.remove_at(index)
 	_check_visibility()
 	
-func add_card_to_hand(index : int):
-	var rng_tile_index = randi_range(0, tile_cards.size()-1)
-	var card = tile_cards[rng_tile_index]
+func add_card_to_hand(index : int, card : PackedScene):
 	hand.append(card)
 	var tile_card_instance : TileCard = card.instantiate() as TileCard
 	tile_card_instance.hand_index = index
@@ -74,4 +74,4 @@ func _on_turnover_button_pressed() -> void:
 func _on_undo_button_pressed() -> void:
 	main_manager.undo()
 	var last_card : PackedScene = cards_played_today.pop_back()
-	add_card_to_hand(hand.size())
+	add_card_to_hand(hand.size(), last_card)

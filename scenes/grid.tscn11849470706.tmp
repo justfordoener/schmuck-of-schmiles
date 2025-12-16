@@ -1,0 +1,76 @@
+[gd_scene load_steps=15 format=3 uid="uid://dshxsrgqjwt67"]
+
+[ext_resource type="Script" uid="uid://ro671wmm71md" path="res://scripts/managers/grid_manager.gd" id="1_2btm2"]
+[ext_resource type="Script" uid="uid://cqeqix7xk2nmf" path="res://scripts/grid/layers/layer.gd" id="2_2s7k2"]
+[ext_resource type="PackedScene" uid="uid://dyodgw3q3vn04" path="res://scenes/modules/dual_module.tscn" id="2_726jt"]
+[ext_resource type="PackedScene" uid="uid://dlkm5yul1wv44" path="res://scenes/modules/face_module.tscn" id="3_d4ula"]
+[ext_resource type="Script" uid="uid://i245qeyah2yy" path="res://scripts/grid/layers/play_layer.gd" id="3_gnlqp"]
+[ext_resource type="PackedScene" uid="uid://dp5c6bv7tawwy" path="res://scenes/modules/edge_module.tscn" id="4_4hvkd"]
+[ext_resource type="Script" uid="uid://cxb0sqjo5cxy3" path="res://scripts/grid/layers/layer_dual.gd" id="4_gnlqp"]
+[ext_resource type="PackedScene" uid="uid://bnxu3624x5ln5" path="res://scenes/modules/corn_module.tscn" id="5_bm8mr"]
+[ext_resource type="Script" uid="uid://djswraymgnrbm" path="res://scripts/grid/layers/layer_full.gd" id="7_abhab"]
+[ext_resource type="Script" uid="uid://dg27qxgcl41t7" path="res://scripts/grid/layers/layer_face.gd" id="8_ns5hy"]
+[ext_resource type="Script" uid="uid://cu3j3oei780q8" path="res://scripts/grid/layers/layer_corn.gd" id="8_uwaop"]
+[ext_resource type="Script" uid="uid://dihax5yv7m05a" path="res://scripts/grid/layers/layer_edge.gd" id="10_bm8mr"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gnlqp"]
+shading_mode = 0
+albedo_color = Color(0.419608, 0.368627, 0.286275, 1)
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_726jt"]
+shading_mode = 0
+albedo_color = Color(0.345098, 0.419608, 0.313726, 1)
+
+[node name="grid_manager" type="Node3D"]
+script = ExtResource("1_2btm2")
+dual_module = ExtResource("2_726jt")
+face_module = ExtResource("3_d4ula")
+edge_module = ExtResource("4_4hvkd")
+corn_module = ExtResource("5_bm8mr")
+
+[node name="grid_layers" type="Node3D" parent="."]
+script = ExtResource("2_2s7k2")
+
+[node name="full_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("7_abhab")
+
+[node name="full_layer_mesh" type="MeshInstance3D" parent="grid_layers/full_layer"]
+visible = false
+
+[node name="play_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("3_gnlqp")
+
+[node name="play_layer_mesh" type="MeshInstance3D" parent="grid_layers/play_layer"]
+visible = false
+
+[node name="dual_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("4_gnlqp")
+
+[node name="dual_layer_mesh" type="MeshInstance3D" parent="grid_layers/dual_layer"]
+visible = false
+material_override = SubResource("ORMMaterial3D_gnlqp")
+cast_shadow = 0
+
+[node name="face_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("8_ns5hy")
+
+[node name="face_layer_mesh" type="MeshInstance3D" parent="grid_layers/face_layer"]
+visible = false
+material_override = SubResource("ORMMaterial3D_726jt")
+cast_shadow = 0
+
+[node name="edge_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("10_bm8mr")
+
+[node name="edge_layer_mesh" type="MeshInstance3D" parent="grid_layers/edge_layer"]
+visible = false
+material_override = SubResource("ORMMaterial3D_726jt")
+cast_shadow = 0
+
+[node name="corn_layer" type="Node3D" parent="grid_layers"]
+script = ExtResource("8_uwaop")
+
+[node name="corn_layer_mesh" type="MeshInstance3D" parent="grid_layers/corn_layer"]
+visible = false
+material_override = SubResource("ORMMaterial3D_726jt")
+cast_shadow = 0

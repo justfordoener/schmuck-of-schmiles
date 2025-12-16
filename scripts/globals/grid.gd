@@ -4,17 +4,6 @@ extends Node
 # - cube coordinates for grid calculations
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
-class play_cell extends Cell:
-	pass
-class dual_cell extends Cell:
-	pass
-class face_cell extends Cell:
-	pass
-class edge_cell extends Cell:
-	pass
-class corn_cell extends Cell:
-	pass
-
 var dual_layer_snap_points = {} 
 var face_layer_snap_points = {} 
 var play_layer_snap_points = {}
@@ -25,10 +14,10 @@ func _ready() -> void:
 
 func initialize_grid_layers() -> void:
 	# dual layer
-	dual_layer_snap_points[Layout.CENTER_TILE_CUBIC] = dual_cell.new()
+	dual_layer_snap_points[Layout.CENTER_TILE_CUBIC] = DualCell.new()
 	for ring in cubic_spiral(Layout.CENTER_TILE_CUBIC, Layout.GRID_RADIUS):
 		for pos in ring:
-			var new_cell = dual_cell.new()
+			var new_cell = DualCell.new()
 			new_cell.state = 0
 			dual_layer_snap_points[pos] = new_cell
 	
@@ -37,7 +26,7 @@ func initialize_grid_layers() -> void:
 		for direction in range(6):
 			var corner = get_euclicdic_dual_corner(cubic_to_euclidic(point), direction)
 			if !face_layer_snap_points.has(corner):
-				var new_cell = face_cell.new()
+				var new_cell = FaceCell.new()
 				new_cell.state = 0
 				face_layer_snap_points[corner] = new_cell
 				
@@ -45,7 +34,7 @@ func initialize_grid_layers() -> void:
 	
 	# corn layer
 	for point in dual_layer_snap_points:
-		var new_cell = corn_cell.new()
+		var new_cell = CornCell.new()
 		new_cell.state = 0
 		corn_layer_snap_points[point] = new_cell
 	

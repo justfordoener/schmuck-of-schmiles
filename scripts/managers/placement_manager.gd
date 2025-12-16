@@ -46,7 +46,8 @@ func _process(_delta):
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
-		preview_instance.global_position = Grid.snap_to_face_layer(hit, preview_instance.tile_rotation)
+		var grid = Grid as Grid
+		preview_instance.global_position = grid.snap_to_face_layer(hit, preview_instance.tile_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_down"):
 			preview_instance.rotate_y(deg_to_rad(60))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
@@ -56,15 +57,15 @@ func _process(_delta):
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
 
-func _round_rotation(value : int) -> int:
+func _round_rotation(value : float) -> int:
 	return int(ceil(value / 60.0) * 60.0) + 120
 	
-func _spawn_instance(position: Vector3, rotation : float):
+func _spawn_instance(_position: Vector3, _rotation : float):
 	var instance = current_tile.instantiate()
 	get_tree().current_scene.add_child(instance)
 	tiles_placed_today.append(instance)
-	instance.global_position = position
-	instance.global_rotation.y = rotation
+	instance.global_position = _position
+	instance.global_rotation.y = _rotation
 	for child in instance.get_children():
 		if child is Module:
 			pass

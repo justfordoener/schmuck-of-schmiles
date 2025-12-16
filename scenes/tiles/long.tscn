@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_4tsfh"]
 [ext_resource type="Script" uid="uid://cw6bmc48ijoux" path="res://scripts/grid/modules/face_module.gd" id="2_dkg80"]
-[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/module.gd" id="2_l8is1"]
+[ext_resource type="Script" uid="uid://blr3taogdnapm" path="res://scripts/grid/modules/edge_module.gd" id="3_dkg80"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6rkop"]
 
@@ -131,16 +131,16 @@ script = ExtResource("2_dkg80")
 transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
-script = ExtResource("2_l8is1")
+script = ExtResource("3_dkg80")
 
 [node name="tri_edge3" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0.866, 1, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
-script = ExtResource("2_l8is1")
+script = ExtResource("3_dkg80")
 
 [node name="tri_edge2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0.43287897, 0.24981153, 3.2775308e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
-script = ExtResource("2_l8is1")
+script = ExtResource("3_dkg80")

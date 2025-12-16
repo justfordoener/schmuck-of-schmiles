@@ -26,6 +26,6 @@ extends Node
 
 func _ready():
 	grid_layers["corn_layer"].show_layer_mesh(true)
-	grid_layers["dual_layer"].show_layer_mesh(true)
+	#grid_layers["dual_layer"].show_layer_mesh(true)
 	grid_layers["face_layer"].show_layer_mesh(true)
 	grid_layers["face_layer"].activate_layer_snapping()
