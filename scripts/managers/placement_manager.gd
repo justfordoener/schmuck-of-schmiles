@@ -61,16 +61,15 @@ func _round_rotation(value : int) -> int:
 	
 func _spawn_instance(position: Vector3, rotation : float):
 	var instance = current_tile.instantiate()
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color.DARK_GRAY
-	for child in instance.get_children():
-		if child is MeshInstance3D:
-			child.material_override = material
 	get_tree().current_scene.add_child(instance)
 	tiles_placed_today.append(instance)
 	instance.global_position = position
 	instance.global_rotation.y = rotation
+	for child in instance.get_children():
+		if child is Module:
+			pass
 	preview_instance.queue_free()
+	
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()
