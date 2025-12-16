@@ -9,3 +9,6 @@ func on_ui_grid_layer_button_pressed(layer_key : String):
 
 func tile_selected(tile : PackedScene):
 	placement_manager.place_tile(tile)
+
+func undo():
+	placement_manager.undo_last_placement()

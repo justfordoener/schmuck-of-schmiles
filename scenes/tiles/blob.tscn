@@ -1,6 +1,9 @@
-[gd_scene load_steps=14 format=4 uid="uid://bu2qbtogh7kq"]
+[gd_scene load_steps=17 format=4 uid="uid://bu2qbtogh7kq"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_vtbnk"]
+[ext_resource type="Script" uid="uid://cw6bmc48ijoux" path="res://scripts/grid/modules/face_module.gd" id="2_vq5jh"]
+[ext_resource type="Script" uid="uid://blr3taogdnapm" path="res://scripts/grid/modules/edge_module.gd" id="3_srkpl"]
+[ext_resource type="Script" uid="uid://b73glqdildcom" path="res://scripts/grid/modules/corner_module.gd" id="4_exj8j"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6rkop"]
 
@@ -137,63 +140,76 @@ script = ExtResource("1_vtbnk")
 [node name="tri_face" type="MeshInstance3D" parent="."]
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
+script = ExtResource("2_vq5jh")
 
 [node name="tri_face2" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, -1, 0)
 mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
+script = ExtResource("2_vq5jh")
 
 [node name="tri_edge" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
+script = ExtResource("3_srkpl")
 
 [node name="tri_edge4" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 1.732, -0.5, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
+script = ExtResource("3_srkpl")
 
 [node name="tri_edge5" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, 0.433, -1.25, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
+script = ExtResource("3_srkpl")
 
 [node name="tri_edge6" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.99999994, 8.742277e-08, 0, -8.742277e-08, -0.99999994, 0, 0, 0, 1, 0.433, 0.25, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
+script = ExtResource("3_srkpl")
 
 [node name="tri_face3" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5020391, -0.8648449, -3.7803574e-08, 0.8648449, 0.5020391, -2.1766564e-08, 3.7803574e-08, -2.1766564e-08, 1, 0.866, 0.4978722, -9.300827e-11)
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
+script = ExtResource("2_vq5jh")
 
 [node name="tri_face4" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.502039, 0.864845, -3.7803574e-08, -0.864845, -0.502039, -2.1766564e-08, -3.780357e-08, 2.1766565e-08, 1, 1.731, -0.003, 0)
 mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
+script = ExtResource("2_vq5jh")
 
 [node name="tri_edge2" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.49795815, -0.867201, -3.7803574e-08, 0.867201, -0.49795815, -2.1766565e-08, 5.1382898e-11, -4.3622137e-08, 1, 1.2985525, 0.248, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
+script = ExtResource("3_srkpl")
 
 [node name="tri_face5" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, 0.866, -1.5, 0)
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
+script = ExtResource("2_vq5jh")
 
 [node name="tri_face6" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0, 1, 1.732, -1, 0)
 mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
+script = ExtResource("2_vq5jh")
 
 [node name="tri_edge3" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.99999994, 8.742277e-08, 0, -8.742277e-08, -0.99999994, 0, 0, 0, 1, 1.299, -1.25, 0)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
+script = ExtResource("3_srkpl")
 
 [node name="tri_corner" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.866, -0.5, 0)
 mesh = SubResource("ArrayMesh_ne7gm")
 skeleton = NodePath("")
+script = ExtResource("4_exj8j")

@@ -1,0 +1,1 @@
+class_name Module extends MeshInstance3D

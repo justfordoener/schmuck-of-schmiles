@@ -7,12 +7,19 @@ extends Node3D
 var preview_instance : Node3D
 var current_tile : PackedScene
 var camera : Camera3D
+var tiles_placed_today : Array[Node3D] = []
+
+func undo_last_placement() -> void:
+	var tile : Node3D = tiles_placed_today.pop_back()
+	if tile:
+		tile.queue_free()
+
+func place_tile(tile : PackedScene) -> void:
+	_create_preview_instance(tile)
 
 func _ready() -> void:
 	camera = camera_controller.camera
 	
-func place_tile(tile : PackedScene) -> void:
-	_create_preview_instance(tile)
 	
 func _create_preview_instance(tile : PackedScene) -> void:
 	current_tile = tile
@@ -43,11 +50,9 @@ func _process(_delta):
 		if Input.is_action_just_pressed("mouse_wheel_down"):
 			preview_instance.rotate_y(deg_to_rad(60))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
-			print(preview_instance.tile_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_up"):
 			preview_instance.rotate_y(deg_to_rad(-60))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
-			print(preview_instance.tile_rotation)
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
 
@@ -62,6 +67,7 @@ func _spawn_instance(position: Vector3, rotation : float):
 		if child is MeshInstance3D:
 			child.material_override = material
 	get_tree().current_scene.add_child(instance)
+	tiles_placed_today.append(instance)
 	instance.global_position = position
 	instance.global_rotation.y = rotation
 	preview_instance.queue_free()

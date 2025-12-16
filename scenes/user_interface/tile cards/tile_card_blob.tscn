@@ -11,4 +11,4 @@ tile = ExtResource("2_djcye")
 texture_normal = ExtResource("2_watfb")
 
 [node name="RichTextLabel" parent="VBoxContainer" index="1"]
-text = "Blob"
+text = "斑点"

@@ -6,7 +6,6 @@
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_3eudk")
-tile_card_directory = null
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -112,4 +111,5 @@ text = "Next Day"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="pressed" from="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox/TextureButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/HBoxContainer/TurnOver/TurnOverButtonVBox/TextureButton" to="." method="_on_turnover_button_pressed"]
