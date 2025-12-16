@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="2_c2dvl"]
-[ext_resource type="PackedScene" uid="uid://dgrm4us3hm1kg" path="res://scenes/camera.tscn" id="3_wgu8i"]
+[ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="4_jed05"]
 
 [node name="ModuleSandbox" type="Node"]
@@ -90,8 +90,8 @@ layout_mode = 2
 text = "edge"
 horizontal_alignment = 1
 
-[node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.452)
+[node name="CameraController" parent="." instance=ExtResource("3_6o6k0")]
+transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 12.550121, 15.068786)
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../CameraController")

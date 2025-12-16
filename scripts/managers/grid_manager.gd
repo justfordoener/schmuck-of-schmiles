@@ -36,7 +36,7 @@ func _ready():
 	set_process(false)
 
 func _create_preview_instance():
-	if !active_layer.current_module:
+	if not active_layer.current_module:
 		push_warning("WARNING: active_module is not assigned.")
 		return
 	preview_instance = active_layer.current_module.instantiate()
