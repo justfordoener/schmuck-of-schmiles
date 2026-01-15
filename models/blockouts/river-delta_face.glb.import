@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dkafcwsveih1r"
-path="res://.godot/imported/edge_module.glb-7155789d9dd7acad813cc99a69714fc1.scn"
+uid="uid://b20aamjspdd0"
+path="res://.godot/imported/river-delta_face.glb-7a3b24a6825c15c624d02bfb94df5c55.scn"
 
 [deps]
 
-source_file="res://models/edge_module.glb"
-dest_files=["res://.godot/imported/edge_module.glb-7155789d9dd7acad813cc99a69714fc1.scn"]
+source_file="res://models/blockouts/river-delta_face.glb"
+dest_files=["res://.godot/imported/river-delta_face.glb-7a3b24a6825c15c624d02bfb94df5c55.scn"]
 
 [params]
 

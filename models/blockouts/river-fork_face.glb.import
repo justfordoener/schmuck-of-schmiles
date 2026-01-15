@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dkafcwsveih1r"
-path="res://.godot/imported/edge_module.glb-7155789d9dd7acad813cc99a69714fc1.scn"
+uid="uid://b8hw32m6x7siv"
+path="res://.godot/imported/river-fork_face.glb-7a025ec0b60a6af3bd13c0d4ea77dd05.scn"
 
 [deps]
 
-source_file="res://models/edge_module.glb"
-dest_files=["res://.godot/imported/edge_module.glb-7155789d9dd7acad813cc99a69714fc1.scn"]
+source_file="res://models/blockouts/river-fork_face.glb"
+dest_files=["res://.godot/imported/river-fork_face.glb-7a025ec0b60a6af3bd13c0d4ea77dd05.scn"]
 
 [params]
 
