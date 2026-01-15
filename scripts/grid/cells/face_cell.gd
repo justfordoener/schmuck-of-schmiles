@@ -1,5 +1,5 @@
 class_name FaceCell extends Cell
 
-func create() -> Cell:
+func _init() -> void:
+	type = "FaceCell"
 	state = 1
-	return self

@@ -8,6 +8,7 @@ var preview_instance : Node3D
 var current_tile : PackedScene
 var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
+var plane : Plane
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
@@ -19,6 +20,7 @@ func place_tile(tile : PackedScene) -> void:
 
 func _ready() -> void:
 	camera = camera_controller.camera
+	plane = Plane(Vector3.UP, 0)
 	
 	
 func _create_preview_instance(tile : PackedScene) -> void:
@@ -42,7 +44,6 @@ func _process(_delta):
 	var mouse_pos = get_viewport().get_mouse_position()
 	var ray_origin = camera.project_ray_origin(mouse_pos)
 	var ray_dir = camera.project_ray_normal(mouse_pos)
-	var plane = Plane(Vector3.UP, 0)
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:

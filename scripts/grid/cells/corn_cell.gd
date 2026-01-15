@@ -1,5 +1,5 @@
 class_name CornCell extends Cell
 
-func create() -> Cell:
+func _init() -> void:
+	type = "CornCell"
 	state = 1
-	return self

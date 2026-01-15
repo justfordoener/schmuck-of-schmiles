@@ -1,5 +1,5 @@
 class_name EdgeCell extends Cell
 
-func create() -> Cell:
+func _init() -> void:
+	type = "EdgeCell"
 	state = 1
-	return self

@@ -20,7 +20,6 @@ boot_splash/show_image=false
 Grid="*res://scripts/globals/grid.gd"
 Layout="*res://scripts/globals/layout.gd"
 Parameters="*res://scripts/globals/parameters.gd"
-AxialGrid="*res://scripts/globals/axial_grid.gd"
 
 [display]
 
