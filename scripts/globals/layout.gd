@@ -1,9 +1,8 @@
-@tool
 extends Node
 
 var CELL_SIZE   : int = 1 # length of a triangle cell edge on the trigrid 
 var CELL_STATE  : int = 1
-var GRID_RADIUS : int = 3
+var GRID_RADIUS : int = 1
 var GRID_HEIGHT : int = 1
 var CENTER_TILE_EUCLIDIC : Vector3i = Vector3(0,0,0)
 var CENTER_TILE_AXIAL : Vector3i = Vector3i(0,0,0)
@@ -20,8 +19,8 @@ var AXIAL_DIRECTION := {
 	1: Vector3i(-1, 0, 1), 	#right
 	2: Vector3i(-1, 0, 0), 	#bottom right
 	3: Vector3i(0 , 0, 1), 	#bottom left
-	4: Vector3i(6 , 0,-1),	#left
-	5: Vector3i(6 , 0, 0),	#top left
+	4: Vector3i(1 , 0,-1),	#left
+	5: Vector3i(1 , 0, 0),	#top left
 	6: Vector3i(0 , 1, 0),	#up
 	7: Vector3i(0 ,-1, 0)
 }

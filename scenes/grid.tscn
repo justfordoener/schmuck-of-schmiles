@@ -26,7 +26,6 @@ script = ExtResource("2_2s7k2")
 script = ExtResource("8_ns5hy")
 
 [node name="face_layer_mesh" type="MeshInstance3D" parent="grid_layers/face_layer"]
-visible = false
 material_override = SubResource("ORMMaterial3D_726jt")
 cast_shadow = 0
 
@@ -34,7 +33,6 @@ cast_shadow = 0
 script = ExtResource("10_bm8mr")
 
 [node name="edge_layer_mesh" type="MeshInstance3D" parent="grid_layers/edge_layer"]
-visible = false
 material_override = SubResource("ORMMaterial3D_726jt")
 cast_shadow = 0
 
@@ -42,6 +40,5 @@ cast_shadow = 0
 script = ExtResource("8_uwaop")
 
 [node name="corn_layer_mesh" type="MeshInstance3D" parent="grid_layers/corn_layer"]
-visible = false
 material_override = SubResource("ORMMaterial3D_726jt")
 cast_shadow = 0
