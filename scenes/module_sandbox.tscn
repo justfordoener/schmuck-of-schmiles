@@ -13,7 +13,7 @@ script = ExtResource("1_6o6k0")
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
 
 [node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
-transform = Transform3D(1, 0, 0, 0, 0.73829055, 0.6744828, 0, -0.6744828, 0.73829055, 0, 1.4584587, -0.023988605)
+visible = false
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../CameraController")
@@ -21,4 +21,5 @@ camera_path = NodePath("../CameraController")
 [node name="PlacementManager" parent="." instance=ExtResource("6_wgu8i")]
 
 [node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
+visible = false
 tile_card_directory = "res://scenes/user_interface/tile cards"

@@ -1,30 +1,30 @@
 extends Node
 
-var CELL_SIZE   : int = 1 # length of a triangle cell edge on the trigrid 
+var CELL_SIZE   : int = 2 # length of a triangle cell edge on the trigrid 
 var CELL_STATE  : int = 1
 var GRID_RADIUS : int = 1
 var GRID_HEIGHT : int = 1
-var CENTER_TILE_EUCLIDIC : Vector3i = Vector3(0,0,0)
-var CENTER_TILE_AXIAL : Vector3i = Vector3i(0,0,0)
-var CUBIC_DIRECTION : Dictionary[int, Vector3i] = {	
-	0: Vector3i(0, -1,  1),	# top
-	1: Vector3i(1, -1,  0),	# top right
-	2: Vector3i(1,  0, -1),	# bottom right
-	3: Vector3i(0,  1,  -1),	# bottom
-	4: Vector3i(-1, 1,  0),	# bottom left
-	5: Vector3i(-1,  0,  1)	# top left
+var CENTER_TILE_EUCLIDIC : Vector3 = Vector3(0,0,0)
+var CENTER_TILE_AXIAL : Vector3 = Vector3(0,0,0)
+var CUBIC_DIRECTION : Dictionary[int, Vector3] = {	
+	0: Vector3(0, -1,  1),	# top
+	1: Vector3(1, -1,  0),	# top right
+	2: Vector3(1,  0, -1),	# bottom right
+	3: Vector3(0,  1,  -1),	# bottom
+	4: Vector3(-1, 1,  0),	# bottom left
+	5: Vector3(-1,  0,  1)	# top left
 }
 var AXIAL_DIRECTION := {
-	0: Vector3i(1 , 0, 0), 	#top right
-	1: Vector3i(0,  0, 1), 	#right
-	2: Vector3i(-1, 0, 1), 	#bottom right
-	3: Vector3i(-1, 0, 0), 	#bottom left
-	4: Vector3i(0 , 0,-1),	#left
-	5: Vector3i(1 , 0,-1),	#top left
-	6: Vector3i(0 , 1, 0),	#up
-	7: Vector3i(0 ,-1, 0)
+	0: Vector3(1 , 0, 0), 	#top right
+	1: Vector3(0,  0, 1), 	#right
+	2: Vector3(-1, 0, 1), 	#bottom right
+	3: Vector3(-1, 0, 0), 	#bottom left
+	4: Vector3(0 , 0,-1),	#left
+	5: Vector3(1 , 0,-1),	#top left
+	6: Vector3(0 , 1, 0),	#up
+	7: Vector3(0 ,-1, 0)
 }
-var AXIAL_CENTER := Vector3i(0,0,0)
+var AXIAL_CENTER := Vector3(0,0,0)
 
 var TILE_ROTATION_VALUE := {
 	0:    CUBIC_DIRECTION[0],	# facing top

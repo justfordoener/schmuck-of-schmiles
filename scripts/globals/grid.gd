@@ -3,7 +3,7 @@ extends Node
 # - cube coordinates for grid calculations
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
-var grid : Dictionary[Vector3i, Cell]
+var grid : Dictionary[Vector3, Cell]
 
 var corn_mesh : ArrayMesh
 var face_mesh : ArrayMesh
@@ -12,21 +12,20 @@ var edge_mesh : ArrayMesh
 func _ready() -> void:
 	grid = {}
 	_initialize_grid_layers()
-	_initialize_layer_mesh(corn_mesh, "CornCell")
-	_initialize_layer_mesh(face_mesh, "FaceCell")
-	_initialize_layer_mesh(edge_mesh, "EdgeCell")
+	_initialize_layer_mesh(corn_mesh, "CornCell", Color.YELLOW)
+	_initialize_layer_mesh(face_mesh, "FaceCell", Color.SKY_BLUE)
+	_initialize_layer_mesh(edge_mesh, "EdgeCell", Color.LIME_GREEN)
 	
-	
-func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : String) -> void:
+func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : String, color : Color) -> void:
 	var mesh_array = []
 	mesh_array.resize(Mesh.ARRAY_MAX)
 	var mesh_verts = PackedVector3Array()
 	var mesh_indices = PackedInt32Array()
 	var vert_counter = 0
 	print("grid: ", grid.keys())
-	for pos : Vector3i in grid.keys():
+	for pos : Vector3 in grid.keys():
 		if grid[pos].type == class_name_string:
-			var position_axial : Vector3i = grid[pos].axial_position
+			var position_axial : Vector3 = grid[pos].axial_position
 			var position_cartesian = axial_to_cartesian(position_axial)
 			mesh_verts.append(position_cartesian)
 			mesh_indices.append(vert_counter)
@@ -39,25 +38,25 @@ func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : String) -> voi
 	mesh_instance.mesh = mesh
 	var mat = StandardMaterial3D.new()
 	mat.use_point_size = true
-	mat.point_size = 10.0 # Make them 10 pixels wide
-	mat.albedo_color = Color.RED # Make them bright red
+	mat.point_size = 10.0
+	mat.albedo_color = color
 	mesh_instance.material_override = mat
 	add_child(mesh_instance)
+		
+func _add_edges_and_faces(center : Vector3) -> void:
+	var neighbors = axial_ring(center, 1, 2)
+	for i in range(6):
+		var n1 = neighbors[i]
+		var n2 = neighbors[(i + 1) % 6]
+		var grid_index_edge : Vector3 = (center + n1) / 2
+		if not grid.has(grid_index_edge):
+			var edge_cell : EdgeCell = EdgeCell.new(grid_index_edge)
+			grid[grid_index_edge] = edge_cell
+		var grid_index_face : Vector3 = (center + n1 + n2) / 3
+		if not grid.has(grid_index_face):
+			var face_cell : FaceCell = FaceCell.new(grid_index_face)
+			grid[grid_index_face] = face_cell
 	
-func _add_edges_and_faces(pos_axial_i : Vector3i) -> void:
-	var arr = axial_ring(pos_axial_i, 1)
-	var index = 0
-	for cell_pos in arr:
-		index += 1
-		if grid.has(cell_pos):
-			continue
-		var grid_index_edge : Vector3i = (cell_pos + pos_axial_i) / 2
-		var edge_cell : EdgeCell = EdgeCell.new(grid_index_edge)
-		grid[grid_index_edge] = edge_cell
-		var grid_index_face : Vector3 = cell_pos + pos_axial_i + arr[index % arr.size()] / 3
-		var face_cell : FaceCell = FaceCell.new(grid_index_face)
-		grid[Vector3i(grid_index_face.round())] = face_cell
-
 func _initialize_grid_layers() -> void:
 	corn_mesh = ArrayMesh.new()
 	edge_mesh = ArrayMesh.new()
@@ -81,20 +80,21 @@ func _create_mesh_instance(color : Color) -> MeshInstance3D:
 	add_child(mesh_instance)
 	return mesh_instance
 	
-func cartesian_to_axial(cartesian_position : Vector3) -> Vector3i:
-	
+func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	var axial_position : Vector3 = Vector3.ZERO
 	axial_position.x = cartesian_position.z * 2./3
 	axial_position.y = cartesian_position.y
 	axial_position.z = cartesian_position.x * sqrt(3)/3 + cartesian_position.z * -1./3
 	return axial_round(axial_position / Layout.CELL_SIZE)
 
-func axial_round(axial_coordinate : Vector3) -> Vector3i:
-	var xgrid : int = round(axial_coordinate.x)
-	var zgrid : int = round(axial_coordinate.z)
-	return Vector3i(int(xgrid), axial_coordinate.y, int(zgrid))
+func axial_round(axial_coordinate : Vector3) -> Vector3:
+	var xgrid : int = roundi(axial_coordinate.x)
+	var zgrid : int = roundi(axial_coordinate.z)
+	var return_vector = Vector3(xgrid, roundi(axial_coordinate.y), zgrid)
+	print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
+	return return_vector
 	
-func axial_to_cartesian(axial_position : Vector3i) -> Vector3:
+func axial_to_cartesian(axial_position : Vector3) -> Vector3:
 	var cartesian_position : Vector3 = Vector3.ZERO
 	cartesian_position.x = axial_position.z * 3. / 2
 	cartesian_position.y = axial_position.y
@@ -119,20 +119,21 @@ func configure_grid_mesh(mesh : MeshInstance3D, color : Color) -> void:
 	material.albedo_color = color
 	mesh.material_override = material
 	
-func axial_ring(center : Vector3i, radius : int) -> Array[Vector3i]:
-	var results : Array[Vector3i] = [center]
-	var point : Vector3i = center + Layout.AXIAL_DIRECTION[0] * radius * Layout.CELL_SIZE
-	for direction in range(5): # -2 because we don't want up and down here
-		for i in range(0, radius):
+func axial_ring(center : Vector3, radius : int, step : int) -> Array[Vector3]:
+	var cell_size = Layout.CELL_SIZE
+	var results : Array[Vector3] = []
+	var point : Vector3 = center + Layout.AXIAL_DIRECTION[0] * radius * cell_size * step
+	for direction in range(6): # -2 because we don't want up and down here
+		for i in range(0, step * radius, step):
 			results.append(point)
-			point = point - Layout.AXIAL_DIRECTION[(direction + 4) % 6] # +4 because we want to choose the hexdirection that matches our circle direction
+			point = point + cell_size * step * Layout.AXIAL_DIRECTION[(direction + 2) % 6] # +4 because we want to choose the hexdirection that matches our circle direction
 	return results
 
-func axial_spiral(center : Vector3i, radius : int) -> Array[Vector3i]:
-	var results : Array[Vector3i] = [center]
-	for i : int in range(0, radius + 1):
-		var ring : Array[Vector3i] = axial_ring(center, i)
-		for elem : Vector3i in ring:
+func axial_spiral(center : Vector3, radius : int) -> Array[Vector3]:
+	var results : Array[Vector3] = [center]
+	for i : int in range(1, radius + 1):
+		var ring : Array[Vector3] = axial_ring(center, i, 2)
+		for elem : Vector3 in ring:
 			results.append(elem)
 	return results
 
