@@ -15,12 +15,12 @@ var CUBIC_DIRECTION : Dictionary[int, Vector3i] = {
 	5: Vector3i(-1,  0,  1)	# top left
 }
 var AXIAL_DIRECTION := {
-	0: Vector3i(0 , 0, 1), 	#top right
-	1: Vector3i(-1, 0, 1), 	#right
-	2: Vector3i(-1, 0, 0), 	#bottom right
-	3: Vector3i(0 , 0, 1), 	#bottom left
-	4: Vector3i(1 , 0,-1),	#left
-	5: Vector3i(1 , 0, 0),	#top left
+	0: Vector3i(1 , 0, 0), 	#top right
+	1: Vector3i(0,  0, 1), 	#right
+	2: Vector3i(-1, 0, 1), 	#bottom right
+	3: Vector3i(-1, 0, 0), 	#bottom left
+	4: Vector3i(0 , 0,-1),	#left
+	5: Vector3i(1 , 0,-1),	#top left
 	6: Vector3i(0 , 1, 0),	#up
 	7: Vector3i(0 ,-1, 0)
 }
