@@ -1,9 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=8 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="2_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="4_jed05"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6o6k0"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_6o6k0"]
+size = Vector2(1000, 1000)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c2dvl"]
+size = Vector3(1000, 1, 1000)
 
 [node name="ModuleSandbox" type="Node"]
 script = ExtResource("1_6o6k0")
@@ -90,11 +98,26 @@ layout_mode = 2
 text = "edge"
 horizontal_alignment = 1
 
+[node name="pivot_object" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 0, -0.640913, -1.4620966)
+mesh = SubResource("CylinderMesh_6o6k0")
+
 [node name="CameraController" parent="." instance=ExtResource("3_6o6k0")]
-transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 12.550121, 15.068786)
+transform = Transform3D(1, 0, 0, 0, 0.819152, 0.5735764, 0, -0.5735764, 0.819152, 0, 12.55012, 15.068784)
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../CameraController")
+
+[node name="Area3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("PlaneMesh_6o6k0")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+shape = SubResource("BoxShape3D_c2dvl")
 
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer/dual_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["dual_layer"]]
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer2/face_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["face_layer"]]
