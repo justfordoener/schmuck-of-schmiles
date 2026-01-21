@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://cl022yfv6jrj"]
+
+[ext_resource type="Script" uid="uid://bg6hpcnpykqce" path="res://scripts/player_controller/camera.gd" id="1_cvpoc"]
+
+[node name="RTSCamera" type="Node3D" node_paths=PackedStringArray("path")]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+script = ExtResource("1_cvpoc")
+path = NodePath("CameraRotX/CameraZoomPivot/Camera3D")
+
+[node name="CameraRotX" type="Node3D" parent="."]
+
+[node name="CameraZoomPivot" type="Node3D" parent="CameraRotX"]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRotX/CameraZoomPivot"]
+
+[node name="RayCast3D" type="RayCast3D" parent="CameraRotX/CameraZoomPivot/Camera3D"]
+target_position = Vector3(0, 0, -1000)
