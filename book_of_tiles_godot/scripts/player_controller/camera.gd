@@ -27,12 +27,15 @@ var zoom_target: float
 @onready var zoom_pivot = $CameraRotX/CameraZoomPivot
 @onready var camera = $CameraRotX/CameraZoomPivot/Camera3D
 
+# rotation
+@onready var pivot_object = $"../pivot_object"
+@onready var raycast = $CameraRotX/CameraZoomPivot/Camera3D/RayCast3D
 
 func _ready() -> void:
 	move_target = position
 	rotate_keys_target = rotation_degrees.y
 	zoom_target = camera.position.z
-
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -54,7 +57,7 @@ func _process(_delta: float) -> void:
 	# set movement targets
 	var zoom_move_factor = 1.0 - current_zoom + 0.2
 	move_target += move_speed * zoom_move_factor * movement_direction
-	rotate_keys_target += rotate_keys_speed * rotate_keys_direction
+	#rotate_keys_target += rotate_keys_speed * rotate_keys_direction
 	
 	# Zoom - fast in the middle, slow at edges
 	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
@@ -64,7 +67,6 @@ func _process(_delta: float) -> void:
 	
 	# lerp to movement targets
 	position = lerp(position, move_target, floatyness)
-	rotation_degrees.y = lerp(rotation_degrees.y, rotate_keys_target, floatyness)
 	camera.position.z = lerp(camera.position.z, zoom_target, floatyness)
 	
 	# compute new pitch between min_pitch and max_pitch
@@ -76,3 +78,23 @@ func _process(_delta: float) -> void:
 		target_pitch,
 		floatyness
 	)
+	
+	# raycast
+	raycast.force_raycast_update()
+	var raycast_hit_position: Vector3
+	if raycast.is_colliding():
+		raycast_hit_position = raycast.get_collision_point()
+	else:
+		raycast_hit_position = camera.global_transform.origin + camera.global_transform.basis.z * -zoom_target
+	
+	pivot_object.global_position = raycast_hit_position
+	
+	# pivot rotation
+	if rotate_keys_direction != 0:
+		pivot_object.rotate_y(rotate_keys_speed * rotate_keys_direction * _delta)
+	
+
+	var offset = camera.global_transform.origin - pivot_object.global_transform.origin
+	offset = offset.rotated(Vector3.UP, rotate_keys_speed * rotate_keys_direction * _delta)
+	camera.global_transform.origin = pivot_object.global_transform.origin + offset
+	camera.look_at(pivot_object.global_transform.origin, Vector3.UP)
