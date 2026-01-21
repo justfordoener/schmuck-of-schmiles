@@ -103,7 +103,7 @@ transform = Transform3D(1, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 0, -0.640913,
 mesh = SubResource("CylinderMesh_6o6k0")
 
 [node name="CameraController" parent="." instance=ExtResource("3_6o6k0")]
-transform = Transform3D(1, 0, 0, 0, 0.819152, 0.5735764, 0, -0.5735764, 0.819152, 0, 12.55012, 15.068784)
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 12.55012, 15.068784)
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../CameraController")
