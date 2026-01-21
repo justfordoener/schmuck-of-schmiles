@@ -2,16 +2,21 @@
 
 [ext_resource type="Script" uid="uid://bg6hpcnpykqce" path="res://scripts/player_controller/camera.gd" id="1_cvpoc"]
 
-[node name="RTSCamera" type="Node3D" node_paths=PackedStringArray("path")]
+[node name="RTSCamera" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 script = ExtResource("1_cvpoc")
-path = NodePath("CameraRotX/CameraZoomPivot/Camera3D")
 
-[node name="CameraRotX" type="Node3D" parent="."]
+[node name="Pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
 
-[node name="CameraZoomPivot" type="Node3D" parent="CameraRotX"]
+[node name="CameraRotX" type="Node3D" parent="Pivot"]
 
-[node name="Camera3D" type="Camera3D" parent="CameraRotX/CameraZoomPivot"]
+[node name="CameraZoomPivot" type="Node3D" parent="Pivot/CameraRotX"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 
-[node name="RayCast3D" type="RayCast3D" parent="CameraRotX/CameraZoomPivot/Camera3D"]
+[node name="Camera3D" type="Camera3D" parent="Pivot/CameraRotX/CameraZoomPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
+
+[node name="GroundRayCast" type="RayCast3D" parent="Pivot/CameraRotX/CameraZoomPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, -8, 0)
 target_position = Vector3(0, 0, -1000)

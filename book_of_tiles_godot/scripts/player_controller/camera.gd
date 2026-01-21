@@ -10,6 +10,7 @@ var move_target: Vector3
 # rotation
 @export var rotate_keys_speed = 1.5
 var rotate_keys_target: float
+@export var initial_pitch := -35.0
 
 # zoom
 @export var zoom_speed = 3.0
@@ -23,22 +24,24 @@ var zoom_target: float
 # mouse
 @export var mouse_sensitivity = 0.3
 
-@onready var rotation_x = $CameraRotX
-@onready var zoom_pivot = $CameraRotX/CameraZoomPivot
-@onready var camera = $CameraRotX/CameraZoomPivot/Camera3D
+@onready var rotation_x = $Pivot/CameraRotX
+@onready var zoom_pivot = $Pivot/CameraRotX/CameraZoomPivot
+@onready var camera = $Pivot/CameraRotX/CameraZoomPivot/Camera3D
 
 # rotation
-@onready var pivot_object = $"../pivot_object"
-@onready var raycast = $CameraRotX/CameraZoomPivot/Camera3D/RayCast3D
+@onready var pivot = $Pivot
+@onready var raycast = $Pivot/CameraRotX/CameraZoomPivot/Camera3D/GroundRayCast
+
 
 func _ready() -> void:
 	move_target = position
 	rotate_keys_target = rotation_degrees.y
 	zoom_target = camera.position.z
-	
+	rotation_x.rotation_degrees.x = initial_pitch
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	
 	if Input.is_action_just_pressed("rotate"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if Input.is_action_just_released("rotate"):
@@ -46,7 +49,7 @@ func _process(_delta: float) -> void:
 	
 	# get input directions
 	var input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	var horizontal_basis = Basis(Vector3.UP, deg_to_rad(rotation_degrees.y))
+	var horizontal_basis = Basis(Vector3.UP, pivot.rotation.y)
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
@@ -79,22 +82,13 @@ func _process(_delta: float) -> void:
 		floatyness
 	)
 	
+
+	
 	# raycast
 	raycast.force_raycast_update()
-	var raycast_hit_position: Vector3
 	if raycast.is_colliding():
-		raycast_hit_position = raycast.get_collision_point()
-	else:
-		raycast_hit_position = camera.global_transform.origin + camera.global_transform.basis.z * -zoom_target
-	
-	pivot_object.global_position = raycast_hit_position
-	
+		pivot.global_position = raycast.get_collision_point()
+		
 	# pivot rotation
 	if rotate_keys_direction != 0:
-		pivot_object.rotate_y(rotate_keys_speed * rotate_keys_direction * _delta)
-	
-
-	var offset = camera.global_transform.origin - pivot_object.global_transform.origin
-	offset = offset.rotated(Vector3.UP, rotate_keys_speed * rotate_keys_direction * _delta)
-	camera.global_transform.origin = pivot_object.global_transform.origin + offset
-	camera.look_at(pivot_object.global_transform.origin, Vector3.UP)
+		pivot.rotate_y(rotate_keys_speed * rotate_keys_direction * _delta)
