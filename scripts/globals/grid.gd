@@ -87,25 +87,26 @@ func create_axial_index(axial_corrdinate : Vector3) -> Vector3:
 	return index / 1000 #return same vector but rounded 
 	
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
+	cartesian_position = cartesian_position / Layout.CELL_SIZE
 	var axial_position : Vector3 = Vector3.ZERO
-	axial_position.x = cartesian_position.z * 2./3
+	axial_position.x = cartesian_position.x * sqrt(3)/3 + cartesian_position.z * -1./3
 	axial_position.y = cartesian_position.y
-	axial_position.z = cartesian_position.x * sqrt(3)/3 + cartesian_position.z * -1./3
-	return axial_position / Layout.CELL_SIZE
+	axial_position.z = cartesian_position.z * 2./3
+	return axial_position
 
+func axial_to_cartesian(axial_position : Vector3) -> Vector3:
+	var cartesian_position : Vector3 = Vector3.ZERO
+	cartesian_position.x = axial_position.x * sqrt(3) + axial_position.z * sqrt(3) / 2
+	cartesian_position.y = axial_position.y
+	cartesian_position.z = axial_position.z * 3. / 2
+	return Layout.CELL_SIZE * cartesian_position 
+	
 func axial_round(axial_coordinate : Vector3) -> Vector3:
 	var xgrid : int = roundi(axial_coordinate.x)
 	var zgrid : int = roundi(axial_coordinate.z)
 	var return_vector = Vector3(xgrid, roundi(axial_coordinate.y), zgrid)
 	print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
 	return return_vector
-	
-func axial_to_cartesian(axial_position : Vector3) -> Vector3:
-	var cartesian_position : Vector3 = Vector3.ZERO
-	cartesian_position.x = axial_position.z * 3. / 2
-	cartesian_position.y = axial_position.y
-	cartesian_position.z = axial_position.x * sqrt(3) + axial_position.z * sqrt(3) / 2
-	return Layout.CELL_SIZE * cartesian_position 
 	
 func snap_to_layer(point : Vector3, class_name_string : String) -> Vector3:
 	var target_axial = cartesian_to_axial(point)
@@ -143,13 +144,13 @@ func configure_grid_mesh(mesh : MeshInstance3D, color : Color) -> void:
 	mesh.material_override = material
 	
 func axial_ring(center : Vector3, radius : int, step : int) -> Array[Vector3]:
-	var cell_size = Layout.CELL_SIZE
+	var cell_height = Layout.CELL_SIZE * sqrt(3)
 	var results : Array[Vector3] = []
-	var point : Vector3 = center + Layout.AXIAL_DIRECTION[0] * radius * cell_size * step
+	var point : Vector3 = center + Layout.AXIAL_DIRECTION[0] * radius * cell_height * step
 	for direction in range(6): # -2 because we don't want up and down here
 		for i in range(0, step * radius, step):
 			results.append(point)
-			point = point + cell_size * step * Layout.AXIAL_DIRECTION[(direction + 2) % 6] # +4 because we want to choose the hexdirection that matches our circle direction
+			point = point + cell_height * step * Layout.AXIAL_DIRECTION[(direction + 2) % 6] # +4 because we want to choose the hexdirection that matches our circle direction
 	return results
 
 func axial_spiral(center : Vector3, radius : int) -> Array[Vector3]:

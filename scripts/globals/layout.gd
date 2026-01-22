@@ -1,6 +1,6 @@
 extends Node
 
-var CELL_SIZE   : float = 0.866# length of a triangle cell edge on the trigrid 
+var CELL_SIZE   : float = 1 / sqrt(3)# length of a side of a hexagon
 var CELL_STATE  : int = 1
 var GRID_RADIUS : int = 1
 var GRID_HEIGHT : int = 1
@@ -15,14 +15,14 @@ var CUBIC_DIRECTION : Dictionary[int, Vector3] = {
 	5: Vector3(-1,  0,  1)	# top left
 }
 var AXIAL_DIRECTION := {
-	0: Vector3(1 , 0, 0), 	#top right
-	1: Vector3(0,  0, 1), 	#right
-	2: Vector3(-1, 0, 1), 	#bottom right
-	3: Vector3(-1, 0, 0), 	#bottom left
-	4: Vector3(0 , 0,-1),	#left
-	5: Vector3(1 , 0,-1),	#top left
+	0: Vector3(1 , 0, 0), 	#right
+	1: Vector3(0 , 0, 1), 	#bot right
+	2: Vector3(-1, 0, 1), 	#bot left
+	3: Vector3(-1, 0, 0), 	#left
+	4: Vector3(0 , 0,-1),	#top left
+	5: Vector3(1 , 0,-1),	#top right
 	6: Vector3(0 , 1, 0),	#up
-	7: Vector3(0 ,-1, 0)
+	7: Vector3(0 ,-1, 0)	#down
 }
 var AXIAL_CENTER := Vector3(0,0,0)
 
