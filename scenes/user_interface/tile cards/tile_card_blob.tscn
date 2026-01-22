@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://ff130n6clesp" path="res://textures/blob.png" id="2_watfb"]
 
 [node name="TileCardBlob" instance=ExtResource("1_iplyg")]
+anchors_preset = 0
 tile = ExtResource("2_djcye")
 
 [node name="TextureButton" parent="VBoxContainer" index="0"]

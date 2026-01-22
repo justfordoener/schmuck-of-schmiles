@@ -136,80 +136,82 @@ shadow_mesh = SubResource("ArrayMesh_q10d0")
 [node name="BlobTile" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_vtbnk")
+layer_type = "CornCell"
 
 [node name="tri_face" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8688646, 0.4972807, 2.173683e-08)
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
 script = ExtResource("2_vq5jh")
 
 [node name="tri_face2" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(-1, 1.509958e-07, 0, -1.509958e-07, -1, 0, 0, 0, 1, -0.8688646, -0.5027193, 2.1736831e-08)
 mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
 script = ExtResource("2_vq5jh")
 
 [node name="tri_edge" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, -0.8688646, -0.002719313, 2.173683e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_srkpl")
 
 [node name="tri_edge4" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 1.732, -0.5, 0)
+transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0.8631354, -0.002719313, 2.173683e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_srkpl")
 
 [node name="tri_edge5" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, 0.433, -1.25, 0)
+transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, -0.43586463, -0.7527193, 2.1736831e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_srkpl")
 
 [node name="tri_edge6" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.99999994, 8.742277e-08, 0, -8.742277e-08, -0.99999994, 0, 0, 0, 1, 0.433, 0.25, 0)
+transform = Transform3D(-0.99999994, 1.5099579e-07, 0, -1.5099579e-07, -0.99999994, 0, 0, 0, 1, -0.43586463, 0.7472807, 2.173683e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_srkpl")
 
 [node name="tri_face3" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5020391, -0.8648449, -3.7803574e-08, 0.8648449, 0.5020391, -2.1766564e-08, 3.7803574e-08, -2.1766564e-08, 1, 0.866, 0.4978722, -9.300827e-11)
+transform = Transform3D(0.5020391, -0.8648449, -3.7803574e-08, 0.8648449, 0.5020391, -2.1766562e-08, 3.7803574e-08, -2.1766564e-08, 1, -0.0028646141, 0.99515295, 2.1643825e-08)
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
 script = ExtResource("2_vq5jh")
 
 [node name="tri_face4" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.502039, 0.864845, -3.7803574e-08, -0.864845, -0.502039, -2.1766564e-08, -3.780357e-08, 2.1766565e-08, 1, 1.731, -0.003, 0)
+transform = Transform3D(-0.5020391, 0.8648449, -3.780357e-08, -0.8648449, -0.5020391, -2.1766562e-08, -3.780357e-08, 2.176656e-08, 1, 0.86213535, 0.4942807, 2.173683e-08)
 mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
 script = ExtResource("2_vq5jh")
 
 [node name="tri_edge2" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.49795815, -0.867201, -3.7803574e-08, 0.867201, -0.49795815, -2.1766565e-08, 5.1382898e-11, -4.3622137e-08, 1, 1.2985525, 0.248, 0)
+transform = Transform3D(-0.49795824, -0.8672009, -3.780358e-08, 0.8672009, -0.49795824, -2.1766562e-08, 5.1377565e-11, -4.3622137e-08, 1, 0.42968792, 0.74528074, 2.1736831e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_srkpl")
 
 [node name="tri_face5" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, 0.866, -1.5, 0)
+transform = Transform3D(-0.5, -0.8660253, 0, 0.8660253, -0.5, 0, 0, 0, 1, -0.0028646141, -1.0027193, 2.1736827e-08)
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
 script = ExtResource("2_vq5jh")
 
 [node name="tri_face6" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0, 1, 1.732, -1, 0)
+transform = Transform3D(0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0, 0, 1, 0.8631354, -0.5027193, 2.1736831e-08)
 mesh = SubResource("ArrayMesh_ex0ci")
 skeleton = NodePath("")
 script = ExtResource("2_vq5jh")
 
 [node name="tri_edge3" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.99999994, 8.742277e-08, 0, -8.742277e-08, -0.99999994, 0, 0, 0, 1, 1.299, -1.25, 0)
+transform = Transform3D(-0.99999994, 1.5099579e-07, 0, -1.5099579e-07, -0.99999994, 0, 0, 0, 1, 0.43013543, -0.7527193, 2.1736831e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_srkpl")
 
 [node name="tri_corner" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.866, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0028646141, -0.002719313, 2.173683e-08)
 mesh = SubResource("ArrayMesh_ne7gm")
 skeleton = NodePath("")
 script = ExtResource("4_exj8j")

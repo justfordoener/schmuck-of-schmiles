@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://djt6cap1wq4bb"
-path="res://.godot/imported/face_module.glb-11b855dcd0329031282bfbb4ae95474a.scn"
+path="res://.godot/imported/face_module.glb-3c6a7d496f652ed69c405dfb41ee736d.scn"
 
 [deps]
 
-source_file="res://models/face_module.glb"
-dest_files=["res://.godot/imported/face_module.glb-11b855dcd0329031282bfbb4ae95474a.scn"]
+source_file="res://models/shapes/face_module.glb"
+dest_files=["res://.godot/imported/face_module.glb-3c6a7d496f652ed69c405dfb41ee736d.scn"]
 
 [params]
 

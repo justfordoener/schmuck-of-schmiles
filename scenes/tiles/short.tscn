@@ -103,20 +103,22 @@ shadow_mesh = SubResource("ArrayMesh_0alkg")
 [node name="ShortTile" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_aftgl")
+layer_type = "EdgeCell"
 
 [node name="tri_face" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50388217, 2.202539e-08)
 mesh = SubResource("ArrayMesh_cf4sw")
 skeleton = NodePath("")
 script = ExtResource("2_ncwt5")
 
 [node name="tri_face2" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(-1, 1.509958e-07, 0, -1.509958e-07, -1, 0, 0, 0, 1, 0, -0.49611783, 2.202539e-08)
 mesh = SubResource("ArrayMesh_7j7oi")
 skeleton = NodePath("")
 script = ExtResource("2_ncwt5")
 
 [node name="tri_edge" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(0.49999994, -0.8660254, 0, 0.8660254, 0.49999994, 0, 0, 0, 1, 0, 0.0038821697, 2.202539e-08)
 mesh = SubResource("ArrayMesh_5ivdm")
 skeleton = NodePath("")
 script = ExtResource("3_0pgwy")

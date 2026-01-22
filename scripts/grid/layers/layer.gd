@@ -10,6 +10,7 @@ class_name GridLayer extends Node3D
 var layer_color = Color.BLACK
 var layer_mesh : ArrayMesh
 var is_built = false
+var active_snap_layer : String
 
 func _ready():
 	pass

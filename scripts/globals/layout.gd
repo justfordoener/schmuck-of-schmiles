@@ -1,6 +1,6 @@
 extends Node
 
-var CELL_SIZE   : int = 2 # length of a triangle cell edge on the trigrid 
+var CELL_SIZE   : float = 0.866# length of a triangle cell edge on the trigrid 
 var CELL_STATE  : int = 1
 var GRID_RADIUS : int = 1
 var GRID_HEIGHT : int = 1

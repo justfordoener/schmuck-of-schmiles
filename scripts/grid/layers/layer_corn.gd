@@ -15,6 +15,7 @@ func show_layer_mesh(value : bool):
 func activate_layer_snapping():
 	print_debug("corn layer activated")
 	layer_color = CORN_LAYER_COLOR
+	active_snap_layer = "corn_layer"
 
 func snap_to_layer(point : Vector3) -> Vector3:
 	return Grid.snap_to_corn_layer(point)

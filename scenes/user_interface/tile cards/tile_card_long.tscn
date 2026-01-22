@@ -1,10 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://bh3dh4jmoyqhj"]
 
 [ext_resource type="PackedScene" uid="uid://be5qy5lmbx0pv" path="res://scenes/user_interface/tile_card.tscn" id="1_kty4w"]
-[ext_resource type="PackedScene" uid="uid://ovn7tdf8w2bo" path="res://scenes/tiles/long.tscn" id="2_33yw7"]
+[ext_resource type="PackedScene" uid="uid://bsxm1n64tsil7" path="res://scenes/tiles/river_edge.tscn" id="2_33yw7"]
 [ext_resource type="Texture2D" uid="uid://dmtogyblh0447" path="res://textures/Long.png" id="2_lqdqr"]
 
 [node name="TileCardLong" instance=ExtResource("1_kty4w")]
+anchors_preset = 0
 tile = ExtResource("2_33yw7")
 
 [node name="TextureButton" parent="VBoxContainer" index="0"]

@@ -20,10 +20,17 @@ edge_module = ExtResource("4_4hvkd")
 corn_module = ExtResource("5_bm8mr")
 
 [node name="grid_layers" type="Node3D" parent="."]
+visible = false
 script = ExtResource("2_2s7k2")
 
 [node name="face_layer" type="Node3D" parent="grid_layers"]
 script = ExtResource("8_ns5hy")
+FULL_LAYER_COLOR = null
+PLAY_LAYER_COLOR = null
+DUAL_LAYER_COLOR = null
+FACE_LAYER_COLOR = null
+EDGE_LAYER_COLOR = null
+CORN_LAYER_COLOR = null
 
 [node name="face_layer_mesh" type="MeshInstance3D" parent="grid_layers/face_layer"]
 material_override = SubResource("ORMMaterial3D_726jt")

@@ -18,6 +18,7 @@ func show_layer_mesh(value : bool):
 func activate_layer_snapping():
 	print_debug("face layer activated")
 	layer_color = FACE_LAYER_COLOR
+	active_snap_layer = "face_layer"
 
 func snap_to_layer(point : Vector3) -> Vector3:
-	return point
+	return Grid.snap_to_face_layer(point)

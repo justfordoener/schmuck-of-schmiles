@@ -24,12 +24,12 @@ func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : String, color 
 	var vert_counter = 0
 	print("grid: ", grid.keys())
 	for pos : Vector3 in grid.keys():
-		if grid[pos].type == class_name_string:
-			var position_axial : Vector3 = grid[pos].axial_position
+		if grid[create_axial_index(pos)].type == class_name_string:
+			var position_axial : Vector3 = grid[create_axial_index(pos)].axial_position
 			var position_cartesian = axial_to_cartesian(position_axial)
 			mesh_verts.append(position_cartesian)
 			mesh_indices.append(vert_counter)
-			print(vert_counter, " - cell type: ", grid[pos].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
+			print(vert_counter, " - cell type: ", grid[create_axial_index(pos)].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
 			vert_counter += 1
 	mesh_array[Mesh.ARRAY_VERTEX] = mesh_verts
 	mesh_array[Mesh.ARRAY_INDEX] = mesh_indices
@@ -48,22 +48,22 @@ func _add_edges_and_faces(center : Vector3) -> void:
 	for i in range(6):
 		var n1 = neighbors[i]
 		var n2 = neighbors[(i + 1) % 6]
-		var grid_index_edge : Vector3 = (center + n1) / 2
-		if not grid.has(grid_index_edge):
-			var edge_cell : EdgeCell = EdgeCell.new(grid_index_edge)
-			grid[grid_index_edge] = edge_cell
-		var grid_index_face : Vector3 = (center + n1 + n2) / 3
-		if not grid.has(grid_index_face):
-			var face_cell : FaceCell = FaceCell.new(grid_index_face)
-			grid[grid_index_face] = face_cell
+		var pos_edge : Vector3 = (center + n1) / 2
+		if not grid.has(create_axial_index(pos_edge)):
+			var edge_cell : EdgeCell = EdgeCell.new(create_axial_index(pos_edge))
+			grid[create_axial_index(pos_edge)] = edge_cell
+		var pos_face : Vector3 = (center + n1 + n2) / 3
+		if not grid.has(create_axial_index(pos_face)):
+			var face_cell : FaceCell = FaceCell.new(create_axial_index(pos_face))
+			grid[create_axial_index(pos_face)] = face_cell
 	
 func _initialize_grid_layers() -> void:
 	corn_mesh = ArrayMesh.new()
 	edge_mesh = ArrayMesh.new()
 	face_mesh = ArrayMesh.new()
 	for pos in axial_spiral(Layout.CENTER_TILE_AXIAL, Layout.GRID_RADIUS): #leave on tile empty
-		var corn_cell : CornCell = CornCell.new(pos)
-		grid[pos] = corn_cell
+		var corn_cell : CornCell = CornCell.new(create_axial_index(pos))
+		grid[create_axial_index(pos)] = corn_cell
 		_add_edges_and_faces(pos)
 
 func _create_mesh_instance(color : Color) -> MeshInstance3D:
@@ -80,12 +80,18 @@ func _create_mesh_instance(color : Color) -> MeshInstance3D:
 	add_child(mesh_instance)
 	return mesh_instance
 	
+#-------------------------------- public functions ----------------------------
+
+func create_axial_index(axial_corrdinate : Vector3) -> Vector3:
+	var index : Vector3 = Vector3(roundi(axial_corrdinate.x * 1000), roundi(axial_corrdinate.y * 1000), roundi(axial_corrdinate.z * 1000))
+	return index / 1000 #return same vector but rounded 
+	
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	var axial_position : Vector3 = Vector3.ZERO
 	axial_position.x = cartesian_position.z * 2./3
 	axial_position.y = cartesian_position.y
 	axial_position.z = cartesian_position.x * sqrt(3)/3 + cartesian_position.z * -1./3
-	return axial_round(axial_position / Layout.CELL_SIZE)
+	return axial_position / Layout.CELL_SIZE
 
 func axial_round(axial_coordinate : Vector3) -> Vector3:
 	var xgrid : int = roundi(axial_coordinate.x)
@@ -100,15 +106,32 @@ func axial_to_cartesian(axial_position : Vector3) -> Vector3:
 	cartesian_position.y = axial_position.y
 	cartesian_position.z = axial_position.x * sqrt(3) + axial_position.z * sqrt(3) / 2
 	return Layout.CELL_SIZE * cartesian_position 
+	
+func snap_to_layer(point : Vector3, class_name_string : String) -> Vector3:
+	var target_axial = cartesian_to_axial(point)
+	var closest_pos : Vector3 = point # Fallback to original point
+	var min_dist : float = INF
+	
+	# might need to limit the grid and only check for cells within a given radius
+	for index_key in grid.keys():
+		var cell = grid[index_key]
+		if cell.type == class_name_string:
+			var cell_world_pos = axial_to_cartesian(cell.axial_position)
+			var dist = point.distance_to(cell_world_pos)
+			if dist < min_dist:
+				min_dist = dist
+				closest_pos = cell_world_pos
+				
+	return closest_pos
 
-func snap_to_face_layer(point : Vector3, _rotation : int) -> Vector3:
-	return point
+func snap_to_face_layer(point : Vector3) -> Vector3:
+	return snap_to_layer(point, "FaceCell")
 	
 func snap_to_edge_layer(point : Vector3) -> Vector3:
-	return point
+	return snap_to_layer(point, "EdgeCell")
 	
 func snap_to_corn_layer(point : Vector3) -> Vector3:
-	return point
+	return snap_to_layer(point, "CornCell")
 
 # ------------------- helper functions -------------------
 
@@ -136,10 +159,3 @@ func axial_spiral(center : Vector3, radius : int) -> Array[Vector3]:
 		for elem : Vector3 in ring:
 			results.append(elem)
 	return results
-
-func convert_to_int(bits : String) -> int:
-	var result = 0
-	for bit_index in range(bits.length()):
-		if (int(bits[bit_index]) == 1):
-			result += 2 ** bit_index
-	return result

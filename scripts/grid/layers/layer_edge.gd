@@ -15,6 +15,7 @@ func show_layer_mesh(value : bool):
 func activate_layer_snapping():
 	print_debug("edge layer activated")
 	layer_color = EDGE_LAYER_COLOR
+	active_snap_layer = "edge_layer"
 
 func snap_to_layer(point : Vector3) -> Vector3:
 	return Grid.snap_to_edge_layer(point)

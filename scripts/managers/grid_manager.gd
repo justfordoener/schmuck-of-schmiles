@@ -1,4 +1,4 @@
-extends Node
+class_name GridManager extends Node
 
 @onready var grid_layers = {
 	"face_layer" : $grid_layers/face_layer,
@@ -22,4 +22,8 @@ func _ready():
 	#grid_layers["dual_layer"].show_layer_mesh(true)
 	grid_layers["face_layer"].show_layer_mesh(true)
 	grid_layers["edge_layer"].show_layer_mesh(true)
-	grid_layers["face_layer"].activate_layer_snapping()
+	#grid_layers["face_layer"].activate_layer_snapping()
+	
+func snap(position : Vector3, layer_key : String) -> Vector3:
+	grid_layers[layer_key].snap_to_layer(position)
+	return position
