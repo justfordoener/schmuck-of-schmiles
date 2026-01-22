@@ -1,54 +1,78 @@
 extends Node3D
 
-@export var move_speed: float 		= 20.0
-@export var rotation_speed: float 	= 120  # Degrees per second
-@export var smoothness: float 		= 5.0       # Higher = faster interpolation
-@export var zoom_speed: float 		= 3.0
-@export var min_y: float			= 1
-@export var max_y: float			= 5
-@onready var camera: Node			= $Camera3D
+@export var path = camera
 
-var _target_position: Vector3 		= Vector3.ZERO
-var _target_position_y: float 		= 0.0
-var _target_rotation_y: float 		= 0.0
-var _target_rotation_x: float 		= 45.0
+# variables
+@export var floatyness : float = 0.10
+@export var move_speed = 0.6
+var move_target: Vector3
 
-func _ready():
-	_target_position = global_position
-	_target_rotation_y = rotation_degrees.y
-	_target_rotation_x = rotation_degrees.x
-	
-func _process(delta):
-	handle_input(delta)
-	smooth_update(delta)
+# rotation
+@export var rotate_keys_speed = 1.5
+var rotate_keys_target: float
 
-func smooth_update(delta):
-	global_position = global_position.lerp(_target_position, delta * smoothness)
-	rotation_degrees.y = lerp_angle(_target_rotation_y, _target_rotation_y, delta * smoothness)
-	camera.position.y = lerp(camera.position.y, _target_position_y, delta * smoothness)
+# zoom
+@export var zoom_speed = 3.0
+@export var min_zoom = -28.0 
+@export var max_zoom = 10.0
+@export var min_zoom_speed = 0.15 # as % of max speed (max_speed = 1.0)
+var zoom_target: float
+@export var min_pitch := -25.0   # when zoomed out
+@export var max_pitch :=  10.0   # when zoomed in
+
+# mouse
+@export var mouse_sensitivity = 0.3
+
+@onready var rotation_x = $CameraRotX
+@onready var zoom_pivot = $CameraRotX/CameraZoomPivot
+@onready var camera = $CameraRotX/CameraZoomPivot/Camera3D
+
+
+func _ready() -> void:
+	move_target = position
+	rotate_keys_target = rotation_degrees.y
+	zoom_target = camera.position.z
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("rotate"):
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if Input.is_action_just_released("rotate"):
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
-	
-func handle_input(delta):
-	var input_dir := Vector3.ZERO
-	if Input.is_action_pressed("move_forward"):
-		input_dir.z -= 1
-	if Input.is_action_pressed("move_back"):
-		input_dir.z += 1
-	if Input.is_action_pressed("move_left"):
-		input_dir.x -= 1
-	if Input.is_action_pressed("move_right"):
-		input_dir.x += 1
-	if input_dir != Vector3.ZERO:
-		input_dir = input_dir.normalized()
-		var move_dir = transform.basis * input_dir
-		move_dir.y = 0
-		_target_position += move_dir * move_speed * delta
-	
-	if Input.is_action_pressed("rotate_left"):
-		_target_rotation_y -= rotation_speed * delta
-	if Input.is_action_pressed("rotate_right"):
-		_target_rotation_y += rotation_speed * delta
-	
+	# get input directions
+	var input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var horizontal_basis = Basis(Vector3.UP, deg_to_rad(rotation_degrees.y))
+	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
+	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
-	_target_position_y += zoom_speed * zoom_direction
-	_target_position_y = clamp(_target_position_y, min_y, max_y)
+	
+	# normalize zoom range between 0 and 1
+	var current_zoom = 1 - inverse_lerp(min_zoom, max_zoom, zoom_target)
+	
+	# set movement targets
+	var zoom_move_factor = 1.0 - current_zoom + 0.2
+	move_target += move_speed * zoom_move_factor * movement_direction
+	rotate_keys_target += rotate_keys_speed * rotate_keys_direction
+	
+	# Zoom - fast in the middle, slow at edges
+	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
+	zoom_curve = clamp(zoom_curve, min_zoom_speed, 1.0)
+	zoom_target += zoom_speed * zoom_direction * zoom_curve
+	zoom_target = clamp(zoom_target, min_zoom, max_zoom)
+	
+	# lerp to movement targets
+	position = lerp(position, move_target, floatyness)
+	rotation_degrees.y = lerp(rotation_degrees.y, rotate_keys_target, floatyness)
+	camera.position.z = lerp(camera.position.z, zoom_target, floatyness)
+	
+	# compute new pitch between min_pitch and max_pitch
+	var target_pitch = lerp(min_pitch, max_pitch, current_zoom)
+	
+	# apply smoothed rotation
+	rotation_x.rotation_degrees.x = lerp(
+		rotation_x.rotation_degrees.x,
+		target_pitch,
+		floatyness
+	)

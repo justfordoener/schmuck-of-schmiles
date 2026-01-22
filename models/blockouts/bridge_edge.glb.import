@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b7pj1jwfvbupc"
-path="res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"
+uid="uid://bs8b5ldeackpf"
+path="res://.godot/imported/bridge_edge.glb-9d29a1a7d80dbc58c015e012b7bd87af.scn"
 
 [deps]
 
-source_file="res://models/corn_module.glb"
-dest_files=["res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"]
+source_file="res://models/blockouts/bridge_edge.glb"
+dest_files=["res://.godot/imported/bridge_edge.glb-9d29a1a7d80dbc58c015e012b7bd87af.scn"]
 
 [params]
 

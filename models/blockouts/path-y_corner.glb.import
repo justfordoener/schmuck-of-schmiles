@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b7pj1jwfvbupc"
-path="res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"
+uid="uid://b62ncc8t77hxl"
+path="res://.godot/imported/path-y_corner.glb-2bc01f9ccdb946fea262be6c1d801096.scn"
 
 [deps]
 
-source_file="res://models/corn_module.glb"
-dest_files=["res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"]
+source_file="res://models/blockouts/path-y_corner.glb"
+dest_files=["res://.godot/imported/path-y_corner.glb-2bc01f9ccdb946fea262be6c1d801096.scn"]
 
 [params]
 

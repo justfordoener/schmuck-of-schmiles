@@ -12,8 +12,87 @@ script = ExtResource("1_6o6k0")
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
 
-[node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
-visible = false
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -66.0
+offset_right = 66.0
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/VBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="dual_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("2_c2dvl")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+text = "dual"
+horizontal_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="UI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="face_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer2"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("2_c2dvl")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+text = "face"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="UI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="corn_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer3"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("2_c2dvl")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer3"]
+layout_mode = 2
+text = "corner"
+horizontal_alignment = 1
+
+[node name="MarginContainer4" type="MarginContainer" parent="UI/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="edge_layer_button" type="TextureButton" parent="UI/VBoxContainer/HBoxContainer/MarginContainer4"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("2_c2dvl")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="UI/VBoxContainer/HBoxContainer/MarginContainer4"]
+layout_mode = 2
+text = "edge"
+horizontal_alignment = 1
+
+[node name="CameraController" parent="." instance=ExtResource("3_6o6k0")]
+transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 0, 12.550121, 15.068786)
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../CameraController")

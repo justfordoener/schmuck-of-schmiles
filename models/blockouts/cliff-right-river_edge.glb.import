@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b7pj1jwfvbupc"
-path="res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"
+uid="uid://cuu6a7hnhruuu"
+path="res://.godot/imported/cliff-right-river_edge.glb-801c2f6f8c45e7bb25d950ff8d3580a9.scn"
 
 [deps]
 
-source_file="res://models/corn_module.glb"
-dest_files=["res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"]
+source_file="res://models/blockouts/cliff-right-river_edge.glb"
+dest_files=["res://.godot/imported/cliff-right-river_edge.glb-801c2f6f8c45e7bb25d950ff8d3580a9.scn"]
 
 [params]
 

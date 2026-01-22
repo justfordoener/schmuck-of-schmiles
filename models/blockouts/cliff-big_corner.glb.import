@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b7pj1jwfvbupc"
-path="res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"
+uid="uid://dctf5ye0upq21"
+path="res://.godot/imported/cliff-big_corner.glb-8ba0a295ac8b3644c609e605ece2cfa2.scn"
 
 [deps]
 
-source_file="res://models/corn_module.glb"
-dest_files=["res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"]
+source_file="res://models/blockouts/cliff-big_corner.glb"
+dest_files=["res://.godot/imported/cliff-big_corner.glb-8ba0a295ac8b3644c609e605ece2cfa2.scn"]
 
 [params]
 

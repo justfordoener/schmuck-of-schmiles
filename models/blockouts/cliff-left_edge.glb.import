@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b7pj1jwfvbupc"
-path="res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"
+uid="uid://bsyrhirsu1yml"
+path="res://.godot/imported/cliff-left_edge.glb-03fd19097932f295bcde171eb008fe96.scn"
 
 [deps]
 
-source_file="res://models/corn_module.glb"
-dest_files=["res://.godot/imported/corn_module.glb-3c2f03367bdd02a6a679aad9eda2533b.scn"]
+source_file="res://models/blockouts/cliff-left_edge.glb"
+dest_files=["res://.godot/imported/cliff-left_edge.glb-03fd19097932f295bcde171eb008fe96.scn"]
 
 [params]
 
