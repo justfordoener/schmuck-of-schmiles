@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bitgdqcc38ffs"
-path="res://.godot/imported/dual_module.glb-bfbc0e07016a5639b8c48bbd77e626e2.scn"
+uid="uid://d2adp0c2aec7a"
+path="res://.godot/imported/cliff-small-stairs_corner.glb-89c722fb2fdaff49f85adaefc756263d.scn"
 
 [deps]
 
-source_file="res://models/dual_module.glb"
-dest_files=["res://.godot/imported/dual_module.glb-bfbc0e07016a5639b8c48bbd77e626e2.scn"]
+source_file="res://models/blockouts/cliff-small-stairs_corner.glb"
+dest_files=["res://.godot/imported/cliff-small-stairs_corner.glb-89c722fb2fdaff49f85adaefc756263d.scn"]
 
 [params]
 
@@ -38,5 +38,5 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-gltf/naming_version=1
+gltf/naming_version=2
 gltf/embedded_image_handling=1
