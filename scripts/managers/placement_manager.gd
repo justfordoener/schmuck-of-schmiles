@@ -1,7 +1,6 @@
 extends Node3D
 
-#WARNING needs CameraController node to be located above the GridManager node.
-#TODO fix this fragile dependency
+#TODO fix this dependency in pauls merge request
 @onready var camera_controller = $"../CameraController"
 
 var preview_instance : Node3D

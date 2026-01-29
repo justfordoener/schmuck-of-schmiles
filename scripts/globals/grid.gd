@@ -12,11 +12,11 @@ var edge_mesh : ArrayMesh
 func _ready() -> void:
 	grid = {}
 	_initialize_grid_layers()
-	_initialize_layer_mesh(corn_mesh, "CornCell", Color.YELLOW)
-	_initialize_layer_mesh(face_mesh, "FaceCell", Color.SKY_BLUE)
-	_initialize_layer_mesh(edge_mesh, "EdgeCell", Color.LIME_GREEN)
+	_initialize_layer_mesh(corn_mesh, Layout.CELL_TYPE.CORNER, Color.YELLOW)
+	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
+	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	
-func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : String, color : Color) -> void:
+func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : Layout.CELL_TYPE, color : Color) -> void:
 	var mesh_array = []
 	mesh_array.resize(Mesh.ARRAY_MAX)
 	var mesh_verts = PackedVector3Array()
@@ -62,8 +62,8 @@ func _initialize_grid_layers() -> void:
 	edge_mesh = ArrayMesh.new()
 	face_mesh = ArrayMesh.new()
 	for pos in axial_spiral(Layout.CENTER_TILE_AXIAL, Layout.GRID_RADIUS): #leave on tile empty
-		var corn_cell : CornCell = CornCell.new(pos)
-		grid[pos] = corn_cell
+		var corner_cell : CornerCell = CornerCell.new(pos)
+		grid[pos] = corner_cell
 		_add_edges_and_faces(pos)
 
 func _create_mesh_instance(color : Color) -> MeshInstance3D:

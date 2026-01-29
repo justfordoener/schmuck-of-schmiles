@@ -1,6 +1,6 @@
 @abstract class_name Module extends MeshInstance3D
 
-var type : String
+var type : Layout.CELL_TYPE
 var cell_shape : ArrayMesh
-@abstract func get_tile_reference() -> String
+@abstract func get_cell_reference() -> Layout.CELL_TYPE
 @abstract func create_cell_shape() -> void
