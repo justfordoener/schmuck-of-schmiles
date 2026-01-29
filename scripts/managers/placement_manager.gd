@@ -47,7 +47,7 @@ func _process(_delta):
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
 		var grid = Grid as Grid
-		preview_instance.global_position = grid.snap_to_face_layer(hit, preview_instance.tile_rotation)
+		preview_instance.global_position = grid.snap_to_layer(hit, preview_instance.cell_type)
 		if Input.is_action_just_pressed("mouse_wheel_down"):
 			preview_instance.rotate_y(deg_to_rad(60))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)

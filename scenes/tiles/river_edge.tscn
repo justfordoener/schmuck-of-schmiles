@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bsxm1n64tsil7"]
+[gd_scene load_steps=3 format=3 uid="uid://dxqjy08qqgaw2"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_jd0mt"]
 [ext_resource type="PackedScene" uid="uid://xgsgb8nvqcl1" path="res://models/blockouts/river_edge.glb" id="2_jd0mt"]
 
 [node name="river_edge" type="Node3D"]
 script = ExtResource("1_jd0mt")
-layer_type = "EdgeCell"
+cell_type = 1
 
 [node name="river_edge2" parent="." instance=ExtResource("2_jd0mt")]
