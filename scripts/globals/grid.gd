@@ -109,7 +109,6 @@ func axial_round(axial_coordinate : Vector3) -> Vector3:
 	return return_vector
 	
 func snap_to_layer(point : Vector3, class_name_string : String) -> Vector3:
-	var target_axial = cartesian_to_axial(point)
 	var closest_pos : Vector3 = point # Fallback to original point
 	var min_dist : float = INF
 	
