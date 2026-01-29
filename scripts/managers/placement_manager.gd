@@ -1,8 +1,7 @@
 extends Node3D
 
-@onready var main_manager : MainManager = $".."
-@onready var camera_controller : CameraController = $"../CameraController"
-@onready var grid_manager : GridManager = $"../GridManager"
+#TODO fix this dependency in pauls merge request
+@onready var camera_controller = $"../CameraController"
 
 var preview_instance : Node3D
 var current_tile : PackedScene
@@ -47,7 +46,8 @@ func _process(_delta):
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
-		preview_instance.global_position = Grid.snap_to_layer(hit, preview_instance.layer_type)
+		var grid = Grid as Grid
+		preview_instance.global_position = grid.snap_to_face_layer(hit, preview_instance.tile_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_down"):
 			preview_instance.rotate_y(deg_to_rad(60))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)

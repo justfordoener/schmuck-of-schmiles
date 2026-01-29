@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cl022yfv6jrj"]
 
-[ext_resource type="Script" uid="uid://ceh0ofm7dnxqa" path="res://scripts/player_controller/camera.gd" id="1_cvpoc"]
+[ext_resource type="Script" uid="uid://bg6hpcnpykqce" path="res://scripts/player_controller/camera.gd" id="1_cvpoc"]
 
 [node name="RTSCamera" type="Node3D" node_paths=PackedStringArray("path")]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
