@@ -136,6 +136,7 @@ shadow_mesh = SubResource("ArrayMesh_q10d0")
 [node name="BlobTile" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_vtbnk")
+layer_type = "CornCell"
 
 [node name="tri_face" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8688646, 0.4972807, 2.173683e-08)

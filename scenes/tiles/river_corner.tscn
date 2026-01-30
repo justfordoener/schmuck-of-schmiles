@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://cb2ense8a7jac"]
+[gd_scene load_steps=3 format=3 uid="uid://b7lpumrxpvgvh"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_vaa7e"]
 [ext_resource type="PackedScene" uid="uid://hqp2o6slp0q3" path="res://models/blockouts/water_corner.glb" id="2_vaa7e"]
 
 [node name="river_corner" type="Node3D"]
 script = ExtResource("1_vaa7e")
+layer_type = "CornCell"
 
 [node name="water_corner2" parent="." instance=ExtResource("2_vaa7e")]

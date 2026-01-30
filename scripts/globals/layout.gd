@@ -2,9 +2,9 @@ extends Node
 
 enum CELL_TYPE {CORNER, EDGE, FACE}
 
-var CELL_SIZE   : float = 1 / sqrt(3) # length of a triangle cell edge on the trigrid 
+var CELL_SIZE   : int = 2 # length of a triangle cell edge on the trigrid 
 var CELL_STATE  : int = 1
-var GRID_RADIUS : int = 2
+var GRID_RADIUS : int = 1
 var GRID_HEIGHT : int = 1
 var CENTER_TILE_EUCLIDIC : Vector3 = Vector3(0,0,0)
 var CENTER_TILE_AXIAL : Vector3 = Vector3(0,0,0)
@@ -16,7 +16,7 @@ var AXIAL_DIRECTION : Dictionary[int, Vector3]= {
 	4: Vector3(0 , 0,-1),	# left
 	5: Vector3(1 , 0,-1),	# top top left
 	6: Vector3(0 , 1, 0),	# up
-	7: Vector3(0 ,-1, 0) 	# down
+	7: Vector3(0 ,-1, 0)	# down
 }
 var AXIAL_CENTER := Vector3(0,0,0)
 
