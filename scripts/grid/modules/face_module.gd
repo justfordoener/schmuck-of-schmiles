@@ -1,7 +1,7 @@
 class_name FaceModule extends Module
 
-func get_cell_reference() -> Layout.CELL_TYPE:
-	return Layout.CELL_TYPE.FACE
+func get_tile_reference() -> String:
+	return "face"
 
 func create_cell_shape() -> void:
 	pass

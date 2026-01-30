@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhuq2bdla75id"]
+
+[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_cigxr"]
+[ext_resource type="PackedScene" uid="uid://bqwg67rp24hy4" path="res://models/blockouts/river_face.glb" id="2_yeh3n"]
+
+[node name="river_face" type="Node3D"]
+script = ExtResource("1_cigxr")
+layer_type = "FaceCell"
+
+[node name="river_face2" parent="." instance=ExtResource("2_yeh3n")]

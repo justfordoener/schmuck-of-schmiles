@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=6 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_wgu8i"]
+[ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="4_jed05"]
 [ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="5_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="6_wgu8i"]
 
@@ -13,6 +14,10 @@ transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952
 
 [node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
 visible = false
+
+[node name="GridManager" parent="." instance=ExtResource("4_jed05")]
+visible = false
+camera_path = NodePath("../CameraController")
 
 [node name="PlacementManager" parent="." instance=ExtResource("6_wgu8i")]
 
