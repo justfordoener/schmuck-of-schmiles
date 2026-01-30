@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://veirm0oi7dgg"
+path="res://.godot/imported/Placement_Plop_05.mp3-c6259252dd51f505fc528206c3a45043.mp3str"
+
+[deps]
+
+source_file="res://sounds/placement sounds/Placement_Sound_Plop/Placement_Plop_05.mp3"
+dest_files=["res://.godot/imported/Placement_Plop_05.mp3-c6259252dd51f505fc528206c3a45043.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

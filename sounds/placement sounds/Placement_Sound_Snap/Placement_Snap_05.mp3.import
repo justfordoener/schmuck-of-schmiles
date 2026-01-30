@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://vfayb0yrcno0"
+path="res://.godot/imported/Placement_Snap_05.mp3-8e36494e4818767fc001173dde0aeb91.mp3str"
+
+[deps]
+
+source_file="res://sounds/placement sounds/Placement_Sound_Snap/Placement_Snap_05.mp3"
+dest_files=["res://.godot/imported/Placement_Snap_05.mp3-8e36494e4818767fc001173dde0aeb91.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
