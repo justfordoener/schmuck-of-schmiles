@@ -1,6 +1,7 @@
-class_name FaceCell extends Cell
+class_name CornCell extends Cell
 
 func _init(axial : Vector3) -> void:
 	super(axial)
-	type = "FaceCell"
+	type = "CornCell"
 	state = 1
+	
