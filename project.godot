@@ -18,11 +18,17 @@ boot_splash/show_image=false
 [autoload]
 
 Grid="*res://scripts/globals/grid.gd"
+Layout="*res://scripts/globals/layout.gd"
+Parameters="*res://scripts/globals/parameters.gd"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 

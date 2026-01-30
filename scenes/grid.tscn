@@ -1,69 +1,172 @@
-[gd_scene load_steps=14 format=3 uid="uid://dshxsrgqjwt67"]
+[gd_scene load_steps=10 format=3 uid="uid://dxi31qrpgtfp5"]
 
-[ext_resource type="Script" uid="uid://ro671wmm71md" path="res://scripts/managers/grid_manager.gd" id="1_2btm2"]
-[ext_resource type="Script" uid="uid://cqeqix7xk2nmf" path="res://scripts/grid_layers/grid_layer.gd" id="2_2s7k2"]
-[ext_resource type="PackedScene" uid="uid://dyodgw3q3vn04" path="res://scenes/modules/dual_module.tscn" id="2_726jt"]
 [ext_resource type="PackedScene" uid="uid://dlkm5yul1wv44" path="res://scenes/modules/face_module.tscn" id="3_d4ula"]
-[ext_resource type="Script" uid="uid://i245qeyah2yy" path="res://scripts/grid_layers/play_layer.gd" id="3_gnlqp"]
 [ext_resource type="PackedScene" uid="uid://dp5c6bv7tawwy" path="res://scenes/modules/edge_module.tscn" id="4_4hvkd"]
-[ext_resource type="Script" uid="uid://cxb0sqjo5cxy3" path="res://scripts/grid_layers/dual_layer.gd" id="4_gnlqp"]
 [ext_resource type="PackedScene" uid="uid://bnxu3624x5ln5" path="res://scenes/modules/corn_module.tscn" id="5_bm8mr"]
-[ext_resource type="Script" uid="uid://dg27qxgcl41t7" path="res://scripts/grid_layers/face_layer.gd" id="8_ns5hy"]
-[ext_resource type="Script" uid="uid://cu3j3oei780q8" path="res://scripts/grid_layers/corn_layer.gd" id="8_uwaop"]
-[ext_resource type="Script" uid="uid://dihax5yv7m05a" path="res://scripts/grid_layers/edge_layer.gd" id="10_bm8mr"]
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_gnlqp"]
-shading_mode = 0
-albedo_color = Color(0.419608, 0.368627, 0.286275, 1)
+[sub_resource type="GDScript" id="GDScript_2s7k2"]
+script/source = "xtends Node
+
+@onready var grid_layers = {
+	\"face_layer\" : $grid_layers/face_layer,
+	\"edge_layer\" : $grid_layers/edge_layer,
+	\"corn_layer\" : $grid_layers/corn_layer
+}
+
+@onready var layer_modules = {
+	\"face_layer\" : face_module,
+	\"edge_layer\" : edge_module,
+	\"corn_layer\" : corn_module
+}
+
+@export var face_module : PackedScene
+@export var edge_module : PackedScene
+@export var corn_module : PackedScene
+@export var camera_path : NodePath
+
+func _ready():
+	grid_layers[\"corn_layer\"].show_layer_mesh(true)
+	#grid_layers[\"dual_layer\"].show_layer_mesh(true)
+	grid_layers[\"face_layer\"].show_layer_mesh(true)
+	grid_layers[\"edge_layer\"].show_layer_mesh(true)
+	grid_layers[\"face_layer\"].activate_layer_snapping()
+"
+
+[sub_resource type="GDScript" id="GDScript_gnlqp"]
+script/source = "class_name GridLayer extends Node3D
+
+@export var FULL_LAYER_COLOR := Color.BLACK
+@export var PLAY_LAYER_COLOR := Color.ORANGE
+@export var DUAL_LAYER_COLOR := Color.DARK_RED
+@export var FACE_LAYER_COLOR := Color.CYAN
+@export var EDGE_LAYER_COLOR := Color.LIME_GREEN
+@export var CORN_LAYER_COLOR := Color.YELLOW
+
+var layer_color = Color.BLACK
+var layer_mesh : ArrayMesh
+var is_built = false
+
+func _ready():
+	pass
+
+func build_layer_mesh():
+	pass
+	
+func show_layer_mesh(value : bool):
+	print_debug(\"show_abstract_layer_mesh. value: \", value)
+	pass
+
+func activate_layer_snapping():
+	print_debug(\"activated_abstract_layer_snapping\")
+	pass
+	
+func snap_to_layer(point : Vector3) -> Vector3:
+	return point
+"
+
+[sub_resource type="GDScript" id="GDScript_jaoqn"]
+script/source = "extends GridLayer
+
+@onready var mesh_instance = $face_layer_mesh
+
+func _ready():
+	pass
+
+func build_layer_mesh():
+	layer_mesh = Grid.face_mesh
+	mesh_instance.mesh = layer_mesh
+	
+func show_layer_mesh(value : bool):
+	if not is_built:
+		build_layer_mesh()
+		is_built = true
+	mesh_instance.visible = value
+	
+func activate_layer_snapping():
+	print_debug(\"face layer activated\")
+	layer_color = FACE_LAYER_COLOR
+
+func snap_to_layer(point : Vector3) -> Vector3:
+	return point
+"
 
 [sub_resource type="ORMMaterial3D" id="ORMMaterial3D_726jt"]
 shading_mode = 0
 albedo_color = Color(0.345098, 0.419608, 0.313726, 1)
 
+[sub_resource type="GDScript" id="GDScript_726jt"]
+script/source = "extends GridLayer
+
+@onready var mesh_instance = $edge_layer_mesh
+
+func _ready():
+	build_layer_mesh()
+
+func build_layer_mesh():
+	layer_mesh = Grid.edge_mesh
+	mesh_instance.mesh = layer_mesh
+	
+func show_layer_mesh(value : bool):
+	mesh_instance.visible = value
+	
+func activate_layer_snapping():
+	print_debug(\"edge layer activated\")
+	layer_color = EDGE_LAYER_COLOR
+
+func snap_to_layer(point : Vector3) -> Vector3:
+	return Grid.snap_to_edge_layer(point)
+"
+
+[sub_resource type="GDScript" id="GDScript_d4ula"]
+script/source = "extends GridLayer
+
+@onready var mesh_instance = $corn_layer_mesh
+
+func _ready():
+	build_layer_mesh()
+
+func build_layer_mesh():
+	layer_mesh = Grid.corn_mesh
+	mesh_instance.mesh = layer_mesh
+	
+func show_layer_mesh(value : bool):
+	mesh_instance.visible = value
+	
+func activate_layer_snapping():
+	print_debug(\"corn layer activated\")
+	layer_color = CORN_LAYER_COLOR
+
+func snap_to_layer(point : Vector3) -> Vector3:
+	return Grid.snap_to_corn_layer(point)
+"
+
 [node name="grid_manager" type="Node3D"]
-script = ExtResource("1_2btm2")
-dual_module = ExtResource("2_726jt")
+script = SubResource("GDScript_2s7k2")
 face_module = ExtResource("3_d4ula")
 edge_module = ExtResource("4_4hvkd")
 corn_module = ExtResource("5_bm8mr")
+camera_path = null
 
 [node name="grid_layers" type="Node3D" parent="."]
-script = ExtResource("2_2s7k2")
-
-[node name="play_layer" type="Node3D" parent="grid_layers"]
-script = ExtResource("3_gnlqp")
-
-[node name="play_layer_mesh" type="MeshInstance3D" parent="grid_layers/play_layer"]
-visible = false
-
-[node name="dual_layer" type="Node3D" parent="grid_layers"]
-script = ExtResource("4_gnlqp")
-
-[node name="dual_layer_mesh" type="MeshInstance3D" parent="grid_layers/dual_layer"]
-visible = false
-material_override = SubResource("ORMMaterial3D_gnlqp")
-cast_shadow = 0
+script = SubResource("GDScript_gnlqp")
 
 [node name="face_layer" type="Node3D" parent="grid_layers"]
-script = ExtResource("8_ns5hy")
+script = SubResource("GDScript_jaoqn")
 
 [node name="face_layer_mesh" type="MeshInstance3D" parent="grid_layers/face_layer"]
-visible = false
 material_override = SubResource("ORMMaterial3D_726jt")
 cast_shadow = 0
 
 [node name="edge_layer" type="Node3D" parent="grid_layers"]
-script = ExtResource("10_bm8mr")
+script = SubResource("GDScript_726jt")
 
 [node name="edge_layer_mesh" type="MeshInstance3D" parent="grid_layers/edge_layer"]
-visible = false
 material_override = SubResource("ORMMaterial3D_726jt")
 cast_shadow = 0
 
 [node name="corn_layer" type="Node3D" parent="grid_layers"]
-script = ExtResource("8_uwaop")
+script = SubResource("GDScript_d4ula")
 
 [node name="corn_layer_mesh" type="MeshInstance3D" parent="grid_layers/corn_layer"]
-visible = false
 material_override = SubResource("ORMMaterial3D_726jt")
 cast_shadow = 0

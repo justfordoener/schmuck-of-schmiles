@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://be5qy5lmbx0pv"]
+
+[ext_resource type="Script" uid="uid://ccf0yypnbq2t5" path="res://scripts/UI/tile_card.gd" id="1_8dihx"]
+[ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="1_yd4ml"]
+
+[node name="TileCard" type="Control"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 3
+offset_right = 150.0
+offset_bottom = 150.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("1_8dihx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 150.0
+offset_bottom = 98.0
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("1_yd4ml")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Tile"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/TextureButton" to="." method="on_button_pressed"]

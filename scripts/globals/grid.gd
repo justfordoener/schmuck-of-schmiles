@@ -1,183 +1,114 @@
-@tool
 extends Node
 # - even-q layout
 # - cube coordinates for grid calculations
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
-#TODO: make these childs of a cell class and put the state var there
-class play_cell:
-	var state : int
-class dual_cell:
-	var state : int  #bitwise superposition of module options (63 = 111111)?????
-class face_cell:
-	var state : int
-class edge_cell:
-	var state : int
-class corn_cell:
-	var state : int
+var grid : Dictionary[Vector3, Cell]
 
-var CELL_SIZE := 1 # length of a triangle cell edge on the trigrid 
-var GRID_RADIUS := 15
-var GRID_HEIGHT := 0.5
-var CENTER_TILE_EUCLIDIC := Vector3(0,0,0)
-var CENTER_TILE_CUBIC := Vector3(0,0,0)
-var CUBIC_DIRECTION := {	
-	0: Vector3(0, -1,  1),	# top
-	1: Vector3(1, -1,  0),	# top right
-	2: Vector3(1,  0, -1),	# bottom right
-	3: Vector3(0,  1,  -1),	# bottom
-	4: Vector3(-1, 1,  0),	# bottom left
-	5: Vector3(-1,  0,  1)	# top left
-}
-var TILE_ROTATION_VALUE := {
-	0:    CUBIC_DIRECTION[0],	# facing top
-	300:  CUBIC_DIRECTION[1],	# facing top right
-	240:  CUBIC_DIRECTION[2],	# facing bottom right
-	180:  CUBIC_DIRECTION[3],	# facing bottom
-	120:  CUBIC_DIRECTION[4],	# facing bottom left
-	60:   CUBIC_DIRECTION[5]	# facing top left
-}
-
-var dual_layer_snap_points = {} 
-var face_layer_snap_points = {} 
-var play_layer_snap_points = {}
-var corn_layer_snap_points = {}
+var corn_mesh : ArrayMesh
+var face_mesh : ArrayMesh
+var edge_mesh : ArrayMesh
 
 func _ready() -> void:
-	initialize_grid_layers()
-
-func initialize_grid_layers() -> void:
-	# dual layer
-	dual_layer_snap_points[CENTER_TILE_CUBIC] = dual_cell.new()
-	for ring in cubic_spiral(CENTER_TILE_CUBIC, GRID_RADIUS):
-		for pos in ring:
-			var new_cell = dual_cell.new()
-			new_cell.state = 0
-			dual_layer_snap_points[pos] = new_cell
+	grid = {}
+	_initialize_grid_layers()
+	_initialize_layer_mesh(corn_mesh, Layout.CELL_TYPE.CORNER, Color.YELLOW)
+	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
+	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	
-	# face layer
-	for point in dual_layer_snap_points:
-		for direction in range(6):
-			var corner = get_euclicdic_dual_corner(cubic_to_euclidic(point), direction)
-			if not face_layer_snap_points.has(corner):
-				var new_cell = face_cell.new()
-				new_cell.state = 0
-				face_layer_snap_points[corner] = new_cell
-				
-	# edge layer #TODO
+func _initialize_layer_mesh(mesh : ArrayMesh, class_name_string : Layout.CELL_TYPE, color : Color) -> void:
+	var mesh_array = []
+	mesh_array.resize(Mesh.ARRAY_MAX)
+	var mesh_verts = PackedVector3Array()
+	var mesh_indices = PackedInt32Array()
+	var vert_counter = 0
+	print("grid: ", grid.keys())
+	for pos : Vector3 in grid.keys():
+		if grid[pos].type == class_name_string:
+			var position_axial : Vector3 = grid[pos].axial_position
+			var position_cartesian = axial_to_cartesian(position_axial)
+			mesh_verts.append(position_cartesian)
+			mesh_indices.append(vert_counter)
+			print(vert_counter, " - cell type: ", grid[pos].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
+			vert_counter += 1
+	mesh_array[Mesh.ARRAY_VERTEX] = mesh_verts
+	mesh_array[Mesh.ARRAY_INDEX] = mesh_indices
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_POINTS, mesh_array)
+	var mesh_instance = MeshInstance3D.new()
+	mesh_instance.mesh = mesh
+	var mat = StandardMaterial3D.new()
+	mat.use_point_size = true
+	mat.point_size = 10.0
+	mat.albedo_color = color
+	mesh_instance.material_override = mat
+	add_child(mesh_instance)
+		
+func _add_edges_and_faces(center : Vector3) -> void:
+	var neighbors = axial_ring(center, 1, 2)
+	for i in range(6):
+		var n1 = neighbors[i]
+		var n2 = neighbors[(i + 1) % 6]
+		var grid_index_edge : Vector3 = (center + n1) / 2
+		if not grid.has(grid_index_edge):
+			var edge_cell : EdgeCell = EdgeCell.new(grid_index_edge)
+			grid[grid_index_edge] = edge_cell
+		var grid_index_face : Vector3 = (center + n1 + n2) / 3
+		if not grid.has(grid_index_face):
+			var face_cell : FaceCell = FaceCell.new(grid_index_face)
+			grid[grid_index_face] = face_cell
 	
-	# corn layer
-	for point in dual_layer_snap_points:
-		var new_cell = corn_cell.new()
-		new_cell.state = 0
-		corn_layer_snap_points[point] = new_cell
+func _initialize_grid_layers() -> void:
+	corn_mesh = ArrayMesh.new()
+	edge_mesh = ArrayMesh.new()
+	face_mesh = ArrayMesh.new()
+	for pos in axial_spiral(Layout.CENTER_TILE_AXIAL, Layout.GRID_RADIUS): #leave on tile empty
+		var corner_cell : CornerCell = CornerCell.new(pos)
+		grid[pos] = corner_cell
+		_add_edges_and_faces(pos)
+
+func _create_mesh_instance(color : Color) -> MeshInstance3D:
+	var mesh_instance = MeshInstance3D.new()
+	var sphere = SphereMesh.new()
+	sphere.height = 1
+	sphere.radius = 0.5
+	mesh_instance.mesh = sphere
+	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var material = ORMMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = color
+	mesh_instance.material_override = material
+	add_child(mesh_instance)
+	return mesh_instance
 	
-	# play layer
+func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
+	var axial_position : Vector3 = Vector3.ZERO
+	axial_position.x = cartesian_position.z * 2./3
+	axial_position.y = cartesian_position.y
+	axial_position.z = cartesian_position.x * sqrt(3)/3 + cartesian_position.z * -1./3
+	return axial_round(axial_position / Layout.CELL_SIZE)
+
+func axial_round(axial_coordinate : Vector3) -> Vector3:
+	var xgrid : int = roundi(axial_coordinate.x)
+	var zgrid : int = roundi(axial_coordinate.z)
+	var return_vector = Vector3(xgrid, roundi(axial_coordinate.y), zgrid)
+	print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
+	return return_vector
 	
-# ------------------- grid mesh functions --------------------
-# ref: https://docs.godotengine.org/en/stable/tutorials/3d/procedural_geometry/arraymesh.html#doc-arraymesh
+func axial_to_cartesian(axial_position : Vector3) -> Vector3:
+	var cartesian_position : Vector3 = Vector3.ZERO
+	cartesian_position.x = axial_position.z * 3. / 2
+	cartesian_position.y = axial_position.y
+	cartesian_position.z = axial_position.x * sqrt(3) + axial_position.z * sqrt(3) / 2
+	return Layout.CELL_SIZE * cartesian_position 
 
-func get_dual_layer_array_mesh() -> ArrayMesh:
-	var dualgrid_array_mesh : ArrayMesh = ArrayMesh.new()
-	var surface_array = []
-	surface_array.resize(Mesh.ARRAY_MAX)
-	var verts = PackedVector3Array()
-	var indices = PackedInt32Array()
-	for point in dual_layer_snap_points:
-		var corners = []
-		for direction in range(6):
-			corners.append(get_euclicdic_dual_corner(cubic_to_euclidic(point), direction))
-		verts.append_array(corners)
-		var base_index = verts.size() - 6
-		for direction in range(6):
-			indices.append(base_index + direction)
-			indices.append(base_index + ((direction + 1) % 6))
-	surface_array[Mesh.ARRAY_VERTEX] = verts
-	surface_array[Mesh.ARRAY_INDEX] = indices
-	dualgrid_array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, surface_array)
-	return dualgrid_array_mesh
-
-func get_face_layer_array_mesh() -> ArrayMesh:
-	var trigrid_array_mesh : ArrayMesh = ArrayMesh.new()
-	var surface_array = []
-	surface_array.resize(Mesh.ARRAY_MAX)
-	var verts = PackedVector3Array()
-	var indices = PackedInt32Array()
-	for point in dual_layer_snap_points:
-		var corners = []
-		for index in range(CUBIC_DIRECTION.size()):
-			corners.append(cubic_to_euclidic(point+CUBIC_DIRECTION[index]))
-		verts.append(cubic_to_euclidic(point))
-		verts.append_array(corners)
-		var base_index = verts.size() - 7
-		for direction in range(6):
-			indices.append(base_index)
-			indices.append(base_index + direction + 1)
-			indices.append(base_index + ((direction + 1) % 6) + 1)
-	surface_array[Mesh.ARRAY_VERTEX] = verts
-	surface_array[Mesh.ARRAY_INDEX] = indices
-	trigrid_array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, surface_array)
-	return trigrid_array_mesh
-
-func get_play_layer_array_mesh() -> ArrayMesh:
-	var playgrid_array_mesh : ArrayMesh = ArrayMesh.new()
-	var surface_array = []
-	surface_array.resize(Mesh.ARRAY_MAX)
-	var verts = PackedVector3Array()
-	var indices = PackedInt32Array()
-	#TODO
-	surface_array[Mesh.ARRAY_VERTEX] = verts
-	surface_array[Mesh.ARRAY_INDEX] = indices
-	playgrid_array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINES, surface_array)
-	return playgrid_array_mesh
-
-# ------------------- snap to grid layer -----------------
-	
-func snap_to_dual_layer(point : Vector3) -> Vector3:
-	var cube_coordinate_rounded : Vector3 = Grid.cubic_round(Grid.euclidic_to_cubic(point))
-	var point_new : Vector3 = Grid.cubic_to_euclidic(cube_coordinate_rounded)
-	return Vector3(point_new.x, point.y, point_new.z)
-
-func snap_to_face_layer(point : Vector3) -> Vector3:
-	var dual_cell_center = snap_to_dual_layer(point)
-	var min_dist = INF
-	var closest_corner : Vector3 = Vector3.ZERO
-	for direction in range(6):
-		var corner = get_euclicdic_dual_corner(dual_cell_center, direction)
-		var dist = point.distance_to(corner)
-		if dist < min_dist:
-			closest_corner = corner
-			min_dist = dist
-	return closest_corner
+func snap_to_face_layer(point : Vector3, _rotation : int) -> Vector3:
+	return point
 	
 func snap_to_edge_layer(point : Vector3) -> Vector3:
-	# get 2 closest dual points
-	var closest_dual : Vector3 = snap_to_dual_layer(point)
-	var second_dual : Vector3 = Vector3.ZERO
-	var min_dist = INF
-	# get second dual by adding vectors of two closest corners
-	var closest_corner : Vector3 = Vector3.ZERO
-	var second_corner : Vector3 = Vector3.ZERO
-	for direction in range(6):
-		var corner = get_euclicdic_dual_corner(closest_dual, direction)
-		var dist = point.distance_to(corner)
-		if dist < min_dist:
-			closest_corner = corner
-			min_dist = dist
-	var max_dist = INF
-	for direction in range(6):
-		var corner = get_euclicdic_dual_corner(closest_dual, direction)
-		var dist = point.distance_to(corner)
-		if dist > min_dist and dist < max_dist:
-			second_corner = corner
-			max_dist = dist
-	var closest_dual_euc = cubic_to_euclidic(closest_dual)
-	second_dual = closest_dual_euc + (closest_corner - closest_dual_euc) + (second_corner - closest_dual_euc)
-	# return point between those duals
-	return closest_dual_euc + 0.5 * (second_dual - closest_dual_euc)	
+	return point
 	
 func snap_to_corn_layer(point : Vector3) -> Vector3:
-	return snap_to_dual_layer(point)
+	return point
 
 # ------------------- helper functions -------------------
 
@@ -187,65 +118,23 @@ func configure_grid_mesh(mesh : MeshInstance3D, color : Color) -> void:
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.albedo_color = color
 	mesh.material_override = material
-
-func get_euclicdic_dual_corner(euclidic_center : Vector3, direction : int) -> Vector3:
-	var angle_degree = 60 * direction + 30
-	var angle_radian = deg_to_rad(angle_degree)
-	return euclidic_center + Vector3(
-		CELL_SIZE * cos(angle_radian),
-		0,
-		CELL_SIZE * sin(angle_radian)
-	)
-
-func cubic_distance_from_to(from: Vector3, to: Vector3) -> Vector3:
-	var distance : Vector3 = Vector3.ZERO
-	distance.x = to.x - from.x
-	distance.y = to.y - from.y
-	distance.z = to.z - from.z
-	return distance
-
-func euclidic_to_cubic(point: Vector3) -> Vector3:
-	var cube_coord : Vector3 = Vector3.ZERO
-	cube_coord.x = ( 2./3 * point.z) / CELL_SIZE
-	cube_coord.y = (-1./3 * point.z + sqrt(3)/3 * point.x) / CELL_SIZE
-	cube_coord.z = -cube_coord.x-cube_coord.y
-	return cubic_round(cube_coord)
 	
-func cubic_to_euclidic(cube_coord: Vector3) -> Vector3:
-	var point : Vector3 = Vector3.ZERO
-	point.x = CELL_SIZE * (sqrt(3)/2 * cube_coord.x + sqrt(3) * cube_coord.y)
-	point.y = 0
-	point.z = CELL_SIZE * 	   (3./2 * cube_coord.x)
-	return point
-
-func cubic_round(frac_cube_coord: Vector3) -> Vector3:
-	var round_x = int(round(frac_cube_coord.x))
-	var round_y = int(round(frac_cube_coord.y))
-	var round_z = int(round(frac_cube_coord.z))
-	var diff_x = abs(round_x - frac_cube_coord.x)
-	var diff_y = abs(round_y - frac_cube_coord.y)
-	var diff_z = abs(round_z - frac_cube_coord.z)
-	if diff_x > diff_y and diff_x > diff_z:
-		round_x = -round_y-round_z
-	elif diff_y > diff_z:
-		round_y = -round_x-round_z
-	else:
-		round_z = -round_x-round_y
-	return Vector3(round_x, round_y, round_z)
-
-func cubic_ring(center : Vector3, radius : int) -> Array:
-	var results = []
-	var point = center + CUBIC_DIRECTION[4] * radius * CELL_SIZE
-	for i in range(6):
-		for j in range(radius):
+func axial_ring(center : Vector3, radius : int, step : int) -> Array[Vector3]:
+	var cell_size = Layout.CELL_SIZE
+	var results : Array[Vector3] = []
+	var point : Vector3 = center + Layout.AXIAL_DIRECTION[0] * radius * cell_size * step
+	for direction in range(6): # -2 because we don't want up and down here
+		for i in range(0, step * radius, step):
 			results.append(point)
-			point = point + CUBIC_DIRECTION[i]
+			point = point + cell_size * step * Layout.AXIAL_DIRECTION[(direction + 2) % 6] # +4 because we want to choose the hexdirection that matches our circle direction
 	return results
 
-func cubic_spiral(center : Vector3, radius : int) -> Array:
-	var results = [center]
-	for i in range(radius):
-		results.append(cubic_ring(center, i))
+func axial_spiral(center : Vector3, radius : int) -> Array[Vector3]:
+	var results : Array[Vector3] = [center]
+	for i : int in range(1, radius + 1):
+		var ring : Array[Vector3] = axial_ring(center, i, 2)
+		for elem : Vector3 in ring:
+			results.append(elem)
 	return results
 
 func convert_to_int(bits : String) -> int:

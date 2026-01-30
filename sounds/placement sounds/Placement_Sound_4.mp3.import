@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwbv0we33pohp"
+path="res://.godot/imported/Placement_Sound_4.mp3-5bc27bbb2171131e31db3522640a2163.mp3str"
+
+[deps]
+
+source_file="res://sounds/placement sounds/Placement_Sound_4.mp3"
+dest_files=["res://.godot/imported/Placement_Sound_4.mp3-5bc27bbb2171131e31db3522640a2163.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
