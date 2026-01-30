@@ -2,7 +2,6 @@ extends Node3D
 
 @onready var main_manager : MainManager = $".."
 @onready var camera_controller : CameraController = $"../CameraController"
-@onready var grid_manager : GridManager = $"../GridManager"
 
 var preview_instance : Node3D
 var current_tile : PackedScene
