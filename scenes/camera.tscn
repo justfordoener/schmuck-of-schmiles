@@ -1,10 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://cl022yfv6jrj"]
+[gd_scene load_steps=4 format=3 uid="uid://cl022yfv6jrj"]
 
 [ext_resource type="Script" uid="uid://bg6hpcnpykqce" path="res://scripts/player_controller/camera.gd" id="1_cvpoc"]
 
-[node name="RTSCamera" type="Node3D"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_cvpoc"]
+radius = 2.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cvpoc"]
+
+[node name="RTSCamera" type="Node3D" node_paths=PackedStringArray("rotation_x", "zoom_pivot", "camera", "pivot", "raycast", "spherecast")]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 script = ExtResource("1_cvpoc")
+initial_pitch = -55.0
+min_pitch = -75.0
+rotation_x = NodePath("Pivot/CameraRotX")
+zoom_pivot = NodePath("Pivot/CameraRotX/CameraZoomPivot")
+camera = NodePath("Pivot/CameraRotX/CameraZoomPivot/Camera3D")
+pivot = NodePath("Pivot")
+raycast = NodePath("Pivot/GroundRayCast")
+spherecast = NodePath("Pivot/CameraRotX/CameraZoomPivot/Camera3D/ShapeCast3D")
 
 [node name="Pivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
@@ -15,8 +28,19 @@ transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Pivot/CameraRotX/CameraZoomPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
 
-[node name="GroundRayCast" type="RayCast3D" parent="Pivot/CameraRotX/CameraZoomPivot/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, -8, 0)
+[node name="ShapeCast3D" type="ShapeCast3D" parent="Pivot/CameraRotX/CameraZoomPivot/Camera3D"]
+shape = SubResource("SphereShape3D_cvpoc")
+target_position = Vector3(0, 0, 0)
+collide_with_areas = true
+
+[node name="pivot_object" type="MeshInstance3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 0, 2, 0)
+visible = false
+mesh = SubResource("CylinderMesh_cvpoc")
+
+[node name="GroundRayCast" type="RayCast3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 100, 0)
 target_position = Vector3(0, 0, -1000)
+collision_mask = 3
+collide_with_areas = true
