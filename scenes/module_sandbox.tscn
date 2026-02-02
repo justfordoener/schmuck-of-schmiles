@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=9 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="Texture2D" uid="uid://ddpcedgy74v6x" path="res://textures/sand.png" id="2_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://dshxsrgqjwt67" path="res://scenes/grid.tscn" id="4_jed05"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6o6k0"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_6o6k0"]
 
@@ -98,28 +100,207 @@ layout_mode = 2
 text = "edge"
 horizontal_alignment = 1
 
-[node name="pivot_object" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 0, -0.640913, -1.4620966)
+[node name="CameraButtons" type="Control" parent="UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ResetButton" type="Button" parent="UI/CameraButtons"]
+layout_mode = 0
+offset_left = 195.0
+offset_top = 45.0
+offset_right = 301.0
+offset_bottom = 76.0
+text = "Reset Values"
+
+[node name="MinZoom" type="HSlider" parent="UI/CameraButtons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 105.0
+offset_right = 392.0
+offset_bottom = 121.0
+min_value = -100.0
+max_value = 0.0
+step = 0.5
+value = -7.0
+
+[node name="Label" type="Label" parent="UI/CameraButtons/MinZoom"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -23.0
+offset_right = 83.0
+text = "Min Zoom:"
+
+[node name="value" type="Label" parent="UI/CameraButtons/MinZoom"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = -23.0
+offset_right = 137.0
+text = "-7.0"
+
+[node name="MaxZoom" type="HSlider" parent="UI/CameraButtons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 144.0
+offset_right = 392.0
+offset_bottom = 160.0
+min_value = 0.5
+step = 0.5
+value = 20.0
+
+[node name="Label" type="Label" parent="UI/CameraButtons/MaxZoom"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -23.0
+offset_right = 83.0
+text = "Max Zoom:"
+
+[node name="value" type="Label" parent="UI/CameraButtons/MaxZoom"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = -23.0
+offset_right = 137.0
+text = "20.0"
+
+[node name="MinPitch" type="HSlider" parent="UI/CameraButtons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 185.0
+offset_right = 392.0
+offset_bottom = 201.0
+min_value = -100.0
+step = 0.5
+value = -25.0
+
+[node name="Label" type="Label" parent="UI/CameraButtons/MinPitch"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -23.0
+offset_right = 83.0
+text = "Min Pitch:"
+
+[node name="value" type="Label" parent="UI/CameraButtons/MinPitch"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = -23.0
+offset_right = 137.0
+text = "-25.0"
+
+[node name="MaxPitch" type="HSlider" parent="UI/CameraButtons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 226.0
+offset_right = 392.0
+offset_bottom = 242.0
+min_value = -100.0
+step = 0.5
+
+[node name="Label" type="Label" parent="UI/CameraButtons/MaxPitch"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -23.0
+offset_right = 83.0
+text = "Min Pitch:"
+
+[node name="value" type="Label" parent="UI/CameraButtons/MaxPitch"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = -23.0
+offset_right = 137.0
+text = "0.0"
+
+[node name="ZoomSpeed" type="HSlider" parent="UI/CameraButtons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 265.0
+offset_right = 392.0
+offset_bottom = 281.0
+max_value = 10.0
+step = 0.5
+value = 3.0
+
+[node name="Label" type="Label" parent="UI/CameraButtons/ZoomSpeed"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -23.0
+offset_right = 83.0
+text = "Zoom Speed:"
+
+[node name="value" type="Label" parent="UI/CameraButtons/ZoomSpeed"]
+layout_mode = 0
+offset_left = 107.0
+offset_top = -23.0
+offset_right = 147.0
+text = "3.0"
+
+[node name="MoveSpeed" type="HSlider" parent="UI/CameraButtons"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 305.0
+offset_right = 392.0
+offset_bottom = 321.0
+max_value = 1.0
+step = 0.05
+value = 0.2
+
+[node name="Label" type="Label" parent="UI/CameraButtons/MoveSpeed"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = -23.0
+offset_right = 83.0
+text = "Move Speed:"
+
+[node name="value" type="Label" parent="UI/CameraButtons/MoveSpeed"]
+layout_mode = 0
+offset_left = 108.0
+offset_top = -23.0
+offset_right = 148.0
+text = "0.2"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, -1.462)
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("CylinderShape3D_6o6k0")
+
+[node name="pivot_object" type="MeshInstance3D" parent="StaticBody3D"]
+layers = 2
 mesh = SubResource("CylinderMesh_6o6k0")
+skeleton = NodePath("../..")
 
 [node name="CameraController" parent="." instance=ExtResource("3_6o6k0")]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 12.55012, 15.068784)
+floatyness = 0.04
 
 [node name="GridManager" parent="." instance=ExtResource("4_jed05")]
 camera_path = NodePath("../CameraController")
 
 [node name="Area3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0, 0)
 mesh = SubResource("PlaneMesh_6o6k0")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 shape = SubResource("BoxShape3D_c2dvl")
 
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer/dual_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["dual_layer"]]
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer2/face_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["face_layer"]]
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer3/corn_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["corn_layer"]]
 [connection signal="pressed" from="UI/VBoxContainer/HBoxContainer/MarginContainer4/edge_layer_button" to="." method="on_ui_grid_layer_button_pressed" binds= ["edge_layer"]]
+[connection signal="pressed" from="UI/CameraButtons/ResetButton" to="CameraController" method="reset_camera_values"]
+[connection signal="value_changed" from="UI/CameraButtons/MinZoom" to="CameraController" method="camera_set_min_zoom"]
+[connection signal="value_changed" from="UI/CameraButtons/MaxZoom" to="CameraController" method="camera_set_max_zoom"]
+[connection signal="value_changed" from="UI/CameraButtons/MinPitch" to="CameraController" method="camera_set_min_pitch"]
+[connection signal="value_changed" from="UI/CameraButtons/MaxPitch" to="CameraController" method="camera_set_max_pitch"]
+[connection signal="value_changed" from="UI/CameraButtons/ZoomSpeed" to="CameraController" method="camera_set_zoom_speed"]
+[connection signal="value_changed" from="UI/CameraButtons/MoveSpeed" to="CameraController" method="camera_set_move_speed"]

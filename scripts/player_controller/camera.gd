@@ -3,43 +3,65 @@ extends Node3D
 @export var path = camera
 
 # variables
-@export var floatyness : float = 0.10
-@export var move_speed = 0.6
+@export var floatyness : float = 0.1
+@export var move_speed = 0.2
 var move_target: Vector3
 
 # rotation
 @export var rotate_keys_speed = 1.5
 var rotate_keys_target: float
-@export var initial_pitch := -35.0
+@export var initial_pitch := -40.0
 
 # zoom
-@export var zoom_speed = 3.0
-@export var min_zoom = -28.0 
-@export var max_zoom = 10.0
+@export var zoom_speed = 3.0 
+@export var min_zoom = -7.0 
+@export var max_zoom = 20.0
 @export var min_zoom_speed = 0.15 # as % of max speed (max_speed = 1.0)
 var zoom_target: float
 @export var min_pitch := -25.0   # when zoomed out
-@export var max_pitch :=  10.0   # when zoomed in
+@export var max_pitch :=  0.0   # when zoomed in
 
 # mouse
 @export var mouse_sensitivity = 0.3
 
-@onready var rotation_x = $Pivot/CameraRotX
-@onready var zoom_pivot = $Pivot/CameraRotX/CameraZoomPivot
-@onready var camera = $Pivot/CameraRotX/CameraZoomPivot/Camera3D
+@export var rotation_x: Node3D
+@export var zoom_pivot: Node3D
+@export var camera: Camera3D
 
 # rotation
-@onready var pivot = $Pivot
-@onready var raycast = $Pivot/CameraRotX/CameraZoomPivot/Camera3D/GroundRayCast
+@export var pivot: Node3D
+@export var raycast: RayCast3D
 
+# spherecast
+@export var spherecast: ShapeCast3D
+
+# Reset to original Values (For the Playtest)
+var _initial_values = {}
+var _initial_transform: Transform3D
+var _initial_rotation_x: Vector3
+var _initial_zoom: float
 
 func _ready() -> void:
 	move_target = position
 	rotate_keys_target = rotation_degrees.y
-	zoom_target = camera.position.z
+	var initial_pitch_t := inverse_lerp(min_pitch, max_pitch, initial_pitch)
+	initial_pitch_t = clamp(initial_pitch_t, 0.0, 1.0)
+	zoom_target = lerp(max_zoom, min_zoom, initial_pitch_t)
+	camera.position.z = zoom_target
 	rotation_x.rotation_degrees.x = initial_pitch
+	
+	# _initial values for playtest
+	_initial_transform = global_transform
+	_initial_rotation_x = rotation_x.rotation_degrees
+	_initial_zoom = camera.position.z
+	_initial_values.min_zoom = min_zoom
+	_initial_values.max_zoom = max_zoom
+	_initial_values.min_pitch = min_pitch
+	_initial_values.max_pitch = max_pitch
+	_initial_values.zoom_speed = zoom_speed
+	_initial_values.move_speed = move_speed
+	
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	
 	if Input.is_action_just_pressed("rotate"):
@@ -53,6 +75,11 @@ func _process(_delta: float) -> void:
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
+	
+	# spherecast to not zoome through the floor
+	spherecast.force_shapecast_update()
+	if zoom_direction < 0 and spherecast.is_colliding():
+		zoom_direction = 0
 	
 	# normalize zoom range between 0 and 1
 	var current_zoom = 1 - inverse_lerp(min_zoom, max_zoom, zoom_target)
@@ -82,13 +109,73 @@ func _process(_delta: float) -> void:
 		floatyness
 	)
 	
-
-	
 	# raycast
+	var pivot_y_target: float
+	pivot_y_target = pivot.global_position.y
 	raycast.force_raycast_update()
 	if raycast.is_colliding():
-		pivot.global_position = raycast.get_collision_point()
+		pivot_y_target = raycast.get_collision_point().y
+		pivot.global_position.y = lerp(
+			pivot.global_position.y,
+			pivot_y_target,
+			floatyness
+		)
 		
 	# pivot rotation
 	if rotate_keys_direction != 0:
 		pivot.rotate_y(rotate_keys_speed * rotate_keys_direction * _delta)
+
+# -----------------------------------------------------
+# Playtest Value sliders - not really needed afterwards
+# -----------------------------------------------------
+@onready var min_zoom_label = $"../UI/CameraButtons/MinZoom/value"
+@onready var max_zoom_label = $"../UI/CameraButtons/MaxZoom/value"
+@onready var min_pitch_label = $"../UI/CameraButtons/MinPitch/value"
+@onready var max_pitch_label = $"../UI/CameraButtons/MaxPitch/value"
+@onready var zoom_speed_label = $"../UI/CameraButtons/ZoomSpeed/value"
+@onready var move_speed_label = $"../UI/CameraButtons/MoveSpeed/value"
+
+func reset_camera_values():
+	
+	global_transform = _initial_transform
+	rotation_x.rotation_degrees = _initial_rotation_x
+	camera.position.z = _initial_zoom
+	
+	min_zoom = _initial_values.min_zoom
+	max_zoom = _initial_values.max_zoom
+	min_pitch = _initial_values.min_pitch
+	max_pitch = _initial_values.max_pitch
+	zoom_speed = _initial_values.zoom_speed
+	move_speed = _initial_values.move_speed
+	
+	$"../UI/CameraButtons/MinZoom".value = min_zoom
+	$"../UI/CameraButtons/MaxZoom".value = max_zoom
+	$"../UI/CameraButtons/MinPitch".value = min_pitch
+	$"../UI/CameraButtons/MaxPitch".value = max_pitch
+	$"../UI/CameraButtons/ZoomSpeed".value = zoom_speed
+	$"../UI/CameraButtons/MoveSpeed".value = move_speed
+
+
+func camera_set_min_zoom(value: float):
+	min_zoom = value
+	min_zoom_label.text = str(value)
+
+func camera_set_max_zoom(value: float):
+	max_zoom = value
+	max_zoom_label.text = str(value)
+
+func camera_set_min_pitch(value: float):
+	min_pitch = value
+	min_pitch_label.text = str(value)
+
+func camera_set_max_pitch(value: float):
+	max_pitch = value
+	max_pitch_label.text = str(value)
+	
+func camera_set_zoom_speed(value: float):
+	zoom_speed = value
+	zoom_speed_label.text = str(value)
+
+func camera_set_move_speed(value: float):
+	move_speed = value
+	move_speed_label.text = str(value)
