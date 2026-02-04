@@ -1,5 +1,6 @@
 extends Node
-# - even-q layout
+# - pointy-top layout
+# - even-r layout
 # - cube coordinates for grid calculations
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
@@ -108,11 +109,11 @@ func axial_round(axial_coordinate : Vector3) -> Vector3:
 	print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
 	return return_vector
 	
-func snap_to_layer(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:
+func snap_position(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:
 	var closest_pos : Vector3 = point # Fallback to original point
 	var min_dist : float = INF
 	
-	# might need to limit the grid and only check for cells within a given radius
+	# might need to limit the grid and only check for cells within a given radius for performance
 	for index_key in grid.keys():
 		var cell = grid[index_key]
 		if cell.type == cell_type:
@@ -121,9 +122,66 @@ func snap_to_layer(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:
 			if dist < min_dist:
 				min_dist = dist
 				closest_pos = cell_world_pos
-				
 	return closest_pos
+	
+func get_rotation_value(type : Layout.CELL_TYPE) -> float:
+	match type:
+		Layout.CELL_TYPE.CORNER:
+			return 60.0
+		Layout.CELL_TYPE.EDGE:
+			return 180.0
+		Layout.CELL_TYPE.FACE:
+			return 120.0
+		_:
+			return 0
+			
+func snap_rotation(snap_point: Vector3, cell_type : Layout.CELL_TYPE) -> float:
+	#var neighbor : Vector3 = point + axial_to_cartesian((Layout.AXIAL_DIRECTION[0] + Layout.AXIAL_DIRECTION[1]) / 2)
+	var y_degrees : float = 0.0
+	var axial_point : Vector3 = cartesian_to_axial(snap_point)
+	match cell_type:
+		Layout.CELL_TYPE.EDGE:
+			if (roundi(axial_point.x) % 2) == 0:
+				y_degrees = 120.0
+			elif (roundi(axial_point.z) % 2) == 0:
+				y_degrees = 0.0
+			else:
+				y_degrees = 60.0
+		Layout.CELL_TYPE.FACE:
+			var fract_sum : float = axial_point.x + axial_point.z
+			var round_sum : int = roundi(axial_point.x) + roundi(axial_point.z)
+			y_degrees = 60.0 if fract_sum < round_sum else 0.0
+		Layout.CELL_TYPE.CORNER:
+			y_degrees = 0.0
+		_:
+			printerr("ERR: something that doesn't have a cell type wants to snap")			
+			y_degrees = 30
+	return y_degrees
+	
+func debug_placement(pos : Vector3) -> void:
+	spawn_debug_sphere(pos + axial_to_cartesian((
+		Layout.AXIAL_DIRECTION[0] +
+		Layout.AXIAL_DIRECTION[1]) / 2), 2.0)
+	spawn_debug_sphere(pos + axial_to_cartesian((
+		Layout.AXIAL_DIRECTION[2] +
+		Layout.AXIAL_DIRECTION[3]) / 2), 2.0)
+	spawn_debug_sphere(pos + axial_to_cartesian((
+		Layout.AXIAL_DIRECTION[4] +
+		Layout.AXIAL_DIRECTION[5]) / 2), 2.0)
 
+func spawn_debug_sphere(pos: Vector3, duration: float = 2.0) -> void:
+	var sphere = MeshInstance3D.new()
+	var sphere_mesh = SphereMesh.new()
+	
+	sphere_mesh.radius = 0.2
+	sphere_mesh.height = 0.4
+	sphere.mesh = sphere_mesh
+	sphere.global_position = pos
+	
+	get_tree().root.add_child(sphere)
+	
+	await get_tree().create_timer(duration).timeout
+	sphere.queue_free()
 # ------------------- helper functions -------------------
 
 func configure_grid_mesh(mesh : MeshInstance3D, color : Color) -> void:

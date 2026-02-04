@@ -8,6 +8,7 @@ var current_tile : PackedScene
 var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
+var previous_position : Vector3 = Vector3.ZERO
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
@@ -46,12 +47,17 @@ func _process(_delta):
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
-		preview_instance.global_position = Grid.snap_to_layer(hit, preview_instance.layer_type)
+		var snap_position = Grid.snap_position(hit, preview_instance.layer_type)
+		var rotation_value = Grid.get_rotation_value(preview_instance.layer_type)
+		preview_instance.global_position = snap_position
+		if snap_position != previous_position:
+			previous_position = snap_position
+			preview_instance.rotation.y = deg_to_rad(Grid.snap_rotation(snap_position, preview_instance.layer_type))
 		if Input.is_action_just_pressed("mouse_wheel_down"):
-			preview_instance.rotate_y(deg_to_rad(60))
+			preview_instance.rotate_y(deg_to_rad(rotation_value))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
 		if Input.is_action_just_pressed("mouse_wheel_up"):
-			preview_instance.rotate_y(deg_to_rad(-60))
+			preview_instance.rotate_y(deg_to_rad(-rotation_value))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)

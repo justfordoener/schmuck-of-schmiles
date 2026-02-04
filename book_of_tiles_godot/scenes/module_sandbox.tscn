@@ -12,7 +12,6 @@ script = ExtResource("1_6o6k0")
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
 
 [node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
-visible = false
 
 [node name="PlacementManager" parent="." instance=ExtResource("6_wgu8i")]
 
