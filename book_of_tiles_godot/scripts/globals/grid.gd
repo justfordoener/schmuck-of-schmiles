@@ -4,7 +4,9 @@ extends Node
 # - cube coordinates for grid calculations
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
-var grid : Dictionary[Vector3, Cell]
+var grid : Dictionary[Vector3i, Cell]
+
+var propagation_stack : Array
 
 var corner_mesh : ArrayMesh
 var face_mesh : ArrayMesh
@@ -19,41 +21,41 @@ func _ready() -> void:
 	_link_neighbors()
 	
 func _link_neighbors() -> void:
-	for pos in grid.keys():
-		var cell = grid[pos]
+	for index in grid.keys():
+		var cell = grid[index]
 		match cell.type:
 			Layout.CELL_TYPE.CORNER:
-				_find_corner_neighbors(pos)
+				_find_corner_neighbors(index)
 			Layout.CELL_TYPE.EDGE:
-				_find_edge_neighbors(pos)
+				_find_edge_neighbors(index)
 			Layout.CELL_TYPE.FACE:
-				_find_face_neighbors(pos)
+				_find_face_neighbors(index)
 
 func _find_corner_neighbors(pos : Vector3) -> void:
 	# find 6 edge cells
 	for i in range(6):
-		var edge_pos = create_axial_index(pos + Layout.AXIAL_DIRECTION[i])
-		if grid.has(edge_pos):
-			grid[pos].neighbors[edge_pos] = grid[edge_pos]
+		var edge_index = _get_axial_index(pos + Layout.AXIAL_DIRECTION[i])
+		if grid.has(edge_index):
+			grid[_get_axial_index(pos)].neighbors[edge_index] = grid[edge_index]
 			
 func _find_edge_neighbors(pos : Vector3) -> void:
 	# find 2 corners
-	for neighbor_pos in grid.keys():
-		if grid[neighbor_pos].type == Layout.CELL_TYPE.CORNER:
-			if pos.distance_to(neighbor_pos) < 1.1:
-				grid[pos].neighbors[neighbor_pos] = grid[neighbor_pos]
+	for neighbor_key in grid.keys():
+		if grid[neighbor_key].type == Layout.CELL_TYPE.CORNER:
+			if pos.distance_to(neighbor_key) < 1.1:
+				grid[_get_axial_index(pos)].neighbors[neighbor_key] = grid[neighbor_key]
 	# find 2 faces
-	for neighbor_pos in grid.keys():
-		if grid[neighbor_pos].type == Layout.CELL_TYPE.FACE:
-			if pos.distance_to(neighbor_pos) < 0.8:
-				grid[pos].neighbors[neighbor_pos] = grid[neighbor_pos]
+	for neighbor_key in grid.keys():
+		if grid[neighbor_key].type == Layout.CELL_TYPE.FACE:
+			if pos.distance_to(neighbor_key) < 0.8:
+				grid[_get_axial_index(pos)].neighbors[_get_axial_index(neighbor_key)] = grid[_get_axial_index(neighbor_key)]
 
 func _find_face_neighbors(pos : Vector3) -> void:
 	# find 3 edge cells
-	for neighbor_pos in grid.keys():
-		if grid[neighbor_pos].type == Layout.CELL_TYPE.EDGE:
-			if pos.distance_to(neighbor_pos) < 0.8:
-				grid[pos].neighbors[neighbor_pos] = grid[neighbor_pos]
+	for neighbor_key in grid.keys():
+		if grid[neighbor_key].type == Layout.CELL_TYPE.EDGE:
+			if pos.distance_to(neighbor_key) < 0.8:
+				grid[_get_axial_index(pos)].neighbors[neighbor_key] = grid[neighbor_key]
 		
 func _initialize_layer_mesh(mesh : ArrayMesh, cell_type : Layout.CELL_TYPE, color : Color) -> void:
 	var mesh_array = []
@@ -62,13 +64,13 @@ func _initialize_layer_mesh(mesh : ArrayMesh, cell_type : Layout.CELL_TYPE, colo
 	var mesh_indices = PackedInt32Array()
 	var vert_counter = 0
 	print("grid: ", grid.keys())
-	for pos : Vector3 in grid.keys():
-		if grid[create_axial_index(pos)].type == cell_type:
-			var position_axial : Vector3 = grid[create_axial_index(pos)].axial_position
+	for key : Vector3i in grid.keys():
+		if grid[key].type == cell_type:
+			var position_axial : Vector3 = grid[key].axial_position
 			var position_cartesian = axial_to_cartesian(position_axial)
 			mesh_verts.append(position_cartesian)
 			mesh_indices.append(vert_counter)
-			print(vert_counter, " - cell type: ", grid[create_axial_index(pos)].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
+			print(vert_counter, " - cell type: ", grid[key].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
 			vert_counter += 1
 	mesh_array[Mesh.ARRAY_VERTEX] = mesh_verts
 	mesh_array[Mesh.ARRAY_INDEX] = mesh_indices
@@ -88,21 +90,21 @@ func _add_edges_and_faces(center : Vector3) -> void:
 		var n1 = neighbors[i]
 		var n2 = neighbors[(i + 1) % 6]
 		var pos_edge : Vector3 = (center + n1) / 2
-		if not grid.has(create_axial_index(pos_edge)):
-			var edge_cell : EdgeCell = EdgeCell.new(create_axial_index(pos_edge))
-			grid[create_axial_index(pos_edge)] = edge_cell
+		if not grid.has(_get_axial_index(pos_edge)):
+			var edge_cell : EdgeCell = EdgeCell.new(pos_edge)
+			grid[_get_axial_index(pos_edge)] = edge_cell
 		var pos_face : Vector3 = (center + n1 + n2) / 3
-		if not grid.has(create_axial_index(pos_face)):
-			var face_cell : FaceCell = FaceCell.new(create_axial_index(pos_face))
-			grid[create_axial_index(pos_face)] = face_cell
+		if not grid.has(_get_axial_index(pos_face)):
+			var face_cell : FaceCell = FaceCell.new(pos_face)
+			grid[_get_axial_index(pos_face)] = face_cell
 			
 func _initialize_grid_layers() -> void:
 	corner_mesh = ArrayMesh.new()
 	edge_mesh = ArrayMesh.new()
 	face_mesh = ArrayMesh.new()
 	for pos in axial_spiral(Layout.CENTER_TILE_AXIAL, Layout.GRID_RADIUS): #leave on tile empty
-		var corner_cell : CornerCell = CornerCell.new(create_axial_index(pos))
-		grid[create_axial_index(pos)] = corner_cell
+		var corner_cell : CornerCell = CornerCell.new(pos)
+		grid[_get_axial_index(pos)] = corner_cell
 		_add_edges_and_faces(pos)
 
 func _create_mesh_instance(color : Color) -> MeshInstance3D:
@@ -119,11 +121,25 @@ func _create_mesh_instance(color : Color) -> MeshInstance3D:
 	add_child(mesh_instance)
 	return mesh_instance
 	
+func _get_axial_index(axial_coordinate : Vector3) -> Vector3i:
+	var x = roundi(axial_coordinate.x * 1000.0)
+	var y = roundi(axial_coordinate.y * 1000.0)
+	var z = roundi(axial_coordinate.z * 1000.0)
+	return Vector3i(x,y,z)
+
+func _get_axial_value(axial_index : Vector3i) -> Vector3:
+	return axial_index / 1000.0
+	
 #-------------------------------- public functions ----------------------------
 
-func create_axial_index(axial_corrdinate : Vector3) -> Vector3:
-	var index : Vector3 = Vector3(roundi(axial_corrdinate.x * 1000), roundi(axial_corrdinate.y * 1000), roundi(axial_corrdinate.z * 1000))
-	return index / 1000 #return same vector but rounded 
+func propagate(pos : Vector3) -> void:
+	spawn_debug_sphere(pos, 1.0)
+	print(pos)
+	for neighbor in grid[_get_axial_index(pos)].neighbors.keys():
+		if not propagation_stack.has(neighbor):
+			propagation_stack.append(neighbor)
+			#await get_tree().create_timer(0.5).timeout
+			propagate(_get_axial_value(neighbor))
 	
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	cartesian_position = cartesian_position / Layout.CELL_SIZE
@@ -174,7 +190,6 @@ func get_rotation_value(type : Layout.CELL_TYPE) -> float:
 			return 0
 			
 func snap_rotation(snap_point: Vector3, cell_type : Layout.CELL_TYPE) -> float:
-	#var neighbor : Vector3 = point + axial_to_cartesian((Layout.AXIAL_DIRECTION[0] + Layout.AXIAL_DIRECTION[1]) / 2)
 	var y_degrees : float = 0.0
 	var axial_point : Vector3 = cartesian_to_axial(snap_point)
 	match cell_type:
@@ -214,10 +229,10 @@ func spawn_debug_sphere(pos: Vector3, duration: float = 2.0) -> void:
 	sphere_mesh.radius = 0.2
 	sphere_mesh.height = 0.4
 	sphere.mesh = sphere_mesh
-	sphere.global_position = pos
 	
 	get_tree().root.add_child(sphere)
 	
+	sphere.global_position = pos + Vector3(0,1,0)
 	await get_tree().create_timer(duration).timeout
 	sphere.queue_free()
 # ------------------- helper functions -------------------

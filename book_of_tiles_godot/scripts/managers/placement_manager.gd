@@ -60,7 +60,8 @@ func _process(_delta):
 			preview_instance.rotate_y(deg_to_rad(-rotation_value))
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
 		if Input.is_action_just_pressed("mouse_left"):
-			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
+			_spawn_instance(snap_position, preview_instance.rotation.y)
+			Grid.propagate(Grid.cartesian_to_axial(snap_position))
 
 func _round_rotation(value : float) -> int:
 	return int(ceil(value / 60.0) * 60.0) + 120

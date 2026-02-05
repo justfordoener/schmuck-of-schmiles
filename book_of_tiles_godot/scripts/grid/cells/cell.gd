@@ -2,7 +2,7 @@ class_name Cell extends Node
 
 var state: int
 var type : Layout.CELL_TYPE
-var neighbors : Dictionary[Vector3, Cell]
+var neighbors : Dictionary[Vector3i, Cell]
 var module_reference: Module
 var axial_position : Vector3
 
