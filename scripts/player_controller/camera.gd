@@ -63,7 +63,6 @@ func _ready() -> void:
 	
 
 func _process(_delta: float) -> void:
-	
 	if Input.is_action_just_pressed("rotate"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if Input.is_action_just_released("rotate"):
@@ -87,7 +86,6 @@ func _process(_delta: float) -> void:
 	# set movement targets
 	var zoom_move_factor = 1.0 - current_zoom + 0.2
 	move_target += move_speed * zoom_move_factor * movement_direction
-	#rotate_keys_target += rotate_keys_speed * rotate_keys_direction
 	
 	# Zoom - fast in the middle, slow at edges
 	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
@@ -98,6 +96,12 @@ func _process(_delta: float) -> void:
 	# lerp to movement targets
 	position = lerp(position, move_target, floatyness)
 	camera.position.z = lerp(camera.position.z, zoom_target, floatyness)
+	spherecast.force_shapecast_update()
+	if spherecast.is_colliding():
+		var collider = spherecast.get_collider(0)
+		if collider.collision_layer & (1 << 0):  
+			camera.global_position.y = spherecast.get_collision_point(0).y + (spherecast.shape as SphereShape3D).radius
+			zoom_target = camera.position.z
 	
 	# compute new pitch between min_pitch and max_pitch
 	var target_pitch = lerp(min_pitch, max_pitch, current_zoom)
@@ -136,7 +140,6 @@ func _process(_delta: float) -> void:
 @onready var move_speed_label = $"../UI/CameraButtons/MoveSpeed/value"
 
 func reset_camera_values():
-	
 	global_transform = _initial_transform
 	rotation_x.rotation_degrees = _initial_rotation_x
 	camera.position.z = _initial_zoom
