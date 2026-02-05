@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://eynshs4stk38"]
+
+[ext_resource type="AudioStream" uid="uid://blv81o1tr2wl1" path="res://sounds/music/Book_of_Tiles_ingame_music.mp3" id="1_km8q8"]
+
+[node name="MusicIngame" type="Node3D"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_km8q8")
+autoplay = true
+parameters/looping = false
