@@ -16,7 +16,45 @@ func _ready() -> void:
 	_initialize_layer_mesh(corner_mesh, Layout.CELL_TYPE.CORNER, Color.YELLOW)
 	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
+	_link_neighbors()
 	
+func _link_neighbors() -> void:
+	for pos in grid.keys():
+		var cell = grid[pos]
+		match cell.type:
+			Layout.CELL_TYPE.CORNER:
+				_find_corner_neighbors(pos)
+			Layout.CELL_TYPE.EDGE:
+				_find_edge_neighbors(pos)
+			Layout.CELL_TYPE.FACE:
+				_find_face_neighbors(pos)
+
+func _find_corner_neighbors(pos : Vector3) -> void:
+	# find 6 edge cells
+	for i in range(6):
+		var edge_pos = create_axial_index(pos + Layout.AXIAL_DIRECTION[i])
+		if grid.has(edge_pos):
+			grid[pos].neighbors[edge_pos] = grid[edge_pos]
+			
+func _find_edge_neighbors(pos : Vector3) -> void:
+	# find 2 corners
+	for neighbor_pos in grid.keys():
+		if grid[neighbor_pos].type == Layout.CELL_TYPE.CORNER:
+			if pos.distance_to(neighbor_pos) < 1.1:
+				grid[pos].neighbors[neighbor_pos] = grid[neighbor_pos]
+	# find 2 faces
+	for neighbor_pos in grid.keys():
+		if grid[neighbor_pos].type == Layout.CELL_TYPE.FACE:
+			if pos.distance_to(neighbor_pos) < 0.8:
+				grid[pos].neighbors[neighbor_pos] = grid[neighbor_pos]
+
+func _find_face_neighbors(pos : Vector3) -> void:
+	# find 3 edge cells
+	for neighbor_pos in grid.keys():
+		if grid[neighbor_pos].type == Layout.CELL_TYPE.EDGE:
+			if pos.distance_to(neighbor_pos) < 0.8:
+				grid[pos].neighbors[neighbor_pos] = grid[neighbor_pos]
+		
 func _initialize_layer_mesh(mesh : ArrayMesh, cell_type : Layout.CELL_TYPE, color : Color) -> void:
 	var mesh_array = []
 	mesh_array.resize(Mesh.ARRAY_MAX)
@@ -57,7 +95,7 @@ func _add_edges_and_faces(center : Vector3) -> void:
 		if not grid.has(create_axial_index(pos_face)):
 			var face_cell : FaceCell = FaceCell.new(create_axial_index(pos_face))
 			grid[create_axial_index(pos_face)] = face_cell
-	
+			
 func _initialize_grid_layers() -> void:
 	corner_mesh = ArrayMesh.new()
 	edge_mesh = ArrayMesh.new()
