@@ -18,7 +18,7 @@ var rotate_keys_target: float
 @export var max_zoom = 20.0
 @export var min_zoom_speed = 0.15 # as % of max speed (max_speed = 1.0)
 var zoom_target: float
-@export var min_pitch := -25.0   # when zoomed out
+@export var min_pitch := -75.0   # when zoomed out
 @export var max_pitch :=  0.0   # when zoomed in
 
 # mouse
@@ -132,12 +132,12 @@ func _process(_delta: float) -> void:
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards
 # -----------------------------------------------------
-@onready var min_zoom_label = $"../UI/CameraButtons/MinZoom/value"
-@onready var max_zoom_label = $"../UI/CameraButtons/MaxZoom/value"
-@onready var min_pitch_label = $"../UI/CameraButtons/MinPitch/value"
-@onready var max_pitch_label = $"../UI/CameraButtons/MaxPitch/value"
-@onready var zoom_speed_label = $"../UI/CameraButtons/ZoomSpeed/value"
-@onready var move_speed_label = $"../UI/CameraButtons/MoveSpeed/value"
+@onready var min_zoom_label = $"../Playtest UI/MinZoom/value"
+@onready var max_zoom_label = $"../Playtest UI/MaxZoom/value"
+@onready var min_pitch_label = $"../Playtest UI/MinPitch/value"
+@onready var max_pitch_label = $"../Playtest UI/MaxPitch/value"
+@onready var zoom_speed_label = $"../Playtest UI/ZoomSpeed/value"
+@onready var move_speed_label = $"../Playtest UI/MoveSpeed/value"
 
 func reset_camera_values():
 	global_transform = _initial_transform
@@ -151,12 +151,12 @@ func reset_camera_values():
 	zoom_speed = _initial_values.zoom_speed
 	move_speed = _initial_values.move_speed
 	
-	$"../UI/CameraButtons/MinZoom".value = min_zoom
-	$"../UI/CameraButtons/MaxZoom".value = max_zoom
-	$"../UI/CameraButtons/MinPitch".value = min_pitch
-	$"../UI/CameraButtons/MaxPitch".value = max_pitch
-	$"../UI/CameraButtons/ZoomSpeed".value = zoom_speed
-	$"../UI/CameraButtons/MoveSpeed".value = move_speed
+	$"../Playtest UI/MinZoom".value = min_zoom
+	$"../Playtest UI/MaxZoom".value = max_zoom
+	$"../Playtest UI/MinPitch".value = min_pitch
+	$"../Playtest UI/MaxPitch".value = max_pitch
+	$"../Playtest UI/ZoomSpeed".value = zoom_speed
+	$"../Playtest UI/MoveSpeed".value = move_speed
 
 
 func camera_set_min_zoom(value: float):
