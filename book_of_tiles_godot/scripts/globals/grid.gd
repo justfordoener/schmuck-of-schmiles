@@ -19,6 +19,8 @@ func _ready() -> void:
 	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
+	for cell in grid.values():
+		print(cell.neighbors)
 	
 func _link_neighbors() -> void:
 	for index in grid.keys():
@@ -31,31 +33,37 @@ func _link_neighbors() -> void:
 			Layout.CELL_TYPE.FACE:
 				_find_face_neighbors(index)
 
-func _find_corner_neighbors(pos : Vector3) -> void:
+func _find_corner_neighbors(index : Vector3i) -> void:
 	# find 6 edge cells
 	for i in range(6):
-		var edge_index = _get_axial_index(pos + Layout.AXIAL_DIRECTION[i])
+		var edge_index : Vector3i = index + _get_axial_index(Layout.AXIAL_DIRECTION[i])
 		if grid.has(edge_index):
-			grid[_get_axial_index(pos)].neighbors[edge_index] = grid[edge_index]
+			grid[index].neighbors[edge_index] = grid[edge_index]
 			
-func _find_edge_neighbors(pos : Vector3) -> void:
+func _find_edge_neighbors(index : Vector3i) -> void:
 	# find 2 corners
-	for neighbor_key in grid.keys():
-		if grid[neighbor_key].type == Layout.CELL_TYPE.CORNER:
-			if pos.distance_to(neighbor_key) < 1.1:
-				grid[_get_axial_index(pos)].neighbors[neighbor_key] = grid[neighbor_key]
+	for neighbor_index in grid.keys():
+		if grid[neighbor_index].type == Layout.CELL_TYPE.CORNER:
+			var index_value = _get_axial_value(index)
+			var neighbor_value = _get_axial_value(neighbor_index)
+			if index_value.distance_to(neighbor_value) < 1.1:
+				grid[index].neighbors[neighbor_index] = grid[neighbor_index]
 	# find 2 faces
-	for neighbor_key in grid.keys():
-		if grid[neighbor_key].type == Layout.CELL_TYPE.FACE:
-			if pos.distance_to(neighbor_key) < 0.8:
-				grid[_get_axial_index(pos)].neighbors[_get_axial_index(neighbor_key)] = grid[_get_axial_index(neighbor_key)]
+	for neighbor_index in grid.keys():
+		if grid[neighbor_index].type == Layout.CELL_TYPE.FACE:
+			var index_value = _get_axial_value(index)
+			var neighbor_value = _get_axial_value(neighbor_index)
+			if index_value.distance_to(neighbor_value) < 0.8:
+				grid[index].neighbors[neighbor_index] = grid[neighbor_index]
 
-func _find_face_neighbors(pos : Vector3) -> void:
+func _find_face_neighbors(index : Vector3i) -> void:
 	# find 3 edge cells
-	for neighbor_key in grid.keys():
-		if grid[neighbor_key].type == Layout.CELL_TYPE.EDGE:
-			if pos.distance_to(neighbor_key) < 0.8:
-				grid[_get_axial_index(pos)].neighbors[neighbor_key] = grid[neighbor_key]
+	for neighbor_index in grid.keys():
+		if grid[neighbor_index].type == Layout.CELL_TYPE.EDGE:
+			var index_value = _get_axial_value(index)
+			var neighbor_value = _get_axial_value(neighbor_index)
+			if index_value.distance_to(neighbor_value) < 0.8:
+				grid[index].neighbors[neighbor_index] = grid[neighbor_index]
 		
 func _initialize_layer_mesh(mesh : ArrayMesh, cell_type : Layout.CELL_TYPE, color : Color) -> void:
 	var mesh_array = []
@@ -133,13 +141,13 @@ func _get_axial_value(axial_index : Vector3i) -> Vector3:
 #-------------------------------- public functions ----------------------------
 
 func propagate(pos : Vector3) -> void:
-	spawn_debug_sphere(pos, 1.0)
-	print(pos)
-	for neighbor in grid[_get_axial_index(pos)].neighbors.keys():
-		if not propagation_stack.has(neighbor):
-			propagation_stack.append(neighbor)
-			#await get_tree().create_timer(0.5).timeout
-			propagate(_get_axial_value(neighbor))
+	spawn_debug_sphere(axial_to_cartesian(pos), 1.0)
+	print(pos, " has neighbors: ", grid[_get_axial_index(pos)].neighbors.keys())
+	for neighbor_key in grid[_get_axial_index(pos)].neighbors.keys():
+		if not propagation_stack.has(neighbor_key):
+			propagation_stack.append(neighbor_key)
+			await get_tree().create_timer(0.2).timeout
+			propagate(_get_axial_value(neighbor_key))
 	
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	cartesian_position = cartesian_position / Layout.CELL_SIZE
@@ -222,7 +230,7 @@ func debug_placement(pos : Vector3) -> void:
 		Layout.AXIAL_DIRECTION[4] +
 		Layout.AXIAL_DIRECTION[5]) / 2), 2.0)
 
-func spawn_debug_sphere(pos: Vector3, duration: float = 2.0) -> void:
+func spawn_debug_sphere(cartesian_pos: Vector3, duration: float = 2.0) -> void:
 	var sphere = MeshInstance3D.new()
 	var sphere_mesh = SphereMesh.new()
 	
@@ -232,7 +240,7 @@ func spawn_debug_sphere(pos: Vector3, duration: float = 2.0) -> void:
 	
 	get_tree().root.add_child(sphere)
 	
-	sphere.global_position = pos + Vector3(0,1,0)
+	sphere.global_position = cartesian_pos + Vector3(0,0.5, 0)
 	await get_tree().create_timer(duration).timeout
 	sphere.queue_free()
 # ------------------- helper functions -------------------
