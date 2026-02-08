@@ -2,7 +2,8 @@ extends AudioStreamPlayer3D
 
 @onready var tile_placement_sound : AudioStreamPlayer3D = $"."
 
-func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("mouse_left"):
-		tile_placement_sound.play()
-	pass
+func play_placement_sound():
+	tile_placement_sound.play()
+
+func _ready():
+	Signals.on_instance_spawned.connect(play_placement_sound)

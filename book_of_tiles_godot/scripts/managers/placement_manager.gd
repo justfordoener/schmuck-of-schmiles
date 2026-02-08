@@ -9,6 +9,7 @@ var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
 
+
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
 	if tile:
@@ -55,6 +56,7 @@ func _process(_delta):
 			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
+			Signals.on_instance_spawned.emit()
 
 func _round_rotation(value : float) -> int:
 	return int(ceil(value / 60.0) * 60.0) + 120
