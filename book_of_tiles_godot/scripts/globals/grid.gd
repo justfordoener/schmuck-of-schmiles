@@ -1,10 +1,11 @@
+@tool
 extends Node
 # - pointy-top layout
 # - even-r layout
 # - cube coordinates for grid calculations
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
-var grid : Dictionary[Vector3i, Cell]
+var grid : Dictionary[Vector3i, Cell] #TODO for cpp rework: make a seperate datastructure for axial indices
 
 var propagation_stack : Array
 
@@ -19,8 +20,6 @@ func _ready() -> void:
 	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
-	for cell in grid.values():
-		print(cell.neighbors)
 	
 func _link_neighbors() -> void:
 	for index in grid.keys():
@@ -71,14 +70,14 @@ func _initialize_layer_mesh(mesh : ArrayMesh, cell_type : Layout.CELL_TYPE, colo
 	var mesh_verts = PackedVector3Array()
 	var mesh_indices = PackedInt32Array()
 	var vert_counter = 0
-	print("grid: ", grid.keys())
+	#print("grid: ", grid.keys())
 	for key : Vector3i in grid.keys():
 		if grid[key].type == cell_type:
 			var position_axial : Vector3 = grid[key].axial_position
 			var position_cartesian = axial_to_cartesian(position_axial)
 			mesh_verts.append(position_cartesian)
 			mesh_indices.append(vert_counter)
-			print(vert_counter, " - cell type: ", grid[key].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
+			#print(vert_counter, " - cell type: ", grid[key].type, " added axial_position ", position_axial, " on cartesian_position ", position_cartesian)
 			vert_counter += 1
 	mesh_array[Mesh.ARRAY_VERTEX] = mesh_verts
 	mesh_array[Mesh.ARRAY_INDEX] = mesh_indices
@@ -140,14 +139,31 @@ func _get_axial_value(axial_index : Vector3i) -> Vector3:
 	
 #-------------------------------- public functions ----------------------------
 
+func link_module_to_cell(module : Module, cartesian_position : Vector3, rotation_deg : int) -> void:
+	var axial_index = _get_axial_index(cartesian_to_axial(cartesian_position))
+	grid[axial_index].module_reference = module
+	for border_deg : int in module.profiles.keys():
+		var profile_index = Layout.TILE_ROTATION_VALUE[posmod(border_deg - rotation_deg, 360)]
+		grid[axial_index].profiles[profile_index] = module.profiles[border_deg]
+	
+		
 func propagate(pos : Vector3) -> void:
 	spawn_debug_sphere(axial_to_cartesian(pos), 1.0)
-	print(pos, " has neighbors: ", grid[_get_axial_index(pos)].neighbors.keys())
+	#print(pos, " has neighbors: ", grid[_get_axial_index(pos)].neighbors.keys())
 	for neighbor_key in grid[_get_axial_index(pos)].neighbors.keys():
 		if not propagation_stack.has(neighbor_key):
 			propagation_stack.append(neighbor_key)
+			# TODO spawn modules
+			propagate_border_profiles(neighbor_key)
 			await get_tree().create_timer(0.2).timeout
 			propagate(_get_axial_value(neighbor_key))
+			
+func propagate_border_profiles(axial_index: Vector3i) -> void:
+	for neighbor_index : Vector3i in grid[axial_index].neighbors.keys():
+		for profile_index : Vector3i in grid[axial_index].profiles.keys():
+			pass #if neighbor_index.distance_to()
+		pass
+	pass
 	
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	cartesian_position = cartesian_position / Layout.CELL_SIZE
@@ -168,7 +184,7 @@ func axial_round(axial_coordinate : Vector3) -> Vector3:
 	var xgrid : int = roundi(axial_coordinate.x)
 	var zgrid : int = roundi(axial_coordinate.z)
 	var return_vector = Vector3(xgrid, roundi(axial_coordinate.y), zgrid)
-	print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
+	#print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
 	return return_vector
 	
 func snap_position(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:

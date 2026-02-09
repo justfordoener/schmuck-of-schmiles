@@ -22,7 +22,6 @@ func _ready() -> void:
 	camera = camera_controller.camera
 	plane = Plane(Vector3.UP, 0)
 	
-	
 func _create_preview_instance(tile : PackedScene) -> void:
 	current_tile = tile
 	preview_instance = tile.instantiate()
@@ -48,36 +47,33 @@ func _process(_delta):
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
 		var snap_position = Grid.snap_position(hit, preview_instance.layer_type)
-		var rotation_value = Grid.get_rotation_value(preview_instance.layer_type)
+		var base_rotation = Grid.get_rotation_value(preview_instance.layer_type)
 		preview_instance.global_position = snap_position
 		if snap_position != previous_position:
 			previous_position = snap_position
 			preview_instance.rotation.y = deg_to_rad(Grid.snap_rotation(snap_position, preview_instance.layer_type))
 		if Input.is_action_just_pressed("mouse_wheel_down"):
-			preview_instance.rotate_y(deg_to_rad(rotation_value))
-			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
+			preview_instance.rotate_y(deg_to_rad(base_rotation))
 		if Input.is_action_just_pressed("mouse_wheel_up"):
-			preview_instance.rotate_y(deg_to_rad(-rotation_value))
-			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
+			preview_instance.rotate_y(deg_to_rad(-base_rotation))
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(snap_position, preview_instance.rotation.y)
-			Grid.propagation_stack = []
-			Grid.propagate(Grid.cartesian_to_axial(snap_position))
 
 func _round_rotation(value : float) -> int:
-	return int(ceil(value / 60.0) * 60.0) + 120
+	return roundi(value / 30.0) * 30
 	
-func _spawn_instance(_position: Vector3, _rotation : float):
+func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	var instance = current_tile.instantiate()
 	get_tree().current_scene.add_child(instance)
 	tiles_placed_today.append(instance)
-	instance.global_position = _position
-	instance.global_rotation.y = _rotation
+	instance.global_position = instance_position
+	instance.global_rotation.y = instance_rotation
 	for child in instance.get_children():
 		if child is Module:
-			pass
+			Grid.link_module_to_cell(child, child.global_position, _round_rotation(rad_to_deg(instance_rotation)))
 	preview_instance.queue_free()
-	
+	Grid.propagation_stack = []
+	Grid.propagate(Grid.cartesian_to_axial(instance_position))
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()
