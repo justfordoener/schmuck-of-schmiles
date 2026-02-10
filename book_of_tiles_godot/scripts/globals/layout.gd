@@ -34,5 +34,5 @@ var TILE_ROTATION_VALUE := {
 	240:   	AXIAL_DIRECTION[4],										# facing top top left
 	270:    (AXIAL_DIRECTION[4] + AXIAL_DIRECTION[5]) * CELL_SIZE,	# facing top
 	300:  	AXIAL_DIRECTION[5],										# facing top top right
-	330:  	(AXIAL_DIRECTION[5] + AXIAL_DIRECTION[0]) * CELL_SIZE		# facing top right right
+	330:  	(AXIAL_DIRECTION[5] + AXIAL_DIRECTION[0]) * CELL_SIZE	# facing top right right
 }

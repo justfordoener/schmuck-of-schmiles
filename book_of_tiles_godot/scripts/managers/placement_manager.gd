@@ -59,9 +59,6 @@ func _process(_delta):
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(snap_position, preview_instance.rotation.y)
 
-func _round_rotation(value : float) -> int:
-	return roundi(value / 30.0) * 30
-	
 func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	var instance = current_tile.instantiate()
 	get_tree().current_scene.add_child(instance)
@@ -70,7 +67,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	instance.global_rotation.y = instance_rotation
 	for child in instance.get_children():
 		if child is Module:
-			Grid.link_module_to_cell(child, child.global_position, _round_rotation(rad_to_deg(instance_rotation)))
+			Grid.link_module_to_cell(child, child.global_position, Grid.round_rotation(rad_to_deg(instance_rotation)))
 	preview_instance.queue_free()
 	Grid.propagation_stack = []
 	Grid.propagate(Grid.cartesian_to_axial(instance_position))

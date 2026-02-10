@@ -1,6 +1,6 @@
 class_name Border extends Cell
 
-var border_profile : Layout.PROFILE_TYPE = Layout.PROFILE_TYPE.EMPTY
+var profile : Layout.PROFILE_TYPE = Layout.PROFILE_TYPE.EMPTY
 var cell_neighbors : Array[Vector3i]
 	
 func set_neighbors(c1: Vector3i, c2: Vector3i) -> void:

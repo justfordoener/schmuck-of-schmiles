@@ -13,6 +13,9 @@ var corner_mesh : ArrayMesh
 var face_mesh : ArrayMesh
 var edge_mesh : ArrayMesh
 
+var modules : Array[PackedScene]
+var module_directory : String = "res://scenes/modules/"
+
 func _ready() -> void:
 	grid = {}
 	_initialize_grid_layers()
@@ -20,6 +23,13 @@ func _ready() -> void:
 	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
+	
+	var dir_path := module_directory
+	var dir : DirAccess = DirAccess.open(module_directory)
+	dir.list_dir_begin()
+	for file in dir.get_files():
+		modules.append(load(dir_path + "/" + file))
+		print("loaded file: ", file)
 	
 func _link_neighbors() -> void:
 	for index in grid.keys():
@@ -142,29 +152,76 @@ func _get_axial_value(axial_index : Vector3i) -> Vector3:
 func link_module_to_cell(module : Module, cartesian_position : Vector3, rotation_deg : int) -> void:
 	var axial_index = _get_axial_index(cartesian_to_axial(cartesian_position))
 	grid[axial_index].module_reference = module
+	print("___")
 	for border_deg : int in module.profiles.keys():
-		var profile_index = Layout.TILE_ROTATION_VALUE[posmod(border_deg - rotation_deg, 360)]
-		grid[axial_index].profiles[profile_index] = module.profiles[border_deg]
+		var profile_axial_direction = Layout.TILE_ROTATION_VALUE[posmod(border_deg - rotation_deg, 360)]
+		var profile_axial_position = _get_axial_value(axial_index) + profile_axial_direction
+		var dir_to_profile = (profile_axial_position - _get_axial_value(axial_index)).normalized()
+		for neighbor_index in grid[axial_index].neighbors.keys():
+			var neighbor_axial_position = _get_axial_value(neighbor_index)
+			var dir_to_neighbor = (neighbor_axial_position - _get_axial_value(axial_index)).normalized()
+			if dir_to_neighbor.dot(dir_to_profile) > 0.99:
+				var border_axial_position = _get_axial_value(axial_index) + (neighbor_axial_position - _get_axial_value(axial_index)) / 2
+				var border_index = _get_axial_index(dir_to_neighbor)
+				var border : Border
+				if grid[axial_index].borders.has(border_index):
+					border = grid[axial_index].borders[border_index]
+				else:
+					border = Border.new(border_axial_position)
+				border.profile = module.profiles[border_deg]
+				grid[axial_index].borders[border_index] = border
+				grid[neighbor_index].borders[border_index] = border
+				print("linked profile ", border.profile, " at ax_pos: ", border_axial_position)
 	
 		
-func propagate(pos : Vector3) -> void:
-	spawn_debug_sphere(axial_to_cartesian(pos), 1.0)
-	#print(pos, " has neighbors: ", grid[_get_axial_index(pos)].neighbors.keys())
-	for neighbor_key in grid[_get_axial_index(pos)].neighbors.keys():
+func propagate(axial_position : Vector3) -> void:
+	spawn_debug_sphere(axial_to_cartesian(axial_position), 1.0)
+	#print(axial_position, " has neighbors: ", grid[_get_axial_index(axial_position)].neighbors.keys())
+	for neighbor_key in grid[_get_axial_index(axial_position)].neighbors.keys():
 		if not propagation_stack.has(neighbor_key):
 			propagation_stack.append(neighbor_key)
-			# TODO spawn modules
-			propagate_border_profiles(neighbor_key)
-			await get_tree().create_timer(0.2).timeout
-			propagate(_get_axial_value(neighbor_key))
 			
-func propagate_border_profiles(axial_index: Vector3i) -> void:
-	for neighbor_index : Vector3i in grid[axial_index].neighbors.keys():
-		for profile_index : Vector3i in grid[axial_index].profiles.keys():
-			pass #if neighbor_index.distance_to()
+			collapse_cell(neighbor_key)
+			
+			await get_tree().create_timer(0.2).timeout
+			#propagate(_get_axial_value(neighbor_key))
+
+func round_rotation(value : float) -> int:
+	return roundi(value / 30.0) * 30
+			
+func collapse_cell(cell_index : Vector3i) -> void:
+	print("collapse cell at ", cell_index)
+	var axial_position : Vector3 = grid[cell_index].axial_position
+	var cartesian_position : Vector3 = axial_to_cartesian(axial_position)
+	var new_module : Module
+	var rotation_step : int = 0
+	var start_rotation : int
+	for module : PackedScene in modules:
+		new_module = module.instantiate()
+		var snap_position = snap_position(cartesian_position, new_module.module_type)
+		new_module.global_position = snap_position
+		var snap_rotation = deg_to_rad(snap_rotation(new_module.global_position, new_module.module_type))
+		new_module.rotation.y = snap_rotation
+		if grid[cell_index].type == new_module.module_type:
+			add_child(new_module)
+			print("rotation: ", rad_to_deg(snap_rotation), " position: ", snap_position)
+			return
+		continue
+		#-------------------------
+		start_rotation = round_rotation(rad_to_deg(new_module.rotation.y))
+		rotation_step = int(get_rotation_value(new_module.module_type))
+		while round_rotation(rad_to_deg(new_module.rotation.y)) < start_rotation + 360:
+			for profile_angle in new_module.profiles.keys():
+				print(profile_angle)
+			pass
+			#rotate module to see if it fits
+			#if all profiles match:
+				# spawn module
+				# link_module_to_cell(new_module, axial_to_cartesian(_get_axial_value(cell_index)), rotation_deg)
+			new_module.rotate_y(rad_to_deg(rotation_step))
+		new_module.queue_free()
 		pass
-	pass
-	
+			
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	cartesian_position = cartesian_position / Layout.CELL_SIZE
 	var axial_position : Vector3 = Vector3.ZERO
