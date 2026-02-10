@@ -6,7 +6,7 @@ enum PROFILE_TYPE {EMPTY, WATER, LAND, RIVER, PATH, CLIFF_UP, CLIFF_DOWN}
 
 var CELL_SIZE   : float = 1 / sqrt(3) # length of a side of a hexagon
 var CELL_STATE  : int = 1
-var GRID_RADIUS : int = 2
+var GRID_RADIUS : int = 6
 var GRID_HEIGHT : int = 1
 var CENTER_TILE_EUCLIDIC : Vector3 = Vector3(0,0,0)
 var CENTER_TILE_AXIAL : Vector3 = Vector3(0,0,0)

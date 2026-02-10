@@ -194,7 +194,7 @@ func link_module_to_cell(module : Module, cartesian_position : Vector3, rotation
 	
 		
 func propagate(axial_position : Vector3) -> void:
-	spawn_debug_sphere(axial_to_cartesian(axial_position), 1.0)
+	#spawn_debug_sphere(axial_to_cartesian(axial_position), 1.0)
 	#print(axial_position, " has neighbors: ", grid[_get_axial_index(axial_position)].neighbors.keys())
 	for neighbor_key in grid[_get_axial_index(axial_position)].neighbors.keys():
 		if not propagation_stack.has(neighbor_key):
