@@ -37,7 +37,10 @@ shape = SubResource("BoxShape3D_6o6k0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 mesh = SubResource("BoxMesh_6o6k0")
 
-[node name="Playtest UI" type="Control" parent="."]
+[node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
+tile_card_directory = "res://scenes/user_interface/tile cards"
+
+[node name="Playtest UI" type="Control" parent="UIManager"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 1743.0
@@ -45,7 +48,7 @@ offset_top = 230.0
 offset_right = 1783.0
 offset_bottom = 270.0
 
-[node name="Reset" type="Button" parent="Playtest UI"]
+[node name="Reset" type="Button" parent="UIManager/Playtest UI"]
 layout_mode = 0
 offset_left = 20.0
 offset_right = 71.0
@@ -53,7 +56,7 @@ offset_bottom = 31.0
 text = "Reset
 "
 
-[node name="MinZoom" type="HSlider" parent="Playtest UI"]
+[node name="MinZoom" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
@@ -65,14 +68,14 @@ max_value = 0.0
 step = 0.5
 value = -7.5
 
-[node name="name" type="Label" parent="Playtest UI/MinZoom"]
+[node name="name" type="Label" parent="UIManager/Playtest UI/MinZoom"]
 layout_mode = 0
 offset_top = -20.0
 offset_right = 78.0
 offset_bottom = 3.0
 text = "Min Zoom"
 
-[node name="value" type="Label" parent="Playtest UI/MinZoom"]
+[node name="value" type="Label" parent="UIManager/Playtest UI/MinZoom"]
 layout_mode = 0
 offset_left = 118.0
 offset_top = -18.0
@@ -80,7 +83,7 @@ offset_right = 158.0
 offset_bottom = 5.0
 text = "-7.0"
 
-[node name="MaxZoom" type="HSlider" parent="Playtest UI"]
+[node name="MaxZoom" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
@@ -92,14 +95,14 @@ max_value = 30.0
 step = 0.5
 value = 20.0
 
-[node name="name" type="Label" parent="Playtest UI/MaxZoom"]
+[node name="name" type="Label" parent="UIManager/Playtest UI/MaxZoom"]
 layout_mode = 0
 offset_top = -20.0
 offset_right = 78.0
 offset_bottom = 3.0
 text = "Max Zoom"
 
-[node name="value" type="Label" parent="Playtest UI/MaxZoom"]
+[node name="value" type="Label" parent="UIManager/Playtest UI/MaxZoom"]
 layout_mode = 0
 offset_left = 117.0
 offset_top = -18.0
@@ -107,7 +110,7 @@ offset_right = 157.0
 offset_bottom = 5.0
 text = "20.0"
 
-[node name="MinPitch" type="HSlider" parent="Playtest UI"]
+[node name="MinPitch" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
@@ -119,14 +122,14 @@ max_value = 0.0
 step = 0.5
 value = -75.0
 
-[node name="name" type="Label" parent="Playtest UI/MinPitch"]
+[node name="name" type="Label" parent="UIManager/Playtest UI/MinPitch"]
 layout_mode = 0
 offset_top = -20.0
 offset_right = 78.0
 offset_bottom = 3.0
 text = "Min Pitch"
 
-[node name="value" type="Label" parent="Playtest UI/MinPitch"]
+[node name="value" type="Label" parent="UIManager/Playtest UI/MinPitch"]
 layout_mode = 0
 offset_left = 111.0
 offset_top = -18.0
@@ -134,7 +137,7 @@ offset_right = 151.0
 offset_bottom = 5.0
 text = "-25.0"
 
-[node name="MaxPitch" type="HSlider" parent="Playtest UI"]
+[node name="MaxPitch" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
@@ -144,14 +147,14 @@ offset_bottom = 173.0
 max_value = 20.0
 step = 0.5
 
-[node name="name" type="Label" parent="Playtest UI/MaxPitch"]
+[node name="name" type="Label" parent="UIManager/Playtest UI/MaxPitch"]
 layout_mode = 0
 offset_top = -20.0
 offset_right = 78.0
 offset_bottom = 3.0
 text = "Max Pitch"
 
-[node name="value" type="Label" parent="Playtest UI/MaxPitch"]
+[node name="value" type="Label" parent="UIManager/Playtest UI/MaxPitch"]
 layout_mode = 0
 offset_left = 118.0
 offset_top = -18.0
@@ -159,7 +162,7 @@ offset_right = 158.0
 offset_bottom = 5.0
 text = "0.0"
 
-[node name="ZoomSpeed" type="HSlider" parent="Playtest UI"]
+[node name="ZoomSpeed" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
@@ -170,14 +173,14 @@ max_value = 10.0
 step = 0.5
 value = 3.0
 
-[node name="name" type="Label" parent="Playtest UI/ZoomSpeed"]
+[node name="name" type="Label" parent="UIManager/Playtest UI/ZoomSpeed"]
 layout_mode = 0
 offset_top = -20.0
 offset_right = 78.0
 offset_bottom = 3.0
 text = "Zoom Speed"
 
-[node name="value" type="Label" parent="Playtest UI/ZoomSpeed"]
+[node name="value" type="Label" parent="UIManager/Playtest UI/ZoomSpeed"]
 layout_mode = 0
 offset_left = 118.0
 offset_top = -18.0
@@ -185,7 +188,7 @@ offset_right = 158.0
 offset_bottom = 5.0
 text = "3.0"
 
-[node name="MoveSpeed" type="HSlider" parent="Playtest UI"]
+[node name="MoveSpeed" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
@@ -196,14 +199,14 @@ max_value = 1.0
 step = 0.1
 value = 0.2
 
-[node name="name" type="Label" parent="Playtest UI/MoveSpeed"]
+[node name="name" type="Label" parent="UIManager/Playtest UI/MoveSpeed"]
 layout_mode = 0
 offset_top = -20.0
 offset_right = 78.0
 offset_bottom = 3.0
 text = "Move Speed"
 
-[node name="value" type="Label" parent="Playtest UI/MoveSpeed"]
+[node name="value" type="Label" parent="UIManager/Playtest UI/MoveSpeed"]
 layout_mode = 0
 offset_left = 118.0
 offset_top = -18.0
@@ -211,13 +214,10 @@ offset_right = 158.0
 offset_bottom = 5.0
 text = "0.2"
 
-[node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
-tile_card_directory = "res://scenes/user_interface/tile cards"
-
-[connection signal="pressed" from="Playtest UI/Reset" to="CameraController" method="reset_camera_values"]
-[connection signal="value_changed" from="Playtest UI/MinZoom" to="CameraController" method="camera_set_min_zoom"]
-[connection signal="value_changed" from="Playtest UI/MaxZoom" to="CameraController" method="camera_set_max_zoom"]
-[connection signal="value_changed" from="Playtest UI/MinPitch" to="CameraController" method="camera_set_min_pitch"]
-[connection signal="value_changed" from="Playtest UI/MaxPitch" to="CameraController" method="camera_set_max_pitch"]
-[connection signal="value_changed" from="Playtest UI/ZoomSpeed" to="CameraController" method="camera_set_zoom_speed"]
-[connection signal="value_changed" from="Playtest UI/MoveSpeed" to="CameraController" method="camera_set_move_speed"]
+[connection signal="pressed" from="UIManager/Playtest UI/Reset" to="CameraController" method="reset_camera_values"]
+[connection signal="value_changed" from="UIManager/Playtest UI/MinZoom" to="CameraController" method="camera_set_min_zoom"]
+[connection signal="value_changed" from="UIManager/Playtest UI/MaxZoom" to="CameraController" method="camera_set_max_zoom"]
+[connection signal="value_changed" from="UIManager/Playtest UI/MinPitch" to="CameraController" method="camera_set_min_pitch"]
+[connection signal="value_changed" from="UIManager/Playtest UI/MaxPitch" to="CameraController" method="camera_set_max_pitch"]
+[connection signal="value_changed" from="UIManager/Playtest UI/ZoomSpeed" to="CameraController" method="camera_set_zoom_speed"]
+[connection signal="value_changed" from="UIManager/Playtest UI/MoveSpeed" to="CameraController" method="camera_set_move_speed"]
