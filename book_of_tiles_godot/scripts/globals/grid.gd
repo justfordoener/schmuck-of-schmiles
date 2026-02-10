@@ -188,8 +188,70 @@ func propagate(axial_position : Vector3) -> void:
 
 func round_rotation(value : float) -> int:
 	return roundi(value / 30.0) * 30
-			
+
 func collapse_cell(cell_index : Vector3i) -> void:
+	var cell = grid[cell_index]
+	var axial_position : Vector3 = cell.axial_position
+	var cartesian_position : Vector3 = axial_to_cartesian(axial_position)
+	
+	# Calculate the grid's required orientation first
+	var base_snap = snap_rotation(cartesian_position, cell.type)
+	
+	for module_res in modules:
+		var temp_module = module_res.instantiate()
+		if temp_module.module_type != cell.type:
+			temp_module.queue_free()
+			continue
+		
+		var step = get_rotation_value(cell.type)
+		var possible_steps = int(360.0 / step)
+		
+		for i in range(possible_steps):
+			# The ACTUAL rotation is the grid alignment PLUS the WFC choice
+			var wfc_offset = int(i * step)
+			var total_rotation = int(base_snap + wfc_offset)
+			
+			# We pass the TOTAL rotation to the fit check
+			if _check_module_fit(cell_index, temp_module, total_rotation):
+				add_child(temp_module)
+				temp_module.global_position = snap_position(cartesian_position, cell.type)
+				temp_module.rotation_degrees.y = total_rotation
+				
+				# Link using the total rotation
+				link_module_to_cell(temp_module, cartesian_position, total_rotation)
+				return
+				
+		temp_module.queue_free()
+	
+func _check_module_fit(cell_index: Vector3i, module: Module, rotation_deg: int) -> bool:
+	var cell = grid[cell_index]
+	
+	# Check every direction where the module has a profile defined
+	for local_angle : int in module.profiles.keys():
+		# Calculate which global direction this profile points to after rotation
+		var global_angle = posmod(local_angle + rotation_deg, 360)
+		var direction_vector = Layout.TILE_ROTATION_VALUE[global_angle]
+		
+		# Find the neighbor in that direction
+		var neighbor_pos = _get_axial_value(cell_index) + direction_vector
+		var neighbor_index = _get_axial_index(neighbor_pos)
+		
+		# If there is a neighbor, check the shared border
+		if cell.neighbors.has(neighbor_index):
+			# We use the direction vector itself as the key for borders
+			var border_index = _get_axial_index(direction_vector.normalized())
+			
+			if cell.borders.has(border_index):
+				var existing_border = cell.borders[border_index]
+				var module_profile = module.profiles[local_angle]
+				
+				# Check if the module's profile matches the border's profile
+				if existing_border.profile != module_profile:
+					return false # Constraint violation!
+					
+	return true # All borders match
+
+func collapse_cell2(cell_index : Vector3i) -> void:
 	print("collapse cell at ", cell_index)
 	var axial_position : Vector3 = grid[cell_index].axial_position
 	var cartesian_position : Vector3 = axial_to_cartesian(axial_position)
