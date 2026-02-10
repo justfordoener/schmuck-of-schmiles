@@ -24,6 +24,7 @@ boot_splash/show_image=false
 Grid="*res://scripts/globals/grid.gd"
 Layout="*res://scripts/globals/layout.gd"
 Parameters="*res://scripts/globals/parameters.gd"
+Signals="*res://scripts/globals/signals.gd"
 
 [display]
 

@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=9 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
+[ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="2_c2dvl"]
+[ext_resource type="PackedScene" uid="uid://cau0gvhxu5xq5" path="res://scenes/sounds/sfx/sfx_tile_placement_sound.tscn" id="2_wgu8i"]
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_wgu8i"]
 [ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="5_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="6_wgu8i"]
@@ -13,6 +15,10 @@ size = Vector3(100, 1, 100)
 
 [node name="ModuleSandbox" type="Node"]
 script = ExtResource("1_6o6k0")
+
+[node name="SfxTilePlacementSound" parent="." instance=ExtResource("2_wgu8i")]
+
+[node name="MusicIngame" parent="." instance=ExtResource("2_c2dvl")]
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
