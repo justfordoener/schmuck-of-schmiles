@@ -1,0 +1,26 @@
+[gd_scene load_steps=10 format=3 uid="uid://cau0gvhxu5xq5"]
+
+[ext_resource type="Script" uid="uid://c571orhg5u50a" path="res://scripts/sound/sfx/sfx_tile_placement_sound.gd" id="1_1nyan"]
+[ext_resource type="AudioStream" uid="uid://catqc2u4io4v" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_01.mp3" id="1_7t2yx"]
+[ext_resource type="AudioStream" uid="uid://ddypwe3ijlvcs" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_02.mp3" id="2_emaqd"]
+[ext_resource type="AudioStream" uid="uid://cnja3mrjbqg1j" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_03.mp3" id="3_a6fvb"]
+[ext_resource type="AudioStream" uid="uid://dmrgyvsah2hos" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_04.mp3" id="4_x4qvn"]
+[ext_resource type="AudioStream" uid="uid://veirm0oi7dgg" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_05.mp3" id="5_kbj03"]
+[ext_resource type="AudioStream" uid="uid://eg686nmljo8m" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_06.mp3" id="6_w26rx"]
+[ext_resource type="AudioStream" uid="uid://cf56yke52qiba" path="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_07.mp3" id="7_2p01j"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_qua8t"]
+streams_count = 7
+stream_0/stream = ExtResource("1_7t2yx")
+stream_1/stream = ExtResource("2_emaqd")
+stream_2/stream = ExtResource("3_a6fvb")
+stream_3/stream = ExtResource("4_x4qvn")
+stream_4/stream = ExtResource("5_kbj03")
+stream_5/stream = ExtResource("6_w26rx")
+stream_6/stream = ExtResource("7_2p01j")
+
+[node name="SfxTilePlacementSound" type="Node3D"]
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_qua8t")
+script = ExtResource("1_1nyan")
