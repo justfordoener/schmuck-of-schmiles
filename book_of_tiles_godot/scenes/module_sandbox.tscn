@@ -27,9 +27,6 @@ transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952
 
 [node name="PlacementManager" parent="." instance=ExtResource("6_wgu8i")]
 
-[node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
-tile_card_directory = "res://scenes/user_interface/tile cards"
-
 [node name="Area3D" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
@@ -213,6 +210,9 @@ offset_top = -18.0
 offset_right = 158.0
 offset_bottom = 5.0
 text = "0.2"
+
+[node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
+tile_card_directory = "res://scenes/user_interface/tile cards"
 
 [connection signal="pressed" from="Playtest UI/Reset" to="CameraController" method="reset_camera_values"]
 [connection signal="value_changed" from="Playtest UI/MinZoom" to="CameraController" method="camera_set_min_zoom"]
