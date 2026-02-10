@@ -12,7 +12,6 @@ var propagation_stack : Array
 var corner_mesh : ArrayMesh
 var face_mesh : ArrayMesh
 var edge_mesh : ArrayMesh
-
 var modules : Array[PackedScene]
 var module_directory : String = "res://scenes/modules/"
 
@@ -24,12 +23,32 @@ func _ready() -> void:
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
 	
-	var dir_path := module_directory
-	var dir : DirAccess = DirAccess.open(module_directory)
-	dir.list_dir_begin()
-	for file in dir.get_files():
-		modules.append(load(dir_path + "/" + file))
-		print("loaded file: ", file)
+	_load_modules_from_dir(module_directory)
+
+func _load_modules_from_dir(path: String) -> void:
+	var dir = DirAccess.open(path)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		
+		while file_name != "":
+			if !dir.current_is_dir():
+				# Web/Export Fix: 
+				# 1. Strip .remap or .import suffixes added during export
+				# 2. Ensure we only load .tscn (scene) files
+				var clean_path = path + "/" + file_name.replace(".remap", "").replace(".import", "")
+				
+				if clean_path.ends_with(".tscn"):
+					# Use ResourceLoader to be safe, though load() usually works
+					var res = load(clean_path)
+					if res is PackedScene:
+						modules.append(res)
+						print("Successfully loaded module: ", clean_path)
+			
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	else:
+		printerr("Failed to open module directory: ", path)
 	
 func _link_neighbors() -> void:
 	for index in grid.keys():
