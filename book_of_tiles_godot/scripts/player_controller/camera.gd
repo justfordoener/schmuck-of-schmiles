@@ -35,11 +35,16 @@ var zoom_target: float
 # spherecast
 @export var spherecast: ShapeCast3D
 
+# Easing
+@export var move_speed_ease := 1.0
+var current_move_speed := 0.0
+
 # Reset to original Values (For the Playtest)
 var _initial_values = {}
 var _initial_transform: Transform3D
 var _initial_rotation_x: Vector3
 var _initial_zoom: float
+var _initial_camera_position: Vector3
 
 func _ready() -> void:
 	move_target = position
@@ -60,9 +65,10 @@ func _ready() -> void:
 	_initial_values.max_pitch = max_pitch
 	_initial_values.zoom_speed = zoom_speed
 	_initial_values.move_speed = move_speed
+	_initial_camera_position = camera.position
 	
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("rotate"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if Input.is_action_just_released("rotate"):
@@ -85,7 +91,17 @@ func _process(_delta: float) -> void:
 	
 	# set movement targets
 	var zoom_move_factor = 1.0 - current_zoom + 0.2
-	move_target += move_speed * zoom_move_factor * movement_direction
+	
+	var target_speed = move_speed if input_direction != Vector2.ZERO else 0.0
+	current_move_speed = lerp(
+		current_move_speed,
+		target_speed,
+		move_speed_ease * _delta
+	)
+	
+	move_target += current_move_speed * zoom_move_factor * movement_direction
+	print(current_move_speed)
+	#move_target += move_speed * zoom_move_factor * movement_direction
 	
 	# Zoom - fast in the middle, slow at edges
 	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
@@ -143,6 +159,8 @@ func reset_camera_values():
 	global_transform = _initial_transform
 	rotation_x.rotation_degrees = _initial_rotation_x
 	camera.position.z = _initial_zoom
+	zoom_target = _initial_zoom
+	camera.position = _initial_camera_position
 	
 	min_zoom = _initial_values.min_zoom
 	max_zoom = _initial_values.max_zoom
