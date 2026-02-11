@@ -135,7 +135,7 @@ offset_left = 111.0
 offset_top = -18.0
 offset_right = 151.0
 offset_bottom = 5.0
-text = "-25.0"
+text = "-75.0"
 
 [node name="MaxPitch" type="HSlider" parent="Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
