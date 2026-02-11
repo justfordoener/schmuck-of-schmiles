@@ -92,6 +92,7 @@ func _physics_process(_delta: float) -> void:
 	# set movement targets
 	var zoom_move_factor = 1.0 - current_zoom + 0.2
 	
+	# Easing movement
 	var target_speed = move_speed if input_direction != Vector2.ZERO else 0.0
 	current_move_speed = lerp(
 		current_move_speed,
