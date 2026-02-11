@@ -64,13 +64,20 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	get_tree().current_scene.add_child(instance)
 	tiles_placed_today.append(instance)
 	instance.global_position = instance_position
-	instance.global_rotation.y = instance_rotation
+	instance.rotation.y = instance_rotation
 	for child in instance.get_children():
-		if child is Module:
+		var child_index = Grid._get_axial_index(Grid.cartesian_to_axial(instance_position))
+		var child_rotation = Grid.round_rotation(rad_to_deg(instance_rotation))
+		if (child is Module
+		and Grid.check_module_fit(child_index, child, child_rotation)
+		and Grid.grid[child_index].module_reference == null
+		):
 			Grid.link_module_to_cell(child, child.global_position, Grid.round_rotation(rad_to_deg(instance_rotation)))
-	preview_instance.queue_free()
-	Grid.propagation_stack = []
-	Grid.propagate(Grid.cartesian_to_axial(instance_position))
+			Grid.propagation_stack = []
+			#Grid.propagate(Grid.cartesian_to_axial(instance_position))
+			preview_instance.queue_free()
+		else:
+			instance.queue_free()
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()

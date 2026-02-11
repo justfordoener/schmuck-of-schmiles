@@ -6,14 +6,13 @@ extends Node
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
 var grid : Dictionary[Vector3i, Cell] #TODO for cpp rework: make a seperate datastructure for axial indices
-
 var propagation_stack : Array
-
 var corner_mesh : ArrayMesh
 var face_mesh : ArrayMesh
 var edge_mesh : ArrayMesh
 var modules : Array[PackedScene]
 var module_directory : String = "res://scenes/modules/"
+var link_counter : int = 0
 
 func _ready() -> void:
 	grid = {}
@@ -22,7 +21,7 @@ func _ready() -> void:
 	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
-	
+	print(grid.size(), link_counter)
 	_load_modules_from_dir(module_directory)
 
 func _load_modules_from_dir(path: String) -> void:
@@ -74,7 +73,7 @@ func _find_edge_neighbors(index : Vector3i) -> void:
 		var neighbor_cell = grid[neighbor_index]
 		var neighbor_value = _get_axial_value(neighbor_index)
 		var dist = index_value.distance_to(neighbor_value)
-		if neighbor_cell.type == Layout.CELL_TYPE.CORNER and dist < 1.1:
+		if neighbor_cell.type == Layout.CELL_TYPE.CORNER and dist < 1.2:
 			_establish_link(index, neighbor_index)
 		elif neighbor_cell.type == Layout.CELL_TYPE.FACE and dist < 1.0:
 			_establish_link(index, neighbor_index)
@@ -87,10 +86,25 @@ func _find_face_neighbors(index : Vector3i) -> void:
 			var neighbor_value = _get_axial_value(neighbor_index)
 			if index_value.distance_to(neighbor_value) < 1.0:
 				_establish_link(neighbor_index, index)
-				
+
+func _get_border_index(a_index: Vector3i, b_index: Vector3i) -> String:
+	var s1 = str(a_index)
+	var s2 = str(b_index)
+	return s1 + "_" + s2 if s1 < s2 else s2 + "_" + s1
+
 func _establish_link(a_index: Vector3i, b_index: Vector3i) -> void:
-	grid[a_index].neighbors[b_index] = grid[b_index]
-	grid[b_index].neighbors[a_index] = grid[a_index]
+	var border = Border.new()
+	var border_index = _get_border_index(a_index, b_index)
+	if not grid[a_index].borders.has(border_index):
+		border.profile = Layout.PROFILE_TYPE.EMPTY
+		grid[a_index].borders[border_index] = border
+		grid[b_index].borders[border_index] = border
+		grid[a_index].neighbors[b_index] = grid[b_index]
+		grid[b_index].neighbors[a_index] = grid[a_index]
+		link_counter += 1
+		#print("added border: ", border_index, " type a: ", grid[a_index].type, " type b: ", grid[b_index].type)
+	else:
+		pass
 		
 func _initialize_layer_mesh(mesh : ArrayMesh, cell_type : Layout.CELL_TYPE, color : Color) -> void:
 	var mesh_array = []
@@ -157,55 +171,41 @@ func _create_mesh_instance(color : Color) -> MeshInstance3D:
 	return mesh_instance
 	
 func _get_axial_index(axial_coordinate : Vector3) -> Vector3i:
-	var x = roundi(axial_coordinate.x * 1000.0)
-	var y = roundi(axial_coordinate.y * 1000.0)
-	var z = roundi(axial_coordinate.z * 1000.0)
+	var x = roundi(axial_coordinate.x * 100.0)
+	var y = roundi(axial_coordinate.y * 100.0)
+	var z = roundi(axial_coordinate.z * 100.0)
 	return Vector3i(x,y,z)
 
 func _get_axial_value(axial_index : Vector3i) -> Vector3:
-	return axial_index / 1000.0
+	return axial_index / 100.0
 	
 #-------------------------------- public functions ----------------------------
 
 func link_module_to_cell(module : Module, cartesian_position : Vector3, rotation_deg : int) -> void:
 	var axial_index = _get_axial_index(cartesian_to_axial(cartesian_position))
 	grid[axial_index].module_reference = module
-	print("___", module.module_type, " has borders: ", module.profiles.keys())
+	#print("___", module.module_type, " has borders: ", module.profiles.keys())
 	for border_deg : int in module.profiles.keys():
-		var profile_axial_direction = Layout.TILE_ROTATION_VALUE[posmod(border_deg - rotation_deg, 360)]
-		var profile_axial_position = _get_axial_value(axial_index) + profile_axial_direction
-		var dir_to_profile = (profile_axial_position - _get_axial_value(axial_index)).normalized()
+		var profile_dir = Layout.TILE_ROTATION_VALUE[posmod(border_deg - rotation_deg, 360)]
+		#var profile_axial_position = _get_axial_value(axial_index) + profile_axial_direction
+		#var dir_to_profile = (profile_axial_position - _get_axial_value(axial_index)).normalized()
 		for neighbor_index in grid[axial_index].neighbors.keys():
 			var neighbor_axial_position = _get_axial_value(neighbor_index)
 			var dir_to_neighbor = neighbor_axial_position - _get_axial_value(axial_index)
-			if dir_to_neighbor.normalized().dot(dir_to_profile) > 0.99:
-				var border_axial_position = _get_axial_value(axial_index) + 0.5 * dir_to_neighbor
-				var border_index = _get_axial_index(border_axial_position)
-				var border : Border
-				if grid[axial_index].borders.has(border_index):
-					border = grid[axial_index].borders[border_index]
-				else:
-					border = Border.new(border_axial_position)
-				border.profile = module.profiles[border_deg]
-				grid[axial_index].borders[border_index] = border
-				grid[neighbor_index].borders[border_index] = border
-				print("added border ", border.profile, " at ax_pos: ", border_axial_position)
+			if dir_to_neighbor.normalized().dot(profile_dir.normalized()) > 0.99:
+				var border_index = _get_border_index(axial_index, neighbor_index)
+				if not grid[axial_index].borders.has(border_index):
+					printerr("no border ", border_index, " found at axial_index", axial_index)
+				var profile : Layout.PROFILE_TYPE = module.profiles[border_deg]
+				grid[axial_index].borders[border_index].profile = profile
+				grid[neighbor_index].borders[border_index].profile = profile
+				#print("updated border ", border_index, " to: ", profile)
 				
-func get_cell_neighbor_from_border(cell_index : Vector3i, border_index : Vector3i) -> Vector3i:
-	return Vector3i.ZERO
-		
-func get_cell_border_from_neighbor(cell_index : Vector3i, neighbor_index : Vector3i) -> Vector3i:
-	return Vector3i.ZERO
-	
 func propagate(axial_position : Vector3) -> void:
-	spawn_debug_sphere(axial_to_cartesian(axial_position), 1.0)
-	#print(axial_position, " has neighbors: ", grid[_get_axial_index(axial_position)].neighbors.keys())
 	for neighbor_key in grid[_get_axial_index(axial_position)].neighbors.keys():
 		if not propagation_stack.has(neighbor_key):
 			propagation_stack.append(neighbor_key)
-			
 			collapse_cell(neighbor_key)
-			
 			await get_tree().create_timer(0.2).timeout
 			#propagate(_get_axial_value(neighbor_key))
 
@@ -222,27 +222,60 @@ func collapse_cell(cell_index : Vector3i) -> void:
 		if temp_module.module_type != cell.type:
 			temp_module.queue_free()
 			continue
-			
 		var step = get_rotation_value(cell.type)
 		var possible_steps = int(360.0 / step)
 		for i in range(possible_steps):
-			# The ACTUAL rotation is the grid alignment PLUS the WFC choice
 			var wfc_offset = int(i * step)
 			var total_rotation = int(base_snap + wfc_offset)
-			
-			# We pass the TOTAL rotation to the fit check
-			if _check_module_fit(cell_index, temp_module, total_rotation):
+			if check_module_fit(cell_index, temp_module, total_rotation):
 				add_child(temp_module)
 				temp_module.global_position = snap_position(cartesian_position, cell.type)
 				temp_module.rotation_degrees.y = total_rotation
-				
-				# Link using the total rotation
 				link_module_to_cell(temp_module, cartesian_position, total_rotation)
 				return
-				
 		temp_module.queue_free()
+
+func check_module_fit(cell_index: Vector3i, module: Module, rotation: int) -> bool:
+	var cell_profiles : Array[Layout.PROFILE_TYPE]
+	var module_profiles : Array[Layout.PROFILE_TYPE]
+	for border in grid[cell_index].borders.values():
+		cell_profiles.append(border.profile)
+	for module_deg in module.profiles.keys():
+		var steps : int = int((rotation) / get_rotation_value(module.module_type))
+		module_profiles.append(module.profiles[posmod(module_deg + steps * get_rotation_value(module.module_type), 360)])
+	print("cell_index: ", cell_index, "mprofiles: ",module_profiles, " cprofiles: ", cell_profiles)
+	if module.module_type != grid[cell_index].type:
+		return false
+	for i in cell_profiles.size():
+		if not evaluate_profiles(cell_profiles[i], module_profiles[i]):
+			return false
+	return true
+		
+func evaluate_profiles(p1 : Layout.PROFILE_TYPE, p2 : Layout.PROFILE_TYPE) -> bool:
+	if (p1 == Layout.PROFILE_TYPE.EMPTY
+	 or p2 == Layout.PROFILE_TYPE.EMPTY
+	 or p1 == p2):
+		return true
+	return false
 	
-func _check_module_fit(cell_index: Vector3i, module: Module, rotation_deg: int) -> bool:
+func check_module_fit2(cell_index: Vector3i, module: Module, rotation_deg: int) -> bool:
+	var cell = grid[cell_index]
+	for local_angle : int in module.profiles.keys():
+		var global_angle = posmod(local_angle + rotation_deg, 360)
+		var dir_vec = Layout.TILE_ROTATION_VALUE[global_angle]
+		
+		for n_idx in cell.neighbors.keys():
+			var n_dir = (_get_axial_value(n_idx) - _get_axial_value(cell_index)).normalized()
+			if n_dir.dot(dir_vec.normalized()) > 0.98:
+				var b_key = _get_border_index(cell_index, n_idx)
+				var existing = cell.borders[b_key].profile
+				if existing == Layout.PROFILE_TYPE.EMPTY:
+					continue
+				if existing != module.profiles[local_angle]:
+					return false
+	return true
+	
+func _check_module_fit2(cell_index: Vector3i, module: Module, rotation_deg: int) -> bool:
 	var cell = grid[cell_index]
 	var cell_axial_position = _get_axial_value(cell_index)
 	# Check every direction where the module has a profile defined
@@ -265,39 +298,6 @@ func _check_module_fit(cell_index: Vector3i, module: Module, rotation_deg: int) 
 					
 	return true # All borders match
 
-func collapse_cell2(cell_index : Vector3i) -> void:
-	print("collapse cell at ", cell_index)
-	var axial_position : Vector3 = grid[cell_index].axial_position
-	var cartesian_position : Vector3 = axial_to_cartesian(axial_position)
-	var new_module : Module
-	var rotation_step : int = 0
-	var start_rotation : int
-	for module : PackedScene in modules:
-		new_module = module.instantiate()
-		var snap_position = snap_position(cartesian_position, new_module.module_type)
-		new_module.global_position = snap_position
-		var snap_rotation = deg_to_rad(snap_rotation(new_module.global_position, new_module.module_type))
-		new_module.rotation.y = snap_rotation
-		if grid[cell_index].type == new_module.module_type:
-			add_child(new_module)
-			print("rotation: ", rad_to_deg(snap_rotation), " position: ", snap_position)
-			return
-		continue
-		#-------------------------
-		start_rotation = round_rotation(rad_to_deg(new_module.rotation.y))
-		rotation_step = int(get_rotation_value(new_module.module_type))
-		while round_rotation(rad_to_deg(new_module.rotation.y)) < start_rotation + 360:
-			for profile_angle in new_module.profiles.keys():
-				print(profile_angle)
-			pass
-			#rotate module to see if it fits
-			#if all profiles match:
-				# spawn module
-				# link_module_to_cell(new_module, axial_to_cartesian(_get_axial_value(cell_index)), rotation_deg)
-			new_module.rotate_y(rad_to_deg(rotation_step))
-		new_module.queue_free()
-		pass
-			
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
 	cartesian_position = cartesian_position / Layout.CELL_SIZE
 	var axial_position : Vector3 = Vector3.ZERO
