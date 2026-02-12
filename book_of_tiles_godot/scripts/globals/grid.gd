@@ -153,10 +153,10 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 					continue # border deg is pointing toward the edge of the map
 				else:
 					possible_module.profiles[border_index] = module.profiles[border_deg]
-					#print("added profile ", module.profiles[border_deg], " on ", border_index)
+					print("added profile ", module.profiles[border_deg], " on ", border_index)
 			cell.possibilities.append(possible_module)
 		for p in cell.possibilities:
-			print(p.profiles.values())
+			pass #print(p.profiles.values())
 
 	#for p in cell.possibilities:
 		#print("type ", p.module_reference.module_type)
@@ -203,6 +203,8 @@ func collapse(cell_index : Vector3i) -> bool:
 
 func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> bool:
 	var cell : Cell = grid[cell_index]
+	var did_it_collapse = false
+	var debug_string : String = "not collapsed"
 	print(cell.possibilities.size())
 	for poss in cell.possibilities:
 		print(poss.profiles.values())
@@ -215,12 +217,13 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 			cell.module_reference = module
 			propagate(cell_index)
 			propagation_stack = []
-			return true
-		print("PLACEMENT: rot = ", rotation, " poss.rot = ", possibility.module_rotation)
-	return false
+			did_it_collapse = true
+			debug_string = "collapsed. rot: " + str(possibility.module_rotation) + " poss: " + str(possibility.profiles.values())
+			break
+	print(debug_string)
+	return did_it_collapse
 
 # ------------------- helper functions -------------------
-
 
 func get_neighbor_from_rot(cell_index : Vector3i, rot_degree : int) -> Vector3i:
 	var cell = grid[cell_index]
