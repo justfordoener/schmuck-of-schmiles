@@ -36,7 +36,7 @@ var zoom_target: float
 @export var spherecast: ShapeCast3D
 
 # Easing
-@export var move_speed_ease := 1.0
+@export var move_speed_ease := 2.0
 var current_move_speed := 0.0
 
 # Reset to original Values (For the Playtest)
@@ -94,15 +94,16 @@ func _physics_process(_delta: float) -> void:
 	
 	# Easing movement
 	var target_speed = move_speed if input_direction != Vector2.ZERO else 0.0
-	current_move_speed = lerp(
-		current_move_speed,
-		target_speed,
-		move_speed_ease * _delta
-	)
+	if input_direction == Vector2.ZERO:
+		current_move_speed = 0.0
+	else:
+		current_move_speed = lerp(
+			current_move_speed,
+			target_speed,
+			move_speed_ease * _delta
+		)
 	
-	move_target += current_move_speed * zoom_move_factor * movement_direction
-	print(current_move_speed)
-	#move_target += move_speed * zoom_move_factor * movement_direction
+	move_target += current_move_speed * zoom_move_factor * movement_direction 
 	
 	# Zoom - fast in the middle, slow at edges
 	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
@@ -111,8 +112,8 @@ func _physics_process(_delta: float) -> void:
 	zoom_target = clamp(zoom_target, min_zoom, max_zoom)
 	
 	# lerp to movement targets
-	position = lerp(position, move_target, floatyness)
-	camera.position.z = lerp(camera.position.z, zoom_target, floatyness)
+	position = lerp(position, move_target, floatyness * _delta * 60)
+	camera.position.z = lerp(camera.position.z, zoom_target, floatyness * _delta * 60)
 	spherecast.force_shapecast_update()
 	if spherecast.is_colliding():
 		var collider = spherecast.get_collider(0)
@@ -127,7 +128,7 @@ func _physics_process(_delta: float) -> void:
 	rotation_x.rotation_degrees.x = lerp(
 		rotation_x.rotation_degrees.x,
 		target_pitch,
-		floatyness
+		floatyness * _delta * 60
 	)
 	
 	# raycast
