@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=10 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="2_c2dvl"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_wgu8i"]
 [ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="5_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="6_wgu8i"]
+[ext_resource type="Script" uid="uid://b1spq0oln5srw" path="res://scenes/sound_settings.gd" id="7_jed05"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6o6k0"]
 size = Vector3(100, 1, 100)
@@ -61,7 +62,7 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 offset_left = -27.0
 offset_top = 54.0
-offset_right = -19.0
+offset_right = 123.0
 offset_bottom = 70.0
 min_value = -20.0
 max_value = 0.0
@@ -70,17 +71,18 @@ value = -7.5
 
 [node name="name" type="Label" parent="UIManager/Playtest UI/MinZoom"]
 layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
+offset_left = 1.0
+offset_top = -22.0
+offset_right = 79.0
+offset_bottom = 1.0
 text = "Min Zoom"
 
 [node name="value" type="Label" parent="UIManager/Playtest UI/MinZoom"]
 layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
+offset_left = 119.0
+offset_top = -20.0
+offset_right = 159.0
+offset_bottom = 3.0
 text = "-7.0"
 
 [node name="MaxZoom" type="HSlider" parent="UIManager/Playtest UI"]
@@ -97,17 +99,17 @@ value = 20.0
 
 [node name="name" type="Label" parent="UIManager/Playtest UI/MaxZoom"]
 layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
+offset_left = 3.0
+offset_top = -25.0
+offset_right = 85.0
+offset_bottom = -2.0
 text = "Max Zoom"
 
 [node name="value" type="Label" parent="UIManager/Playtest UI/MaxZoom"]
 layout_mode = 0
-offset_left = 117.0
-offset_top = -18.0
-offset_right = 157.0
-offset_bottom = 5.0
+offset_left = 120.0
+offset_top = -23.0
+offset_right = 160.0
 text = "20.0"
 
 [node name="MinPitch" type="HSlider" parent="UIManager/Playtest UI"]
@@ -124,18 +126,18 @@ value = -75.0
 
 [node name="name" type="Label" parent="UIManager/Playtest UI/MinPitch"]
 layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
+offset_left = 2.0
+offset_top = -23.0
+offset_right = 80.0
 text = "Min Pitch"
 
 [node name="value" type="Label" parent="UIManager/Playtest UI/MinPitch"]
 layout_mode = 0
-offset_left = 111.0
-offset_top = -18.0
-offset_right = 151.0
-offset_bottom = 5.0
-text = "-25.0"
+offset_left = 113.0
+offset_top = -21.0
+offset_right = 153.0
+offset_bottom = 2.0
+text = "-75.0"
 
 [node name="MaxPitch" type="HSlider" parent="UIManager/Playtest UI"]
 custom_minimum_size = Vector2(150, 0)
@@ -149,17 +151,17 @@ step = 0.5
 
 [node name="name" type="Label" parent="UIManager/Playtest UI/MaxPitch"]
 layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
+offset_left = 4.0
+offset_top = -23.0
+offset_right = 82.0
 text = "Max Pitch"
 
 [node name="value" type="Label" parent="UIManager/Playtest UI/MaxPitch"]
 layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
+offset_left = 122.0
+offset_top = -21.0
+offset_right = 162.0
+offset_bottom = 2.0
 text = "0.0"
 
 [node name="ZoomSpeed" type="HSlider" parent="UIManager/Playtest UI"]
@@ -175,17 +177,18 @@ value = 3.0
 
 [node name="name" type="Label" parent="UIManager/Playtest UI/ZoomSpeed"]
 layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
+offset_left = 4.0
+offset_top = -21.0
+offset_right = 100.0
+offset_bottom = 2.0
 text = "Zoom Speed"
 
 [node name="value" type="Label" parent="UIManager/Playtest UI/ZoomSpeed"]
 layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
+offset_left = 122.0
+offset_top = -19.0
+offset_right = 162.0
+offset_bottom = 4.0
 text = "3.0"
 
 [node name="MoveSpeed" type="HSlider" parent="UIManager/Playtest UI"]
@@ -201,18 +204,82 @@ value = 0.2
 
 [node name="name" type="Label" parent="UIManager/Playtest UI/MoveSpeed"]
 layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
+offset_left = 4.0
+offset_top = -21.0
+offset_right = 98.0
+offset_bottom = 2.0
 text = "Move Speed"
 
 [node name="value" type="Label" parent="UIManager/Playtest UI/MoveSpeed"]
 layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
+offset_left = 122.0
+offset_top = -19.0
+offset_right = 162.0
+offset_bottom = 4.0
 text = "0.2"
+
+[node name="Sound Settings" type="Control" parent="UIManager"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1743.0
+offset_top = 484.0
+offset_right = 1783.0
+offset_bottom = 524.0
+script = ExtResource("7_jed05")
+
+[node name="Master" type="HSlider" parent="UIManager/Sound Settings"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 54.0
+offset_right = -19.0
+offset_bottom = 70.0
+max_value = 4.0
+step = 0.05
+value = 1.0
+
+[node name="name" type="Label" parent="UIManager/Sound Settings/Master"]
+layout_mode = 0
+offset_top = -20.0
+offset_right = 78.0
+offset_bottom = 3.0
+text = "Master"
+
+[node name="Music" type="HSlider" parent="UIManager/Sound Settings"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 89.0
+offset_right = 123.0
+offset_bottom = 105.0
+max_value = 4.0
+step = 0.05
+value = 1.0
+
+[node name="name" type="Label" parent="UIManager/Sound Settings/Music"]
+layout_mode = 0
+offset_top = -20.0
+offset_right = 78.0
+offset_bottom = 3.0
+text = "Music"
+
+[node name="SFX" type="HSlider" parent="UIManager/Sound Settings"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 122.0
+offset_right = 123.0
+offset_bottom = 138.0
+max_value = 4.0
+step = 0.05
+value = 1.0
+
+[node name="name" type="Label" parent="UIManager/Sound Settings/SFX"]
+layout_mode = 0
+offset_top = -20.0
+offset_right = 78.0
+offset_bottom = 3.0
+text = "SFX"
 
 [connection signal="pressed" from="UIManager/Playtest UI/Reset" to="CameraController" method="reset_camera_values"]
 [connection signal="value_changed" from="UIManager/Playtest UI/MinZoom" to="CameraController" method="camera_set_min_zoom"]
@@ -221,3 +288,6 @@ text = "0.2"
 [connection signal="value_changed" from="UIManager/Playtest UI/MaxPitch" to="CameraController" method="camera_set_max_pitch"]
 [connection signal="value_changed" from="UIManager/Playtest UI/ZoomSpeed" to="CameraController" method="camera_set_zoom_speed"]
 [connection signal="value_changed" from="UIManager/Playtest UI/MoveSpeed" to="CameraController" method="camera_set_move_speed"]
+[connection signal="value_changed" from="UIManager/Sound Settings/Master" to="UIManager/Sound Settings" method="_on_master_value_changed"]
+[connection signal="value_changed" from="UIManager/Sound Settings/Music" to="UIManager/Sound Settings" method="_on_music_value_changed"]
+[connection signal="value_changed" from="UIManager/Sound Settings/SFX" to="UIManager/Sound Settings" method="_on_sfx_value_changed"]
