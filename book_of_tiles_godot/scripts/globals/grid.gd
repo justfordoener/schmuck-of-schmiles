@@ -134,32 +134,35 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 		if module.module_type != grid[cell_index].type:
 			module.queue_free()
 			continue
-		var base_rotation : int = round_rotation(snap_rotation(axial_to_cartesian(cell.axial_position), module.module_type))
+		var base_rotation : int = -round_rotation(snap_rotation(axial_to_cartesian(cell.axial_position), module.module_type))
 		var rotation_value : int = round_rotation(get_rotation_value(module.module_type))
 		var possible_rotations : int = (360.0 / rotation_value)
 		for i in range(possible_rotations): 
 			var total_rotation : int = posmod(base_rotation + i * rotation_value, 360)
-			print("++++ module ", module.module_type, " total rot ", total_rotation)
+			#print("++++ module ", module.module_type, " total rot ", total_rotation)
 			var possible_module : Possibility = Possibility.new()
 			possible_module.module_reference = module
 			possible_module.module_rotation = total_rotation
 			for border_deg in module.profiles.keys():
 				var total_direction : int = posmod(total_rotation + border_deg, 360)
 				var neighbor_index : Vector3i = get_neighbor_from_rot(cell_index, total_direction)
-				
-				if neighbor_index == Vector3i(1111,0,0):
-					return
-				
 				var border_index = _get_border_index(cell_index, neighbor_index)
-				possible_module.profiles[border_index] = module.profiles[border_deg]
-				print("added profile ", module.profiles[border_deg], " on ", border_index)
+				if neighbor_index == Vector3i(7777,7777,7777):
+					print("no neighbor at ", cell_index, " in dir ", total_direction, " with baserot: ", base_rotation, " and with total rot: ", total_rotation)
+					possible_module.profiles[border_index] = Layout.PROFILE_TYPE.EMPTY
+					continue # border deg is pointing toward the edge of the map
+				else:
+					possible_module.profiles[border_index] = module.profiles[border_deg]
+					#print("added profile ", module.profiles[border_deg], " on ", border_index)
 			cell.possibilities.append(possible_module)
+		for p in cell.possibilities:
+			print(p.profiles.values())
 
-	for p in cell.possibilities:
-		print("type ", p.module_reference.module_type)
-		print("rota ", p.module_rotation)
-		print("prok ", p.profiles.keys())
-		print("prov ", p.profiles.values())
+	#for p in cell.possibilities:
+		#print("type ", p.module_reference.module_type)
+		#print("rota ", p.module_rotation)
+		#print("prok ", p.profiles.keys())
+		#print("prov ", p.profiles.values())
 		
 func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> void:
 	get_tree().root.add_child.call_deferred(module)
@@ -181,7 +184,7 @@ func propagate(cell_index : Vector3i) -> void:
 			if not collapse(neighbor_index):
 				continue
 			# await get_tree().create_timer(0.2).timeout
-			propagate(neighbor_index)
+			#propagate(neighbor_index)
 
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
@@ -205,7 +208,8 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 		print(poss.profiles.values())
 	for possibility : Possibility in cell.possibilities:
 		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
-		and possibility.module_rotation == posmod(rotation, 360)):
+		and possibility.module_rotation == posmod(rotation, 360)
+		and do_profiles_match(possibility.profiles, cell.profiles)):
 			cell.possibilities = [possibility]
 			cell.profiles = possibility.profiles
 			cell.module_reference = module
@@ -227,8 +231,7 @@ func get_neighbor_from_rot(cell_index : Vector3i, rot_degree : int) -> Vector3i:
 		if dir_to_neighbor.dot(dir_to_neighbor_temp) > 0.9:
 			neighbor_index = get_axial_index(neighbor.axial_position)
 			return neighbor_index
-		#printerr("no neighbor with ", rot_degree, " deg found. dir_to_n: ", dir_to_neighbor, " temp: ", dir_to_neighbor_temp)
-	return Vector3i(1111, 0, 0)
+	return Vector3i(7777, 7777, 7777) # TODO externalize as map border vector
 	
 func _get_border_index(a_index: Vector3i, b_index: Vector3i) -> String:
 	var s1 = str(a_index)
@@ -240,7 +243,9 @@ func round_rotation(value : float) -> int:
 
 func do_profiles_match(p1 : Dictionary[String, Layout.PROFILE_TYPE], p2 : Dictionary[String, Layout.PROFILE_TYPE]) -> bool:
 	#print("match profiles", p1.values(), p2.values())
-	for border_key in p1.keys():
+	for border_key : String in p1.keys():
+		if border_key.contains("7777"):
+			continue
 		if (p1[border_key] != p2[border_key]
 		and not (p1[border_key] == Layout.PROFILE_TYPE.EMPTY
 		or p2[border_key] == Layout.PROFILE_TYPE.EMPTY)):
