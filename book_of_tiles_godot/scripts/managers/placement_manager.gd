@@ -69,10 +69,10 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	
 	# check if children are allowed
 	for child : Module in instance.get_children():
-		print(" child pos ", child.position)
 		var child_position = Grid.snap_position(child.global_position, child.module_type)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
+		print("child_pos: ", child_position, " child_index: ", child_index, " child_rotation: ", child_rotation)
 		if (not Grid.grid[child_index].module_reference == null
 		 or not Grid.does_module_fit(child_index, child, child_rotation)
 		):
@@ -83,7 +83,6 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 		var child_position = Grid.snap_position(child.global_position, child.module_type)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
-		print("force collapse at: ", child_index, child_rotation)
 		if not Grid.force_collapse(child_index, child, child_rotation):
 			print("oups")
 	preview_instance.queue_free()
