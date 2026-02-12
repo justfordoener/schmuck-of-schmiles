@@ -189,6 +189,15 @@ func collapse(cell_index : Vector3i) -> bool:
 	cell.possibilities = new_possibilities
 	return possibilities_before_collapse != cell.possibilities.size()
 
+func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> bool:
+	var cell : Cell = grid[cell_index]
+	for possibility : Possibility in cell.possibilities:
+		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
+		 and possibility.module_rotation == posmod(rotation, 360)
+		 and do_profiles_match(possibility.profiles, cell.profiles)):
+			return true
+	return false
+
 # collapses a cell down to a single possibility. 
 func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> bool:
 	var cell : Cell = grid[cell_index]
@@ -199,8 +208,9 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 			cell.possibilities = [possibility]
 			cell.profiles = possibility.profiles
 			cell.module_reference = module
-			propagate(cell_index)
 			propagation_stack = []
+			print("cid: ", cell_index, " ppvalues: ", possibility.profiles.values(), " cpvalues: ", cell.profiles.values())
+			propagate(cell_index)
 			return true
 	return false
 

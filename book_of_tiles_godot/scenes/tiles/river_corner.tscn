@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://b7lpumrxpvgvh"]
+[gd_scene load_steps=4 format=3 uid="uid://b7lpumrxpvgvh"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_vaa7e"]
+[ext_resource type="PackedScene" uid="uid://c0drxklxykvo7" path="res://scenes/modules/river_face.tscn" id="2_3pjbw"]
 [ext_resource type="PackedScene" uid="uid://bpgrnrk3ekhqp" path="res://scenes/modules/river_corner_full.tscn" id="2_vaa7e"]
 
 [node name="RiverCornerTile" type="Node3D"]
 script = ExtResource("1_vaa7e")
 
-[node name="RiverCornerModule" parent="." instance=ExtResource("2_vaa7e")]
+[node name="RiverFace" parent="." instance=ExtResource("2_3pjbw")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 1.155)
+
+[node name="RiverCornerFull" parent="." instance=ExtResource("2_vaa7e")]

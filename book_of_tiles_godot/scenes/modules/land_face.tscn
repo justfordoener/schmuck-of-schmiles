@@ -41,6 +41,7 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_rlf67")
 
 [node name="LandFace" type="Node3D"]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
 script = ExtResource("1_l38j8")
 module_type = 2
 profiles = Dictionary[int, int]({

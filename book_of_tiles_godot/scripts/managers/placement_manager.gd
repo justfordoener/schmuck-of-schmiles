@@ -59,26 +59,35 @@ func _process(_delta):
 			preview_instance.rotate_y(deg_to_rad(-base_rotation))
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
-			Signals.on_instance_spawned.emit()
 
-func _spawn_instance(instance_position: Vector3, instance_rotation : float):
+func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> void:
 	var instance = current_tile.instantiate()
 	get_tree().current_scene.add_child(instance)
 	tiles_placed_today.append(instance)
 	instance.global_position = instance_position
 	instance.rotation.y = instance_rotation
-	for child in instance.get_children():
-		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(instance_position + child.position)) 
+	
+	# check if children are allowed
+	for child : Module in instance.get_children():
+		print(" child pos ", child.position)
+		var child_position = Grid.snap_position(child.global_position, child.module_type)
+		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
-		if (child is Module
-		 and Grid.grid[child_index].module_reference == null
-		 and Grid.force_collapse(child_index, child, child_rotation)
+		if (not Grid.grid[child_index].module_reference == null
+		 or not Grid.does_module_fit(child_index, child, child_rotation)
 		):
-			Grid.propagation_stack = []
-			Grid.propagate(child_index)
-			preview_instance.queue_free()
-		else:
+			print("failed child: ", child.module_type, child_index, child_rotation, " ", child_position)
 			instance.queue_free()
+			return
+	for child : Module in instance.get_children():
+		var child_position = Grid.snap_position(child.global_position, child.module_type)
+		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
+		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
+		print("force collapse at: ", child_index, child_rotation)
+		if not Grid.force_collapse(child_index, child, child_rotation):
+			print("oups")
+	preview_instance.queue_free()
+	Signals.on_instance_spawned.emit()
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()

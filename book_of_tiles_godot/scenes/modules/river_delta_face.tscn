@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=4 uid="uid://bmkdbqb2q25lb"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_a3030"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rmyuv"]
+resource_name = "MAT_LAND"
+cull_mode = 2
+albedo_color = Color(0.14349401, 0.7088492, 0.19965743, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c0vvo"]
+resource_name = "MAT_WATER"
+cull_mode = 2
+albedo_color = Color(0.17128417, 0.22256415, 0.9063355, 1)
+roughness = 0.5
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3qj85"]
+_surfaces = [{
+"aabb": AABB(-0.433, 0, -0.5, 0.866, 0.5, 0.75),
+"format": 34359742465,
+"index_count": 63,
+"index_data": PackedByteArray("AAABAAIAAQADAAIAAwAEAAIAAwAFAAQABgADAAEAAAAHAAEABgABAAcABwAAAAYACAAGAAAABgAIAAkABgAJAAoACQALAAoACQAIAAwADQAMAAgADQAOAAwADQAIAA8ADQAQAA4ADQAPABAAEAAPAA4ADwARAA4ADwASABEA"),
+"name": "MAT_LAND",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 19,
+"vertex_data": PackedByteArray("MzOtvgAAAAAAAIA+LbLdvgAAAD8AAIA+MzOtvgAAAD8AAIA+03LFvgAAAD95ACw+MzOtvjMz8z4AAIA+03LFvjMz8z55ACw+03LFvgAAAAB5ACw+LbLdvgAAAAAAAIA+cKmtPgAAAAAAAIA+zARCPQAAAAAT/tW+6LpdvQAAAAAc/s++AAAAAAAAAAAAAAC/bXLFPgAAAAAC/ys+LbLdPgAAAAAAAIA+bXLFPgAAAD8C/ys+cKmtPgAAAD8AAIA+LbLdPgAAAD8AAIA+bXLFPjMz8z4C/ys+cKmtPjMz8z4AAIA+")
+}, {
+"aabb": AABB(-0.38564166, 0, -0.5, 0.7712803, 0.475, 0.75),
+"format": 34359742465,
+"index_count": 45,
+"index_data": PackedByteArray("AAABAAIAAwACAAEAAwAEAAIADAABAAAACwAMAAAACwAKAAwAAQAMAA0AAQANAAYABwAGAA0ABwANAAgADQAMAAUACgAFAAwACAANAAUACgAJAAUACAAFAAkA"),
+"lods": [0.00023023956, PackedByteArray("AAABAAIAAwACAAEAAwAEAAIAAQAAAAUAAQAFAAYABwAGAAUABwAFAAgACAAFAAkACgAJAAUACgAFAAAACwAKAAAA")],
+"name": "MAT_WATER",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 14,
+"vertex_data": PackedByteArray("03LFvjMz8z55ACw+cKmtPjMz8z4AAIA+MzOtvjMz8z4AAIA+cKmtPgAAAAAAAIA+MzOtvgAAAAAAAIA+AAAAADMz8z4AAAC/bXLFPjMz8z4C/ys+bXLFPgAAAAAC/ys+zARCPQAAAAAT/tW+AAAAAAAAAAAAAAC/6LpdvQAAAAAc/s++03LFvgAAAAB5ACw+6LpdvTMz8z4c/s++zARCPTMz8z4T/tW+")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_b1g7a"]
+resource_name = "river-delta_face_Cylinder_009"
+_surfaces = [{
+"aabb": AABB(-0.433, 0, -0.5, 0.866, 0.5, 0.75),
+"attribute_data": PackedByteArray("VFW9PgAAAD+pqqo+AAAAAFRVvT4AAAAAqaqqPgAAAD+qqio/AAAAP///Hz8AAAAAqqoqPwAAAAD//x8/AAAAPxoAmD7s/w0/qaqqPgAAAACpqqo+AAAAPxoAmD7A/t89qqoqPwAAAD90VRU/kP7/PXNVFT/o/w8/qqoqPwAAAACpqqo+AAAAP1RVvT4AAAA/GgCYPuz/DT///x8/AAAAPy1clT1c/3E/YrEqPV//bz8AAAAAAACAP3NVFT/o/w8/qqoqPwAAAD+pqqo+AAAAABoAmD7A/t89VFW9PgAAAACqqio/AAAAAP//Hz8AAAAAdFUVP5D+/z3//x8/AAAAAHRVFT+Q/v89dFUVP5D+/z3//x8/AAAAABoAmD7A/t89VFW9PgAAAABUVb0+AAAAABoAmD7A/t89"),
+"format": 34359742487,
+"index_count": 63,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEwASABEAEgATABQAEgAUABUAFAAWABUAFAATABcAGAAXABMAGQAaABsAHAAdAB4AHwAgACEAHwAiACAAIwAkACUAIwAmACQA"),
+"material": SubResource("StandardMaterial3D_rmyuv"),
+"name": "MAT_LAND",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 39,
+"vertex_data": PackedByteArray("MzOtvgAAAAAAAIA+LbLdvgAAAD8AAIA+MzOtvgAAAD8AAIA+LbLdvgAAAAAAAIA+LbLdPgAAAAAAAIA+cKmtPgAAAD8AAIA+LbLdPgAAAD8AAIA+cKmtPgAAAAAAAIA+03LFvgAAAAB5ACw+LbLdvgAAAD8AAIA+LbLdvgAAAAAAAIA+03LFvgAAAD95ACw+LbLdPgAAAAAAAIA+bXLFPgAAAD8C/ys+bXLFPgAAAAAC/ys+LbLdPgAAAD8AAIA+LbLdvgAAAAAAAIA+MzOtvgAAAAAAAIA+03LFvgAAAAB5ACw+cKmtPgAAAAAAAIA+zARCPQAAAAAT/tW+6LpdvQAAAAAc/s++AAAAAAAAAAAAAAC/bXLFPgAAAAAC/ys+LbLdPgAAAAAAAIA+LbLdvgAAAD8AAIA+03LFvgAAAD95ACw+MzOtvgAAAD8AAIA+LbLdPgAAAD8AAIA+cKmtPgAAAD8AAIA+bXLFPgAAAD8C/ys+cKmtPgAAAD8AAIA+bXLFPjMz8z4C/ys+bXLFPgAAAD8C/ys+cKmtPjMz8z4AAIA+03LFvgAAAD95ACw+MzOtvjMz8z4AAIA+MzOtvgAAAD8AAIA+03LFvjMz8z55ACw+/3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////vwAA2a4YYJSrAADZrt5mU6IAANmuEF/7rAAA2a71Z9Wg///ZrnSdwlf//9munZheXv//2a4vnsJW///ZrtSXcV//fwAA////v/9/AAD///+//38AAP///7//fwAAKPv/v/9/AABk//+//38AAP///7//fwAA////v/9/AAB99f+//38AAP///7//f///////P/9///////8//3///////z//f///////P/9///////8//3///////z8AAEau////vwAARq7///+/AABGrv///78AAEau////v///2a7///+////Zrv///7///9mu////v///2a7///+/")
+}, {
+"aabb": AABB(-0.38564166, 0, -0.5, 0.7712803, 0.475, 0.75),
+"attribute_data": PackedByteArray("GgCYPsD+3z3//x8/AAAAAFRVvT4AAAAAAAAAAAAAgD90VRU/kP7/PS1clT1c/3E/AAAAAAAAgD8AAAAAAACAP3NVFT/o/w8/dFUVP5D+/z1isSo9X/9vPwAAAAAAAIA/GgCYPsD+3z0AAAAAAACAPxoAmD7s/w0///8fPwAAAD9UVb0+AAAAAP//Hz8AAAAAVFW9PgAAAD9hsSo9vv5fPy1clT24/mM/LVyVPbj+Yz9hsSo9vv5fPw=="),
+"format": 34359742487,
+"index_count": 45,
+"index_data": PackedByteArray("AAABAAIAEwABAAAAAQATABQAFAATAAMAAQAUAAQABQAGAAcABQAVAAYACAAVAAUACAAJABUACgALABYACgANAAsADgAKABYADgAWAAwADwAQABEADwASABAA"),
+"lods": [0.00023023956, PackedByteArray("AAABAAIAAQAAAAMAAQADAAQABQAGAAcACAAGAAUACAAJAAYACgALAAwACgANAAsADgAKAAwADwAQABEADwASABAA")],
+"material": SubResource("StandardMaterial3D_c0vvo"),
+"name": "MAT_WATER",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 23,
+"vertex_data": PackedByteArray("03LFvjMz8z55ACw+cKmtPjMz8z4AAIA+MzOtvjMz8z4AAIA+AAAAADMz8z4AAAC/bXLFPjMz8z4C/ys+zARCPQAAAAAT/tW+AAAAADMz8z4AAAC/AAAAAAAAAAAAAAC/bXLFPgAAAAAC/ys+bXLFPjMz8z4C/ys+6LpdvQAAAAAc/s++AAAAADMz8z4AAAC/03LFvjMz8z55ACw+AAAAAAAAAAAAAAC/03LFvgAAAAB5ACw+cKmtPgAAAAAAAIA+MzOtvjMz8z4AAIA+cKmtPjMz8z4AAIA+MzOtvgAAAAAAAIA+6LpdvTMz8z4c/s++zARCPTMz8z4T/tW+zARCPTMz8z4T/tW+6LpdvTMz8z4c/s++/3///////z//f///1fj/P/9///////8//3///////z//f///3/D/P///2a65ibZy///Zrp2FU3j//9mu////v///2a7qk8pk///ZrqqYTV4AANmua3VyjgAA2a6veZ6IAADZrlxnp6EAANmu////vwAA2a7ua2ib/3//f////7//f/9/////v/9//3////+//3//f////7//f///////P/9///9k//8////ZrsuL4m8AANmunXPpkA==")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_3qj85")
+
+[node name="RiverDeltaFace" type="Node3D"]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
+script = ExtResource("1_a3030")
+module_type = 2
+profiles = Dictionary[int, int]({
+90: 3,
+210: 1,
+330: 1
+})
+
+[node name="river-delta_face" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+mesh = SubResource("ArrayMesh_b1g7a")
+skeleton = NodePath("")

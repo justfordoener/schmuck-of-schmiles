@@ -69,6 +69,7 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_djho4")
 
 [node name="RiverEdge" type="Node3D"]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
 script = ExtResource("1_iyxyc")
 module_type = 1
 profiles = Dictionary[int, int]({
