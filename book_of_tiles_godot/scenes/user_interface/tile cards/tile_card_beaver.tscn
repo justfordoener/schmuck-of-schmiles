@@ -12,5 +12,5 @@ tile = ExtResource("2_w6ykq")
 texture_normal = ExtResource("3_v7l15")
 
 [node name="RichTextLabel" parent="VBoxContainer" index="1"]
-text = "短
+text = "Beaver
 "

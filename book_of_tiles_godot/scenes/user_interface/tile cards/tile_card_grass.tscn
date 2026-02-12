@@ -15,4 +15,4 @@ offset_bottom = 184.0
 texture_normal = ExtResource("3_djcye")
 
 [node name="RichTextLabel" parent="VBoxContainer" index="1"]
-text = "斑点"
+text = "Grass"
