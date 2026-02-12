@@ -43,6 +43,7 @@ shadow_mesh = SubResource("ArrayMesh_r5pgo")
 [node name="LandCorner" type="Node3D"]
 transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
 script = ExtResource("1_5y7km")
+module_id = 17
 profiles = Dictionary[int, int]({
 0: 2,
 60: 2,

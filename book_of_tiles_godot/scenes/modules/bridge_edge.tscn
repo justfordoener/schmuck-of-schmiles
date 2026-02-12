@@ -7,6 +7,7 @@
 transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
 script = ExtResource("1_g250i")
 module_type = 1
+module_id = 18
 profiles = Dictionary[int, int]({
 0: 4,
 90: 3,

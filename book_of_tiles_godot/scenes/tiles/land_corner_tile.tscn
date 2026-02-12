@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://b7lpumrxpvgvh"]
-
-[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_vaa7e"]
-[ext_resource type="PackedScene" uid="uid://c6kj6xvykr2qm" path="res://scenes/modules/land_corner.tscn" id="2_vaa7e"]
-
-[node name="RiverCornerTile" type="Node3D"]
-script = ExtResource("1_vaa7e")
-
-[node name="LandCorner" parent="." instance=ExtResource("2_vaa7e")]

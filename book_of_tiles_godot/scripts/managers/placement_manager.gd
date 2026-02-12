@@ -9,7 +9,7 @@ var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
 var previous_position : Vector3 = Vector3.ZERO
-
+var saved_rotation : float = 0.
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
@@ -53,10 +53,13 @@ func _process(_delta):
 		if snap_position != previous_position:
 			previous_position = snap_position
 			preview_instance.rotation.y = deg_to_rad(Grid.snap_rotation(snap_position, preview_instance.layer_type))
+			preview_instance.rotate_y(saved_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_down"):
 			preview_instance.rotate_y(deg_to_rad(base_rotation))
+			saved_rotation = deg_to_rad(base_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_up"):
 			preview_instance.rotate_y(deg_to_rad(-base_rotation))
+			saved_rotation = deg_to_rad(-base_rotation)
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
 
@@ -71,7 +74,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	for child : Module in instance.get_children():
 		var child_position = Grid.snap_position(child.global_position, child.module_type)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
-		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
+		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation + child.rotation.y))
 		print("child_pos: ", child_position, " child_index: ", child_index, " child_rotation: ", child_rotation)
 		if not Grid.does_module_fit(child_index, child, child_rotation):
 			print("failed child: ", child.module_type, child_index, child_rotation, " ", child_position)
@@ -80,9 +83,8 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	for child : Module in instance.get_children():
 		var child_position = Grid.snap_position(child.global_position, child.module_type)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
-		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
-		#if not Grid.force_collapse(child_index, child, child_rotation):
-			#print("oups")
+		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation + child.rotation.y))
+		Grid.place_module(child_index, child, child_rotation)
 	preview_instance.queue_free()
 	Signals.on_instance_spawned.emit()
 	

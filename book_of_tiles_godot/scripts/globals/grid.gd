@@ -162,7 +162,7 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 
 func propagate(cell_index : Vector3i) -> void:
 	var cell : Cell = grid[cell_index]
-	#spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
+	spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
 	for neighbor_key : String in cell.neighbors.keys():
 		var neighbor_index : Vector3i = get_axial_index(cell.neighbors[neighbor_key].axial_position)
 		var neighbor : Cell = grid[neighbor_index]
@@ -190,14 +190,38 @@ func collapse(cell_index : Vector3i) -> bool:
 	return possibilities_before_collapse != cell.possibilities.size()
 
 func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> bool:
+	if grid[cell_index].module_reference != null:
+		print("cell occupied")
+		return false
+	var possibility : Possibility = get_fitting_possibility(cell_index, module, rotation)
+	if possibility != null:
+		return true
+	else:
+		return false
+
+func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : int) -> Possibility:
 	var cell : Cell = grid[cell_index]
 	for possibility : Possibility in cell.possibilities:
 		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
 		 and possibility.module_rotation == posmod(rotation, 360)
 		 and do_profiles_match(possibility.profiles, cell.profiles)):
-			return true
-	return false
+			#print("cid: ", cell_index, " ppvalues: ", possibility.profiles.values(), " cpvalues: ", cell.profiles.values())
+			return possibility
+	return null
 
+func place_module(cell_index : Vector3i, module : Module, rotation : int) -> void:
+	var cell : Cell = grid[cell_index]
+	var possibility : Possibility = get_fitting_possibility(cell_index, module, rotation)
+	if possibility == null:
+		print("module doesn't fit here")
+		return
+	cell.possibilities = [possibility]
+	cell.profiles = possibility.profiles
+	cell.module_reference = module
+	propagation_stack = []
+	print("cid: ", cell_index, " ppvalues: ", possibility.profiles.values(), " cpvalues: ", cell.profiles.values())
+	propagate(cell_index)
+	
 # collapses a cell down to a single possibility. 
 func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> bool:
 	var cell : Cell = grid[cell_index]

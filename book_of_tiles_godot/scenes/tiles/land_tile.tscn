@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://b7lpumrxpvgvh"]
+
+[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_q4ft2"]
+[ext_resource type="PackedScene" uid="uid://c6kj6xvykr2qm" path="res://scenes/modules/land_corner.tscn" id="2_xdgrf"]
+[ext_resource type="PackedScene" uid="uid://dpxc0kfqikaj4" path="res://scenes/modules/land_face.tscn" id="3_lts2p"]
+[ext_resource type="PackedScene" uid="uid://dw0fwmebsvjui" path="res://scenes/modules/land_edge.tscn" id="4_56ils"]
+
+[node name="LandTile" type="Node3D"]
+script = ExtResource("1_q4ft2")
+
+[node name="LandCorner" parent="." instance=ExtResource("2_xdgrf")]
+
+[node name="LandFace1" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, -1, 0, -0.577)
+
+[node name="LandFace2" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 1, 0, -0.577)
+
+[node name="LandFace3" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 1.155)
+
+[node name="LandFace4" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(0.5774999, 0, -1.0002594, 0, 1.1549999, 0, 1.0002594, 0, 0.5774999, 0, 0, -1.155)
+
+[node name="LandFace5" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(0.5774999, 0, -1.0002594, 0, 1.1549999, 0, 1.0002594, 0, 0.5774999, 1, 0, 0.577)
+
+[node name="LandFace6" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(0.5774999, 0, -1.0002594, 0, 1.1549999, 0, 1.0002594, 0, 0.5774999, -1, 0, 0.577)
+
+[node name="LandEdge" parent="." instance=ExtResource("4_56ils")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, -1, 0, 0)
+
+[node name="LandEdge2" parent="." instance=ExtResource("4_56ils")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 1, 0, 0)
+
+[node name="LandEdge3" parent="." instance=ExtResource("4_56ils")]
+transform = Transform3D(0.5772556, 0, -1.0004003, 0, 1.1549999, 0, 1.0004003, 0, 0.5772556, -0.49978843, 0, -0.8661475)
+
+[node name="LandEdge4" parent="." instance=ExtResource("4_56ils")]
+transform = Transform3D(0.5772556, 0, -1.0004003, 0, 1.1549999, 0, 1.0004003, 0, 0.5772556, 0.49978843, 0, 0.8661475)
+
+[node name="LandEdge5" parent="." instance=ExtResource("4_56ils")]
+transform = Transform3D(-0.57750005, 0, -1.0002593, 0, 1.1549999, 0, 1.0002593, 0, -0.57750005, 0.5, 0, -0.866)
+
+[node name="LandEdge6" parent="." instance=ExtResource("4_56ils")]
+transform = Transform3D(-0.57750005, 0, -1.0002593, 0, 1.1549999, 0, 1.0002593, 0, -0.57750005, -0.5, 0, 0.866)

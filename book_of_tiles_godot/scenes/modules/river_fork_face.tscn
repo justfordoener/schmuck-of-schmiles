@@ -72,6 +72,7 @@ shadow_mesh = SubResource("ArrayMesh_wuffu")
 transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
 script = ExtResource("1_xuux7")
 module_type = 2
+module_id = 1
 profiles = Dictionary[int, int]({
 90: 3,
 210: 3,

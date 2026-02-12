@@ -71,6 +71,7 @@ shadow_mesh = SubResource("ArrayMesh_0ukg8")
 [node name="PathForkCorner" type="Node3D"]
 transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
 script = ExtResource("1_vfyb1")
+module_id = 12
 profiles = Dictionary[int, int]({
 0: 4,
 60: 2,
