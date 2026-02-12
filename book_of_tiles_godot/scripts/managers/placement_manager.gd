@@ -10,6 +10,7 @@ var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
 var previous_position : Vector3 = Vector3.ZERO
 
+
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
 	if tile:
@@ -57,7 +58,8 @@ func _process(_delta):
 		if Input.is_action_just_pressed("mouse_wheel_up"):
 			preview_instance.rotate_y(deg_to_rad(-base_rotation))
 		if Input.is_action_just_pressed("mouse_left"):
-			_spawn_instance(snap_position, preview_instance.rotation.y)
+			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
+			Signals.on_instance_spawned.emit()
 
 func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	var instance = current_tile.instantiate()

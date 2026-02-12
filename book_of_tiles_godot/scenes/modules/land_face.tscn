@@ -1,0 +1,54 @@
+[gd_scene load_steps=5 format=4 uid="uid://dpxc0kfqikaj4"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_l38j8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f67jy"]
+resource_name = "mat_land"
+cull_mode = 2
+albedo_color = Color(0.14349401, 0.7088492, 0.19965743, 1)
+roughness = 0.5
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_rlf67"]
+_surfaces = [{
+"aabb": AABB(-0.433, 0, -0.5, 0.866, 0.5, 0.75),
+"format": 34896613377,
+"index_count": 24,
+"index_data": PackedByteArray("AAABAAIAAQADAAIABAAAAAIABAACAAMAAAAFAAEAAAAEAAUABQADAAEABQAEAAMA"),
+"name": "mat_land",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 6,
+"vertex_data": PackedByteArray("/38AAAAAAAD///////8AAP9///8AAAAAAAD/////AAAAAAAA//8AAP//AAD//wAA")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_1acfg"]
+resource_name = "land_face_Cylinder_001"
+_surfaces = [{
+"aabb": AABB(-0.433, 0, -0.5, 0.866, 0.5, 0.75),
+"attribute_data": PackedByteArray("//+PyVTV/3////9/VNWPyVTVj8mpqv9/VNX/f6mqj8mZuv//ZIX///+fCMupqo/J/3//f6mq/3//f4/J/98Iy2TF//+Z+v//"),
+"format": 34896613399,
+"index_count": 24,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACwAMAA0ACwAOAAwADwAQABEA"),
+"material": SubResource("StandardMaterial3D_f67jy"),
+"name": "mat_land",
+"primitive": 3,
+"uv_scale": Vector4(2, 1.74, 0, 0),
+"vertex_count": 18,
+"vertex_data": PackedByteArray("/38AAAAAVNX///////9U1f9///8AAFTV//8AAP//VNX//wAA//8AgAAA/////wCA////////AIAAAAAA//8AgP////////+/AAD//////7//f///AAD/vwAAAAD//1TV/3///wAAVNUAAP////9U1f9/AAAAAFTV/38AAAAA/z8AAAAA////P///AAD///8//38AAP9/AAD/fwAA/38AAP9/////f////3////9///////9/////f////3//f////3////9/////f///AAD/fwAA/38AAP9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_rlf67")
+
+[node name="LandFace" type="Node3D"]
+script = ExtResource("1_l38j8")
+module_type = 2
+profiles = Dictionary[int, int]({
+90: 2,
+210: 2,
+330: 2
+})
+
+[node name="land_face" type="MeshInstance3D" parent="."]
+mesh = SubResource("ArrayMesh_1acfg")
+skeleton = NodePath("")
