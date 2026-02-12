@@ -162,7 +162,7 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 
 func propagate(cell_index : Vector3i) -> void:
 	var cell : Cell = grid[cell_index]
-	spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
+	#spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
 	for neighbor_key : String in cell.neighbors.keys():
 		var neighbor_index : Vector3i = get_axial_index(cell.neighbors[neighbor_key].axial_position)
 		var neighbor : Cell = grid[neighbor_index]
