@@ -73,9 +73,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
 		print("child_pos: ", child_position, " child_index: ", child_index, " child_rotation: ", child_rotation)
-		if (not Grid.grid[child_index].module_reference == null
-		 or not Grid.does_module_fit(child_index, child, child_rotation)
-		):
+		if not Grid.does_module_fit(child_index, child, child_rotation):
 			print("failed child: ", child.module_type, child_index, child_rotation, " ", child_position)
 			instance.queue_free()
 			return
@@ -83,8 +81,8 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 		var child_position = Grid.snap_position(child.global_position, child.module_type)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
-		if not Grid.force_collapse(child_index, child, child_rotation):
-			print("oups")
+		#if not Grid.force_collapse(child_index, child, child_rotation):
+			#print("oups")
 	preview_instance.queue_free()
 	Signals.on_instance_spawned.emit()
 	
