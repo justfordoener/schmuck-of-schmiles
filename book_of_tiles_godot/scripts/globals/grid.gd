@@ -127,7 +127,6 @@ func _add_edges_and_faces(center : Vector3) -> void:
 			grid[get_axial_index(pos_face)] = face_cell
 			
 func _init_cell_possibilities(cell_index : Vector3i) -> void:
-	print("-----------", cell_index)
 	var cell : Cell = grid[cell_index]
 	for module_ref in modules:
 		var module : Module = module_ref.instantiate()
@@ -136,10 +135,9 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 			continue
 		var base_rotation : int = -round_rotation(snap_rotation(axial_to_cartesian(cell.axial_position), module.module_type))
 		var rotation_value : int = round_rotation(get_rotation_value(module.module_type))
-		var possible_rotations : int = (360.0 / rotation_value)
+		var possible_rotations : int = floor(360.0 / rotation_value)
 		for i in range(possible_rotations): 
 			var total_rotation : int = posmod(base_rotation + i * rotation_value, 360)
-			#print("++++ module ", module.module_type, " total rot ", total_rotation)
 			var possible_module : Possibility = Possibility.new()
 			possible_module.module_reference = module
 			possible_module.module_rotation = total_rotation
@@ -148,21 +146,11 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 				var neighbor_index : Vector3i = get_neighbor_from_rot(cell_index, total_direction)
 				var border_index = _get_border_index(cell_index, neighbor_index)
 				if neighbor_index == Vector3i(7777,7777,7777):
-					print("no neighbor at ", cell_index, " in dir ", total_direction, " with baserot: ", base_rotation, " and with total rot: ", total_rotation)
 					possible_module.profiles[border_index] = Layout.PROFILE_TYPE.EMPTY
 					continue # border deg is pointing toward the edge of the map
 				else:
 					possible_module.profiles[border_index] = module.profiles[border_deg]
-					print("added profile ", module.profiles[border_deg], " on ", border_index)
 			cell.possibilities.append(possible_module)
-		for p in cell.possibilities:
-			pass #print(p.profiles.values())
-
-	#for p in cell.possibilities:
-		#print("type ", p.module_reference.module_type)
-		#print("rota ", p.module_rotation)
-		#print("prok ", p.profiles.keys())
-		#print("prov ", p.profiles.values())
 		
 func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> void:
 	get_tree().root.add_child.call_deferred(module)
@@ -174,7 +162,7 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 
 func propagate(cell_index : Vector3i) -> void:
 	var cell : Cell = grid[cell_index]
-	spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
+	#spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
 	for neighbor_key : String in cell.neighbors.keys():
 		var neighbor_index : Vector3i = get_axial_index(cell.neighbors[neighbor_key].axial_position)
 		var neighbor : Cell = grid[neighbor_index]
@@ -184,7 +172,7 @@ func propagate(cell_index : Vector3i) -> void:
 			if not collapse(neighbor_index):
 				continue
 			# await get_tree().create_timer(0.2).timeout
-			#propagate(neighbor_index)
+			propagate(neighbor_index)
 
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
@@ -201,13 +189,9 @@ func collapse(cell_index : Vector3i) -> bool:
 	cell.possibilities = new_possibilities
 	return possibilities_before_collapse != cell.possibilities.size()
 
+# collapses a cell down to a single possibility. 
 func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> bool:
 	var cell : Cell = grid[cell_index]
-	var did_it_collapse = false
-	var debug_string : String = "not collapsed"
-	print(cell.possibilities.size())
-	for poss in cell.possibilities:
-		print(poss.profiles.values())
 	for possibility : Possibility in cell.possibilities:
 		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
 		and possibility.module_rotation == posmod(rotation, 360)
@@ -217,11 +201,8 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 			cell.module_reference = module
 			propagate(cell_index)
 			propagation_stack = []
-			did_it_collapse = true
-			debug_string = "collapsed. rot: " + str(possibility.module_rotation) + " poss: " + str(possibility.profiles.values())
-			break
-	print(debug_string)
-	return did_it_collapse
+			return true
+	return false
 
 # ------------------- helper functions -------------------
 

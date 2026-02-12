@@ -66,7 +66,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	instance.global_position = instance_position
 	instance.rotation.y = instance_rotation
 	for child in instance.get_children():
-		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(instance_position)) # TODO fix for tiles with more modules
+		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(instance_position + child.position)) 
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation))
 		if (child is Module
 		 and Grid.grid[child_index].module_reference == null
