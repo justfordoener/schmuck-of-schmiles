@@ -22,7 +22,7 @@ func _ready() -> void:
 	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
 	_load_modules_from_dir(module_directory)
-	for cell_index in grid.keys():
+	for cell_index in grid.keys(): #.slice(0, 5):
 		_init_cell_possibilities(cell_index)
 		#print("cell: ", grid[cell_index].axial_position, " of type ", grid[cell_index].type, " has ", grid[cell_index].possibilities.size(), " possibilites")
 
@@ -127,25 +127,45 @@ func _add_edges_and_faces(center : Vector3) -> void:
 			grid[get_axial_index(pos_face)] = face_cell
 			
 func _init_cell_possibilities(cell_index : Vector3i) -> void:
+	print("-----------", cell_index)
 	var cell : Cell = grid[cell_index]
 	for module_ref in modules:
 		var module : Module = module_ref.instantiate()
 		if module.module_type != grid[cell_index].type:
 			module.queue_free()
 			continue
-		var possible_rotations : Array[int] = module.profiles.keys()
 		var base_rotation : int = round_rotation(snap_rotation(axial_to_cartesian(cell.axial_position), module.module_type))
-		var rotation_step : int = round_rotation(get_rotation_value(module.module_type))
-		var step : int = 0
-		for rotation in possible_rotations:
+		var rotation_value : int = round_rotation(get_rotation_value(module.module_type))
+		var possible_rotations : int = (360.0 / rotation_value)
+		for i in range(possible_rotations): 
+			var total_rotation : int = posmod(base_rotation + i * rotation_value, 360)
+			print("++++ module ", module.module_type, " total rot ", total_rotation)
 			var possible_module : Possibility = Possibility.new()
 			possible_module.module_reference = module
-			possible_module.module_rotation = posmod(base_rotation + step * rotation_step, 360)
-			step += 1
-			for i in range(cell.profiles.size()):
-				possible_module.profiles[cell.profiles.keys()[i]] = module.profiles.values()[i]
+			possible_module.module_rotation = total_rotation
+			for border_deg in module.profiles.keys():
+				var total_direction : int = posmod(total_rotation + border_deg, 360)
+				var neighbor_index : Vector3i = get_neighbor_from_rot(cell_index, total_direction)
+				
+				if neighbor_index == Vector3i(1111,0,0):
+					return
+				
+				var border_index = _get_border_index(cell_index, neighbor_index)
+				possible_module.profiles[border_index] = module.profiles[border_deg]
+				print("added profile ", module.profiles[border_deg], " on ", border_index)
 			cell.possibilities.append(possible_module)
-			break
+
+	for p in cell.possibilities:
+		print("type ", p.module_reference.module_type)
+		print("rota ", p.module_rotation)
+		print("prok ", p.profiles.keys())
+		print("prov ", p.profiles.values())
+		
+func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> void:
+	get_tree().root.add_child.call_deferred(module)
+	module.global_position = cartvec
+	module.rotation_degrees.y = rotdeg
+	
 	
 #-------------------------------- wfc ----------------------------
 
@@ -180,6 +200,9 @@ func collapse(cell_index : Vector3i) -> bool:
 
 func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> bool:
 	var cell : Cell = grid[cell_index]
+	print(cell.possibilities.size())
+	for poss in cell.possibilities:
+		print(poss.profiles.values())
 	for possibility : Possibility in cell.possibilities:
 		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
 		and possibility.module_rotation == posmod(rotation, 360)):
@@ -189,11 +212,24 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 			propagate(cell_index)
 			propagation_stack = []
 			return true
-	print(module.profiles.values(), " -- ", cell.profiles.values())
+		print("PLACEMENT: rot = ", rotation, " poss.rot = ", possibility.module_rotation)
 	return false
 
 # ------------------- helper functions -------------------
 
+
+func get_neighbor_from_rot(cell_index : Vector3i, rot_degree : int) -> Vector3i:
+	var cell = grid[cell_index]
+	var neighbor_index : Vector3i
+	var dir_to_neighbor : Vector3 = Layout.TILE_ROTATION_VALUE[rot_degree].normalized()
+	for neighbor : Cell in cell.neighbors.values():
+		var dir_to_neighbor_temp : Vector3 = (neighbor.axial_position - cell.axial_position).normalized()
+		if dir_to_neighbor.dot(dir_to_neighbor_temp) > 0.9:
+			neighbor_index = get_axial_index(neighbor.axial_position)
+			return neighbor_index
+		#printerr("no neighbor with ", rot_degree, " deg found. dir_to_n: ", dir_to_neighbor, " temp: ", dir_to_neighbor_temp)
+	return Vector3i(1111, 0, 0)
+	
 func _get_border_index(a_index: Vector3i, b_index: Vector3i) -> String:
 	var s1 = str(a_index)
 	var s2 = str(b_index)
