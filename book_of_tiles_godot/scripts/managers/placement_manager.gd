@@ -66,15 +66,14 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float):
 	instance.global_position = instance_position
 	instance.rotation.y = instance_rotation
 	for child in instance.get_children():
-		var child_index = Grid._get_axial_index(Grid.cartesian_to_axial(instance_position))
+		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(instance_position)) # TODO fix for tiles with more modules
 		var child_rotation = Grid.round_rotation(rad_to_deg(instance_rotation))
 		if (child is Module
-		and Grid.check_module_fit(child_index, child, child_rotation)
-		and Grid.grid[child_index].module_reference == null
+		 and Grid.grid[child_index].module_reference == null
+		 and Grid.force_collapse(child_index, child, child_rotation)
 		):
-			Grid.link_module_to_cell(child, child.global_position, Grid.round_rotation(rad_to_deg(instance_rotation)))
 			Grid.propagation_stack = []
-			#Grid.propagate(Grid.cartesian_to_axial(instance_position))
+			Grid.propagate(child_index)
 			preview_instance.queue_free()
 		else:
 			instance.queue_free()
