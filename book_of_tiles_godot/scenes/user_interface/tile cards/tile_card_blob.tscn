@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c5t358kv785i2"]
 
 [ext_resource type="PackedScene" uid="uid://be5qy5lmbx0pv" path="res://scenes/user_interface/tile_card.tscn" id="1_iplyg"]
-[ext_resource type="PackedScene" uid="uid://b7lpumrxpvgvh" path="res://scenes/tiles/river_corner.tscn" id="2_djcye"]
+[ext_resource type="PackedScene" uid="uid://b7lpumrxpvgvh" path="res://scenes/tiles/land_corner_tile.tscn" id="2_djcye"]
 [ext_resource type="Texture2D" uid="uid://ff130n6clesp" path="res://textures/blob.png" id="2_watfb"]
 
 [node name="TileCardBlob" instance=ExtResource("1_iplyg")]
