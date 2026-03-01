@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://i8qyitdsh5pv"]
+[gd_scene load_steps=3 format=3 uid="uid://i8qyitdsh5pv"]
 
 [ext_resource type="Script" uid="uid://1gok5algkmqy" path="res://scripts/UI/main_menu.gd" id="1_dhggu"]
+[ext_resource type="Script" uid="uid://b1spq0oln5srw" path="res://scripts/UI/sound_settings.gd" id="2_v1ts7"]
 
 [node name="MainMenu" type="Control" node_paths=PackedStringArray("level_button", "settings_button", "credits_button", "quit_button", "level_back_button", "level_buttons", "settings_back_button", "credits_back_button", "level_selection", "settings", "credits")]
 layout_mode = 3
@@ -319,7 +320,6 @@ text = "Back"
 [node name="SettingsCanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="SettingsMenu" type="VBoxContainer" parent="SettingsCanvasLayer"]
-visible = false
 custom_minimum_size = Vector2(800, 660)
 anchors_preset = 8
 anchor_left = 0.5
@@ -338,14 +338,33 @@ alignment = 1
 custom_minimum_size = Vector2(800, 600)
 layout_mode = 2
 tab_alignment = 1
-current_tab = 1
+current_tab = 0
 
 [node name="Keybinds" type="TabBar" parent="SettingsCanvasLayer/SettingsMenu/SettingsContainer"]
-visible = false
 layout_mode = 2
+script = ExtResource("2_v1ts7")
 metadata/_tab_index = 0
 
+[node name="HSlider" type="HSlider" parent="SettingsCanvasLayer/SettingsMenu/SettingsContainer/Keybinds"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+min_value = -6.0
+step = 0.1
+ticks_position = 3
+
 [node name="Sound" type="TabBar" parent="SettingsCanvasLayer/SettingsMenu/SettingsContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
