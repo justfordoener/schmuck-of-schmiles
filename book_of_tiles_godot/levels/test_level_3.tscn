@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://cxpydfj22r5ip"]
+[gd_scene load_steps=2 format=3 uid="uid://cxpydfj22r5ip"]
+
+[ext_resource type="PackedScene" uid="uid://c2q2ys53elenm" path="res://scenes/user_interface/menus/pause_ui.tscn" id="1_yvf4s"]
 
 [node name="TestLevel1" type="Node2D"]
 
@@ -36,12 +38,15 @@ offset_right = 80.0
 offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Scene 2"
+text = "Scene 3"
 
 [node name="Spacer" type="Control" parent="TestLayer/Scene"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="Back" type="Button" parent="TestLayer/Scene"]
+visible = false
 layout_mode = 2
 text = "Close"
+
+[node name="PauseUI" parent="." instance=ExtResource("1_yvf4s")]
