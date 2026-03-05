@@ -1,20 +1,73 @@
 extends Control
 
 var master_volume: float = 1.0
+var previous_master: float = 1.0
+
+@export var slider_master := HSlider
+@export var slider_music := HSlider
+@export var slider_sfx := HSlider
+
+@export var value_master := RichTextLabel
+@export var value_music := RichTextLabel
+@export var value_sfx := RichTextLabel
+
+func _ready() -> void:
+	# Get current volumes from AudioServer in dB
+	var master_db = AudioServer.get_bus_volume_db(0)
+	var music_db = AudioServer.get_bus_volume_db(1)
+	var sfx_db = AudioServer.get_bus_volume_db(2)
+
+	var master_linear = db_to_linear(master_db)
+	var music_linear = db_to_linear(music_db)
+	var sfx_linear = db_to_linear(sfx_db)
+
+	slider_master.value = master_linear
+	slider_music.value = music_linear
+	slider_sfx.value = sfx_linear
+
+	# Initialize master tracking variable
+	master_volume = master_linear
+	previous_master = master_linear
+
+	update_labels()
 
 func _on_master_value_changed(value: float) -> void:
+	var delta = value - previous_master
+	previous_master = value
 	master_volume = value
-	$Music.value = value
-	$SFX.value = value
-	set_bus_volume(1, value)
-	set_bus_volume(2, value)
 
-func _on_music_value_changed(value: float) -> void:
-	set_bus_volume(1, value * master_volume)
+	# Move other sliders by same amount
+	slider_music.value = clamp(slider_music.value + delta, 0.0, 4.0)
+	slider_sfx.value = clamp(slider_sfx.value + delta, 0.0, 4.0)
+	if master_volume == 0:
+		slider_music.value = 0.0
+		slider_sfx.value = 0.0
+	elif master_volume == 4.0:
+		slider_music.value = 4.0
+		slider_sfx.value = 4.0
 
+	apply_volumes()
+	update_labels()
 
-func _on_sfx_value_changed(value: float) -> void:
-	set_bus_volume(2, value * master_volume)
+func _on_music_value_changed(_value: float) -> void:
+	apply_volumes()
+	update_labels()
+
+func _on_sfx_value_changed(_value: float) -> void:
+	apply_volumes()
+	update_labels()
+
+func apply_volumes():
+	set_bus_volume(1, slider_music.value)
+	set_bus_volume(2, slider_sfx.value)
 
 func set_bus_volume(bus_index: int, value: float) -> void:
 	AudioServer.set_bus_volume_db(bus_index, linear_to_db(value))
+
+func update_labels() -> void:
+	value_master.text = str(to_percent(slider_master.value)) + "%"
+	value_music.text = str(to_percent(slider_music.value)) + "%"
+	value_sfx.text = str(to_percent(slider_sfx.value)) + "%"
+
+func to_percent(value: float) -> int:
+	return int((value / 4.0) * 100)
