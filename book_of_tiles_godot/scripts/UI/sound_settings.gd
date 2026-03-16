@@ -1,8 +1,5 @@
 extends Control
 
-var master_volume: float = 1.0
-var previous_master: float = 1.0
-
 @export var slider_master := HSlider
 @export var slider_music := HSlider
 @export var slider_sfx := HSlider
@@ -11,7 +8,13 @@ var previous_master: float = 1.0
 @export var value_music := RichTextLabel
 @export var value_sfx := RichTextLabel
 
+var master_volume: float = 1.0
+var previous_master: float = 1.0
+var max_volume # max possible volume in db
+
 func _ready() -> void:
+	max_volume = FileManager.balancing_data["max_volume"] 
+	
 	# Get current volumes from AudioServer in dB
 	var master_db = AudioServer.get_bus_volume_db(0)
 	var music_db = AudioServer.get_bus_volume_db(1)
@@ -31,23 +34,36 @@ func _ready() -> void:
 
 	update_labels()
 
+func _input(event):
+	if event.is_action_pressed("reload_files"):
+		slider_master.value = 1.0
+		slider_music.value = 1.0
+		slider_sfx.value = 1.0
+		max_volume = FileManager.balancing_data["max_volume"]
+		slider_master.max_value = max_volume
+		slider_music.max_value = max_volume
+		slider_sfx.max_value = max_volume
+		update_labels()
+
+
 func _on_master_value_changed(value: float) -> void:
 	var delta = value - previous_master
 	previous_master = value
 	master_volume = value
 
 	# Move other sliders by same amount
-	slider_music.value = clamp(slider_music.value + delta, 0.0, 4.0)
-	slider_sfx.value = clamp(slider_sfx.value + delta, 0.0, 4.0)
+	slider_music.value = clamp(slider_music.value + delta, 0.0, max_volume)
+	slider_sfx.value = clamp(slider_sfx.value + delta, 0.0, max_volume)
 	if master_volume == 0:
 		slider_music.value = 0.0
 		slider_sfx.value = 0.0
-	elif master_volume == 4.0:
-		slider_music.value = 4.0
-		slider_sfx.value = 4.0
+	elif master_volume == max_volume:
+		slider_music.value = max_volume
+		slider_sfx.value = max_volume
 
 	apply_volumes()
 	update_labels()
+	print(slider_master.value)
 
 func _on_music_value_changed(_value: float) -> void:
 	apply_volumes()
@@ -70,4 +86,4 @@ func update_labels() -> void:
 	value_sfx.text = str(to_percent(slider_sfx.value)) + "%"
 
 func to_percent(value: float) -> int:
-	return int((value / 4.0) * 100)
+	return int((value / max_volume) * 100)
