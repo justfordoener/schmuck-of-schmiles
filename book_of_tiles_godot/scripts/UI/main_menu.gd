@@ -33,7 +33,6 @@ func _ready() -> void:
 	credits_button.pressed.connect(toggle_menu.bind(credits))
 	credits_back_button.pressed.connect(toggle_menu.bind(credits))
 	quit_button.pressed.connect(quit_game)
-	
 
 
 func toggle_menu(menu: Control) -> void:
@@ -68,7 +67,11 @@ func check_levels():
 
 			var level_number = get_level_number(file_name)
 
-			if level_number > 0 and level_number <= level_buttons.size():
+			if level_number <= 0:
+				print("Error: Invalid level number (Must be > 0) in file: ", file_name)
+				return
+
+			if level_number <= level_buttons.size():
 				var button_index = level_number - 1
 				var button = level_buttons[button_index]
 				var full_path = level_folder + file_name
@@ -77,11 +80,12 @@ func check_levels():
 				button.pressed.connect(load_level.bind(full_path))
 
 		file_name = directory.get_next()
-
 	directory.list_dir_end()
+
 
 func load_level(scene_path: String) -> void:
 	get_tree().change_scene_to_file(scene_path)
+
 
 func get_level_number(file_name: String) -> int:
 	var base_name := file_name.get_basename()
