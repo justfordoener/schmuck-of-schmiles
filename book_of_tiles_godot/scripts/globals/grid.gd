@@ -171,8 +171,9 @@ func propagate(cell_index : Vector3i) -> void:
 			neighbor.profiles[neighbor_key] = cell.profiles[neighbor_key]
 			if not collapse(neighbor_index):
 				continue
-			# await get_tree().create_timer(0.2).timeout
-			propagate(neighbor_index)
+			else:
+				# await get_tree().create_timer(0.2).timeout
+				propagate(neighbor_index)
 
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
@@ -187,6 +188,21 @@ func collapse(cell_index : Vector3i) -> bool:
 		else:
 			continue
 	cell.possibilities = new_possibilities
+	
+	# --- A ---
+	# collapse to a random module
+		# choose possibility
+	var chosen_possibility : Possibility = cell.possibilities[0]
+		# spawn module with rotation
+	chosen_possibility.module_reference.instantiate()
+		# update cell profile
+			
+		#for border_deg in cell.profiles.keys():
+			#var total_direction : int = posmod(total_rotation + border_deg, 360)
+			#var neighbor_index : Vector3i = get_neighbor_from_rot(cell_index, total_direction)
+	
+	# --- B ---
+	# if this cell has 2+ collapsed neighbors-> collapse it
 	return possibilities_before_collapse != cell.possibilities.size()
 
 func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> bool:
