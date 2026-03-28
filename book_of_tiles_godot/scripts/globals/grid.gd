@@ -215,9 +215,8 @@ func batch_place_modules(placements: Array) -> void:
 				
 	# 5. REGENERATE: Sprout new soft modules around the new tile AND in any gaps
 	var cells_to_populate = placed_indices + gaps_to_fill
-	_soft_populate_immediate_neighbors(cells_to_populate)
+	_soft_populate_immediate_neighbors(placed_indices, gaps_to_fill)
 		
-# Extracted the while loop into a helper so we can call it multiple times
 func _process_propagation_queue(queue: Array[Vector3i]) -> void:
 	while queue.size() > 0:
 		var current_index = queue.pop_front()
@@ -233,43 +232,44 @@ func _process_propagation_queue(queue: Array[Vector3i]) -> void:
 				if not queue.has(neighbor_index):
 					queue.append(neighbor_index)
 
-func _soft_populate_immediate_neighbors(placed_indices: Array[Vector3i]) -> void:
-	var neighbor_set = {}
+func _soft_populate_immediate_neighbors(trigger_indices: Array[Vector3i], explicit_gaps: Array[Vector3i]) -> void:
+	var cells_to_fill = {}
 	
-	# Gather all empty, un-locked neighbors
-	for index in placed_indices:
+	# 1. Add the gaps that need refilling directly
+	for gap in explicit_gaps:
+		cells_to_fill[gap] = true
+	
+	# 2. Add empty neighbors of the newly placed hard tiles
+	for index in trigger_indices:
 		var cell = grid[index]
 		for neighbor_key in cell.neighbors.keys():
 			var n_index = get_axial_index(cell.neighbors[neighbor_key].axial_position)
-			if not placed_indices.has(n_index) and grid[n_index].module_reference == null and grid[n_index].instanced_module == null:
-				neighbor_set[n_index] = true
-	for n_index in neighbor_set.keys():
+			# If it's empty space (no hard tile, no soft mesh), we want to fill it
+			if grid[n_index].module_reference == null and grid[n_index].instanced_module == null:
+				cells_to_fill[n_index] = true
+				
+	# 3. Populate all identified cells
+	for n_index in cells_to_fill.keys():
 		var n_cell = grid[n_index]
 		
-		# 1. Filter valid choices ON THE FLY based on the cell's current profile constraints.
-		# This ensures it respects the soft modules placed immediately before it in this loop!
+		# Filter valid choices ON THE FLY based on the cell's current profile constraints.
 		var valid_choices : Array[Possibility] = []
 		for poss in n_cell.possibilities:
 			if do_profiles_match(poss.profiles, n_cell.profiles):
 				valid_choices.append(poss)
 		
-		# 2. Pick a choice and spawn it
+		# Pick a choice and spawn it
 		if valid_choices.size() > 0:
 			var random_choice = valid_choices[randi() % valid_choices.size()]
 			
 			# FIX A: Use .duplicate() so we don't accidentally mutate the master template dictionary!
 			n_cell.profiles = random_choice.profiles.duplicate()
 			
-			# FIX B: We DO NOT set n_cell.module_reference here! 
-			# Leaving it null tells grid.does_module_fit() that this cell is technically still "empty" 
-			# and can be safely overwritten when you place a real tile later.
-			
-			# FIX C: We DO NOT modify n_cell.possibilities! They stay fully open.
+			# FIX B & C: Leaving module_reference null and keeping possibilities intact
 			
 			spawn_module(random_choice, n_index)
 			
-			# FIX D: Manually pass the new connection requirements to neighbors, 
-			# WITHOUT running the propagation queue (which would permanently delete their possibilities).
+			# FIX D: Manually pass the new connection requirements to neighbors
 			for neighbor_key in n_cell.neighbors.keys():
 				var neighbor_index = get_axial_index(n_cell.neighbors[neighbor_key].axial_position)
 				var neighbor = grid[neighbor_index]
@@ -277,7 +277,7 @@ func _soft_populate_immediate_neighbors(placed_indices: Array[Vector3i]) -> void
 				# Only pass constraints to cells that aren't hard-locked
 				if neighbor.module_reference == null:
 					neighbor.profiles[neighbor_key] = n_cell.profiles[neighbor_key]
-					
+	
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
 	
