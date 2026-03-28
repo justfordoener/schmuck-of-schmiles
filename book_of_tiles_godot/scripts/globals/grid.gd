@@ -159,31 +159,64 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 	
 	
 #-------------------------------- wfc ----------------------------
-# -------------------------------- wfc ----------------------------
 
 func batch_place_modules(placements: Array) -> void:
+	# 1. SCRUB SOFT RULES: Wipe temporary connection profiles from soft cells
+	# so they don't block your new hard tiles from propagating correctly.
+	for index in grid.keys():
+		if grid[index].module_reference == null:
+			grid[index].profiles = get_hard_profiles_for_cell(index)
+
 	var queue : Array[Vector3i] = []
 	var placed_indices : Array[Vector3i] = []
 	
-	# Step 1: Lock in all manually placed modules for this tile
+	# 2. PLACE HARD TILES
 	for p in placements:
 		var cell_index = p["index"]
 		var cell : Cell = grid[cell_index]
 		var possibility : Possibility = get_fitting_possibility(cell_index, p["module"], p["rotation"])
 		
 		if possibility != null:
+			if cell.instanced_module != null:
+				cell.instanced_module.queue_free()
+				cell.instanced_module = null
+				
 			cell.possibilities = [possibility]
 			cell.profiles = possibility.profiles
 			cell.module_reference = p["module"]
 			queue.append(cell_index)
 			placed_indices.append(cell_index)
 			
-	# Step 2: Standard Propagation (Update surrounding empty cells with new constraints)
+	# 3. PROPAGATE NEW HARD CONSTRAINTS GLOBALLY
 	_process_propagation_queue(queue)
 	
-	# Step 3: Force the immediate neighbors to collapse to a random valid module
-	_force_collapse_immediate_neighbors(placed_indices)
-
+	# 4. CHECK ALL SOFT MODULES: Did the new WFC ripple break them?
+	var gaps_to_fill : Array[Vector3i] = []
+	for index in grid.keys():
+		var cell = grid[index]
+		
+		# If it is a soft module
+		if cell.module_reference == null and cell.instanced_module != null:
+			var soft_module : Module = cell.instanced_module
+			var is_still_legal = false
+			var wfc_rotation = posmod(-roundi(soft_module.rotation_degrees.y), 360)
+			
+			# Check if it is still allowed by the WFC possibilities list
+			for poss in cell.possibilities:
+				if poss.module_reference.module_id == soft_module.module_id and poss.module_rotation == wfc_rotation:
+					is_still_legal = true
+					break
+					
+			if not is_still_legal:
+				# The new hard tile made this soft module invalid! Delete it.
+				cell.instanced_module.queue_free()
+				cell.instanced_module = null
+				gaps_to_fill.append(index)
+				
+	# 5. REGENERATE: Sprout new soft modules around the new tile AND in any gaps
+	var cells_to_populate = placed_indices + gaps_to_fill
+	_soft_populate_immediate_neighbors(cells_to_populate)
+		
 # Extracted the while loop into a helper so we can call it multiple times
 func _process_propagation_queue(queue: Array[Vector3i]) -> void:
 	while queue.size() > 0:
@@ -199,40 +232,52 @@ func _process_propagation_queue(queue: Array[Vector3i]) -> void:
 			if collapse(neighbor_index):
 				if not queue.has(neighbor_index):
 					queue.append(neighbor_index)
-func _force_collapse_immediate_neighbors(placed_indices: Array[Vector3i]) -> void:
+
+func _soft_populate_immediate_neighbors(placed_indices: Array[Vector3i]) -> void:
 	var neighbor_set = {}
 	
-	# Step 1: Find all unique, empty neighbors of the 13-module tile
+	# Gather all empty, un-locked neighbors
 	for index in placed_indices:
 		var cell = grid[index]
 		for neighbor_key in cell.neighbors.keys():
 			var n_index = get_axial_index(cell.neighbors[neighbor_key].axial_position)
-			if not placed_indices.has(n_index) and grid[n_index].module_reference == null:
+			if not placed_indices.has(n_index) and grid[n_index].module_reference == null and grid[n_index].instanced_module == null:
 				neighbor_set[n_index] = true
-				
-	# Step 2: Sequentially force them, propagating AFTER EACH ONE
 	for n_index in neighbor_set.keys():
 		var n_cell = grid[n_index]
-		if n_cell.module_reference == null and n_cell.possibilities.size() > 1:
+		
+		# 1. Filter valid choices ON THE FLY based on the cell's current profile constraints.
+		# This ensures it respects the soft modules placed immediately before it in this loop!
+		var valid_choices : Array[Possibility] = []
+		for poss in n_cell.possibilities:
+			if do_profiles_match(poss.profiles, n_cell.profiles):
+				valid_choices.append(poss)
+		
+		# 2. Pick a choice and spawn it
+		if valid_choices.size() > 0:
+			var random_choice = valid_choices[randi() % valid_choices.size()]
 			
-			var random_choice = n_cell.possibilities[randi() % n_cell.possibilities.size()]
+			# FIX A: Use .duplicate() so we don't accidentally mutate the master template dictionary!
+			n_cell.profiles = random_choice.profiles.duplicate()
 			
-			var chosen_array : Array[Possibility] = []
-			chosen_array.append(random_choice)
+			# FIX B: We DO NOT set n_cell.module_reference here! 
+			# Leaving it null tells grid.does_module_fit() that this cell is technically still "empty" 
+			# and can be safely overwritten when you place a real tile later.
 			
-			# Lock it in
-			n_cell.possibilities = chosen_array
-			n_cell.profiles = random_choice.profiles
-			n_cell.module_reference = random_choice.module_reference
+			# FIX C: We DO NOT modify n_cell.possibilities! They stay fully open.
 			
-			# print("WFC [FORCED]: Randomly collapsed neighbor ", n_index, " to module ID ", n_cell.module_reference.module_id)
 			spawn_module(random_choice, n_index)
 			
-			# IMMEDIATELY propagate this new module's constraints outward.
-			# This ensures the next neighbor in the loop knows about this placement!
-			var single_queue : Array[Vector3i] = [n_index]
-			_process_propagation_queue(single_queue)
-			
+			# FIX D: Manually pass the new connection requirements to neighbors, 
+			# WITHOUT running the propagation queue (which would permanently delete their possibilities).
+			for neighbor_key in n_cell.neighbors.keys():
+				var neighbor_index = get_axial_index(n_cell.neighbors[neighbor_key].axial_position)
+				var neighbor = grid[neighbor_index]
+				
+				# Only pass constraints to cells that aren't hard-locked
+				if neighbor.module_reference == null:
+					neighbor.profiles[neighbor_key] = n_cell.profiles[neighbor_key]
+					
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
 	
@@ -272,6 +317,12 @@ func collapse(cell_index : Vector3i) -> bool:
 	
 func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	var cell = grid[cell_index]
+	
+	# 1. If a soft-placed module already exists here, delete it!
+	if cell.instanced_module != null:
+		cell.instanced_module.queue_free()
+	
+	# 2. Spawn the new module
 	var module_instance = poss.module_reference.duplicate() 
 	add_child(module_instance)
 	
@@ -279,6 +330,9 @@ func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	module_instance.global_position = cart_pos
 	module_instance.rotation_degrees.y = -poss.module_rotation
 	
+	# 3. Save the reference so we can delete it if the cell re-collapses later
+	cell.instanced_module = module_instance
+
 func propagate(cell_index : Vector3i) -> void:
 	var cell : Cell = grid[cell_index]
 	#spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
@@ -303,17 +357,43 @@ func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> 
 		return true
 	else:
 		return false
-
+		
 func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : int) -> Possibility:
 	var cell : Cell = grid[cell_index]
+	
 	for possibility : Possibility in cell.possibilities:
-		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
-		 and possibility.module_rotation == posmod(rotation, 360)
-		 and do_profiles_match(possibility.profiles, cell.profiles)):
-			#print("cid: ", cell_index, " ppvalues: ", possibility.profiles.values(), " cpvalues: ", cell.profiles.values())
-			return possibility
+		if possibility.module_reference.module_id == module.module_id and possibility.module_rotation == posmod(rotation, 360):
+			
+			var fits = true
+			for border_key in possibility.profiles.keys():
+				if border_key.contains("7777"): 
+					continue # Ignore map edges
+				var neighbor = cell.neighbors.get(border_key)
+				# If it's a soft module (module_reference == null), we ignore it!
+				if neighbor != null and neighbor.module_reference != null:
+					if possibility.profiles[border_key] != neighbor.profiles[border_key]:
+						fits = false
+						break
+			
+			if fits:
+				return possibility
 	return null
 
+func clear_all_soft_modules() -> void:
+	for index in grid.keys():
+		var cell = grid[index]
+		
+		# If the cell is not hard-locked by a player
+		if cell.module_reference == null:
+			
+			# 1. Delete the soft mesh if one exists
+			if cell.instanced_module != null:
+				cell.instanced_module.queue_free()
+				cell.instanced_module = null
+			
+			# 2. Scrub any soft constraints from its profile, reverting to hard truth
+			cell.profiles = get_hard_profiles_for_cell(index)
+	
 func place_module(cell_index : Vector3i, module : Module, rotation : int) -> void:
 	var cell : Cell = grid[cell_index]
 	var possibility : Possibility = get_fitting_possibility(cell_index, module, rotation)
@@ -345,6 +425,19 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 
 # ------------------- helper functions -------------------
 
+func get_hard_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layout.PROFILE_TYPE]:
+	var cell = grid[cell_index]
+	var hard_profiles : Dictionary[String, Layout.PROFILE_TYPE] = {}
+	
+	for border_key in cell.profiles.keys():
+		var neighbor = cell.neighbors.get(border_key)
+		if neighbor != null and neighbor.module_reference != null:
+			hard_profiles[border_key] = neighbor.profiles[border_key]
+		else:
+			hard_profiles[border_key] = Layout.PROFILE_TYPE.EMPTY
+			
+	return hard_profiles
+		
 func get_neighbor_from_rot(cell_index : Vector3i, rot_degree : int) -> Vector3i:
 	var cell = grid[cell_index]
 	var neighbor_index : Vector3i
