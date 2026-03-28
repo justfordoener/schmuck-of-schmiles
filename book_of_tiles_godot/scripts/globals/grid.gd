@@ -159,7 +159,126 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 	
 	
 #-------------------------------- wfc ----------------------------
+# -------------------------------- wfc ----------------------------
 
+func batch_place_modules(placements: Array) -> void:
+	var queue : Array[Vector3i] = []
+	var placed_indices : Array[Vector3i] = []
+	
+	# Step 1: Lock in all manually placed modules for this tile
+	for p in placements:
+		var cell_index = p["index"]
+		var cell : Cell = grid[cell_index]
+		var possibility : Possibility = get_fitting_possibility(cell_index, p["module"], p["rotation"])
+		
+		if possibility != null:
+			cell.possibilities = [possibility]
+			cell.profiles = possibility.profiles
+			cell.module_reference = p["module"]
+			queue.append(cell_index)
+			placed_indices.append(cell_index)
+			
+	# Step 2: Standard Propagation (Update surrounding empty cells with new constraints)
+	_process_propagation_queue(queue)
+	
+	# Step 3: Force the immediate neighbors to collapse to a random valid module
+	_force_collapse_immediate_neighbors(placed_indices)
+
+# Extracted the while loop into a helper so we can call it multiple times
+func _process_propagation_queue(queue: Array[Vector3i]) -> void:
+	while queue.size() > 0:
+		var current_index = queue.pop_front()
+		var cell = grid[current_index]
+		
+		for neighbor_key : String in cell.neighbors.keys():
+			var neighbor_index : Vector3i = get_axial_index(cell.neighbors[neighbor_key].axial_position)
+			var neighbor : Cell = grid[neighbor_index]
+			
+			neighbor.profiles[neighbor_key] = cell.profiles[neighbor_key]
+			
+			if collapse(neighbor_index):
+				if not queue.has(neighbor_index):
+					queue.append(neighbor_index)
+func _force_collapse_immediate_neighbors(placed_indices: Array[Vector3i]) -> void:
+	var neighbor_set = {}
+	
+	# Step 1: Find all unique, empty neighbors of the 13-module tile
+	for index in placed_indices:
+		var cell = grid[index]
+		for neighbor_key in cell.neighbors.keys():
+			var n_index = get_axial_index(cell.neighbors[neighbor_key].axial_position)
+			if not placed_indices.has(n_index) and grid[n_index].module_reference == null:
+				neighbor_set[n_index] = true
+				
+	# Step 2: Sequentially force them, propagating AFTER EACH ONE
+	for n_index in neighbor_set.keys():
+		var n_cell = grid[n_index]
+		if n_cell.module_reference == null and n_cell.possibilities.size() > 1:
+			
+			var random_choice = n_cell.possibilities[randi() % n_cell.possibilities.size()]
+			
+			var chosen_array : Array[Possibility] = []
+			chosen_array.append(random_choice)
+			
+			# Lock it in
+			n_cell.possibilities = chosen_array
+			n_cell.profiles = random_choice.profiles
+			n_cell.module_reference = random_choice.module_reference
+			
+			# print("WFC [FORCED]: Randomly collapsed neighbor ", n_index, " to module ID ", n_cell.module_reference.module_id)
+			spawn_module(random_choice, n_index)
+			
+			# IMMEDIATELY propagate this new module's constraints outward.
+			# This ensures the next neighbor in the loop knows about this placement!
+			var single_queue : Array[Vector3i] = [n_index]
+			_process_propagation_queue(single_queue)
+			
+func collapse(cell_index : Vector3i) -> bool:
+	var cell : Cell = grid[cell_index]
+	
+	# Skip if already fully collapsed
+	if cell.module_reference != null:
+		return false 
+
+	# Skip if this cell has already "died" (become an empty space)
+	if cell.possibilities.size() == 0:
+		return false
+
+	var possibilities_before_collapse : int = cell.possibilities.size()
+	var new_possibilities : Array[Possibility] = []
+	
+	for poss : Possibility in cell.possibilities:
+		if do_profiles_match(poss.profiles, cell.profiles):
+			new_possibilities.append(poss)
+			
+	cell.possibilities = new_possibilities
+	var changed = possibilities_before_collapse != cell.possibilities.size()
+	
+	# --- SPAWN LOGIC ---
+	if cell.possibilities.size() == 1:
+		cell.module_reference = cell.possibilities[0].module_reference
+		# print("WFC [SUCCESS]: Collapsed cell ", cell_index, " to module ID ", cell.module_reference.module_id)
+		spawn_module(cell.possibilities[0], cell_index)
+		
+	elif cell.possibilities.size() == 0 and possibilities_before_collapse > 0:
+		# Gracefully accept the contradiction as an empty space
+		# print("WFC [EMPTY]: No fitting modules left for cell ", cell_index, ". Leaving as empty space.")
+		
+		# CRITICAL: Return false so this dead cell doesn't get added back to the queue.
+		# This prevents it from spreading impossible constraints to its neighbors!
+		return false
+		
+	return changed
+	
+func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
+	var cell = grid[cell_index]
+	var module_instance = poss.module_reference.duplicate() 
+	add_child(module_instance)
+	
+	var cart_pos = axial_to_cartesian(cell.axial_position)
+	module_instance.global_position = cart_pos
+	module_instance.rotation_degrees.y = -poss.module_rotation
+	
 func propagate(cell_index : Vector3i) -> void:
 	var cell : Cell = grid[cell_index]
 	#spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
@@ -174,37 +293,7 @@ func propagate(cell_index : Vector3i) -> void:
 			else:
 				# await get_tree().create_timer(0.2).timeout
 				propagate(neighbor_index)
-
-func collapse(cell_index : Vector3i) -> bool:
-	var cell : Cell = grid[cell_index]
-	var possibilities_before_collapse : int = cell.possibilities.size()
-	var new_possibilities : Array[Possibility]
-	# go through every possibility
-	for poss : Possibility in cell.possibilities:
-		# keep the ones that still match the cells profile
-		if do_profiles_match(poss.profiles, cell.profiles):
-			if not new_possibilities.has(poss):
-				new_possibilities.append(poss)
-		else:
-			continue
-	cell.possibilities = new_possibilities
 	
-	# --- A ---
-	# collapse to a random module
-		# choose possibility
-	var chosen_possibility : Possibility = cell.possibilities[0]
-		# spawn module with rotation
-	chosen_possibility.module_reference.instantiate()
-		# update cell profile
-			
-		#for border_deg in cell.profiles.keys():
-			#var total_direction : int = posmod(total_rotation + border_deg, 360)
-			#var neighbor_index : Vector3i = get_neighbor_from_rot(cell_index, total_direction)
-	
-	# --- B ---
-	# if this cell has 2+ collapsed neighbors-> collapse it
-	return possibilities_before_collapse != cell.possibilities.size()
-
 func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> bool:
 	if grid[cell_index].module_reference != null:
 		print("cell occupied")

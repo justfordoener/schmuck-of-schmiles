@@ -70,21 +70,30 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	instance.global_position = instance_position
 	instance.rotation.y = instance_rotation
 	
-	# check if children are allowed
+	var module_placements = []
+	
+	# Pass 1: Check if all children are allowed and gather their placement data
 	for child : Module in instance.get_children():
 		var child_position = Grid.snap_position(child.global_position, child.module_type)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation + child.rotation.y))
-		print("child_pos: ", child_position, " child_index: ", child_index, " child_rotation: ", child_rotation)
+		
 		if not Grid.does_module_fit(child_index, child, child_rotation):
 			print("failed child: ", child.module_type, child_index, child_rotation, " ", child_position)
+			# Clean up if even a single module of the tile fails
 			instance.queue_free()
+			tiles_placed_today.pop_back() 
 			return
-	for child : Module in instance.get_children():
-		var child_position = Grid.snap_position(child.global_position, child.module_type)
-		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
-		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation + child.rotation.y))
-		Grid.place_module(child_index, child, child_rotation)
+			
+		module_placements.append({
+			"index": child_index,
+			"module": child,
+			"rotation": child_rotation
+		})
+
+	# Pass 2: If everything fits, batch place them and trigger WFC propagation once
+	Grid.batch_place_modules(module_placements)
+	
 	preview_instance.queue_free()
 	Signals.on_instance_spawned.emit()
 	
