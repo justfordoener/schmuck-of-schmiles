@@ -1,0 +1,4 @@
+{
+"max_volume": 4.0,
+"_comment": "maximum volume in dB - should not be lower then 1.0 or higher then 6.0"
+}

@@ -1,0 +1,223 @@
+[gd_scene load_steps=3 format=3 uid="uid://v56eajf1t8eh"]
+
+[ext_resource type="Script" uid="uid://b1spq0oln5srw" path="res://scripts/UI/sound_settings.gd" id="1_nisuv"]
+[ext_resource type="Script" uid="uid://cwkwjvfkqgubu" path="res://scripts/UI/keybinds.gd" id="2_5308q"]
+
+[node name="SettingsCanvasLayer" type="CanvasLayer"]
+
+[node name="SettingsMenu" type="VBoxContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(800, 660)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="SettingsContainer" type="TabContainer" parent="SettingsMenu"]
+custom_minimum_size = Vector2(800, 600)
+layout_mode = 2
+tab_alignment = 1
+current_tab = 0
+
+[node name="Sound" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("slider_master", "slider_music", "slider_sfx", "value_master", "value_music", "value_sfx")]
+layout_mode = 2
+script = ExtResource("1_nisuv")
+slider_master = NodePath("VBoxContainer/Master/Master")
+slider_music = NodePath("VBoxContainer/Music/Music")
+slider_sfx = NodePath("VBoxContainer/SFX/SFX")
+value_master = NodePath("VBoxContainer/Master/HBoxContainer/Value")
+value_music = NodePath("VBoxContainer/Music/HBoxContainer/Value")
+value_sfx = NodePath("VBoxContainer/SFX/HBoxContainer/Value")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Sound"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -20.0
+offset_right = 75.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Master" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master/HBoxContainer"]
+custom_minimum_size = Vector2(55, 25)
+layout_mode = 2
+text = "Master"
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="Value" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master/HBoxContainer"]
+custom_minimum_size = Vector2(42, 0)
+layout_mode = 2
+text = "25%"
+
+[node name="Master" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+max_value = 4.0
+step = 0.05
+value = 1.0
+ticks_position = 3
+
+[node name="Music" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music/HBoxContainer"]
+custom_minimum_size = Vector2(55, 25)
+layout_mode = 2
+text = "Music"
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="Value" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music/HBoxContainer"]
+custom_minimum_size = Vector2(42, 0)
+layout_mode = 2
+text = "25%"
+
+[node name="Music" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+max_value = 4.0
+step = 0.05
+value = 1.0
+ticks_position = 3
+
+[node name="SFX" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX/HBoxContainer"]
+custom_minimum_size = Vector2(55, 25)
+layout_mode = 2
+text = "SFX"
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+
+[node name="Value" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX/HBoxContainer"]
+custom_minimum_size = Vector2(42, 0)
+layout_mode = 2
+text = "25%"
+
+[node name="SFX" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+max_value = 4.0
+step = 0.05
+value = 1.0
+ticks_position = 3
+
+[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons")]
+visible = false
+layout_mode = 2
+script = ExtResource("2_5308q")
+action_buttons = {
+"move_back": NodePath("VBoxContainer/HBoxContainer3/move_back"),
+"move_forward": NodePath("VBoxContainer/HBoxContainer2/move_forward"),
+"move_left": NodePath("VBoxContainer/HBoxContainer/move_left"),
+"move_right": NodePath("VBoxContainer/HBoxContainer4/move_right")
+}
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Up:"
+
+[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "W"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Left:"
+
+[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "A"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Down:"
+
+[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "S"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Right:"
+
+[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "D"
+
+[node name="Spacer" type="Control" parent="SettingsMenu"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="CloseSettings" type="Button" parent="SettingsMenu"]
+layout_mode = 2
+text = "Close"
+
+[connection signal="value_changed" from="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master/Master" to="SettingsMenu/SettingsContainer/Sound" method="_on_master_value_changed"]
+[connection signal="value_changed" from="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music/Music" to="SettingsMenu/SettingsContainer/Sound" method="_on_music_value_changed"]
+[connection signal="value_changed" from="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX/SFX" to="SettingsMenu/SettingsContainer/Sound" method="_on_sfx_value_changed"]
