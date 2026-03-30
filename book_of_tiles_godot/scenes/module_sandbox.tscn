@@ -20,6 +20,7 @@ script = ExtResource("1_6o6k0")
 [node name="SfxTilePlacementSound" parent="." instance=ExtResource("2_wgu8i")]
 
 [node name="MusicIngame" parent="." instance=ExtResource("2_c2dvl")]
+process_mode = 3
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
