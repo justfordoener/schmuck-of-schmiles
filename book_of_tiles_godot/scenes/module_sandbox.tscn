@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=9 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="2_c2dvl"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_wgu8i"]
 [ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="5_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="6_wgu8i"]
-[ext_resource type="Script" uid="uid://b1spq0oln5srw" path="res://scripts/UI/sound_settings.gd" id="7_jed05"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6o6k0"]
 size = Vector3(100, 1, 100)
@@ -218,69 +217,6 @@ offset_right = 162.0
 offset_bottom = 4.0
 text = "0.2"
 
-[node name="Sound Settings" type="Control" parent="UIManager"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 1743.0
-offset_top = 484.0
-offset_right = 1783.0
-offset_bottom = 524.0
-script = ExtResource("7_jed05")
-
-[node name="Master" type="HSlider" parent="UIManager/Sound Settings"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 54.0
-offset_right = -19.0
-offset_bottom = 70.0
-max_value = 4.0
-step = 0.05
-value = 1.0
-
-[node name="name" type="Label" parent="UIManager/Sound Settings/Master"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Master"
-
-[node name="Music" type="HSlider" parent="UIManager/Sound Settings"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 89.0
-offset_right = 123.0
-offset_bottom = 105.0
-max_value = 4.0
-step = 0.05
-value = 1.0
-
-[node name="name" type="Label" parent="UIManager/Sound Settings/Music"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Music"
-
-[node name="SFX" type="HSlider" parent="UIManager/Sound Settings"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 122.0
-offset_right = 123.0
-offset_bottom = 138.0
-max_value = 4.0
-step = 0.05
-value = 1.0
-
-[node name="name" type="Label" parent="UIManager/Sound Settings/SFX"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "SFX"
-
 [connection signal="pressed" from="UIManager/Playtest UI/Reset" to="CameraController" method="reset_camera_values"]
 [connection signal="value_changed" from="UIManager/Playtest UI/MinZoom" to="CameraController" method="camera_set_min_zoom"]
 [connection signal="value_changed" from="UIManager/Playtest UI/MaxZoom" to="CameraController" method="camera_set_max_zoom"]
@@ -288,6 +224,3 @@ text = "SFX"
 [connection signal="value_changed" from="UIManager/Playtest UI/MaxPitch" to="CameraController" method="camera_set_max_pitch"]
 [connection signal="value_changed" from="UIManager/Playtest UI/ZoomSpeed" to="CameraController" method="camera_set_zoom_speed"]
 [connection signal="value_changed" from="UIManager/Playtest UI/MoveSpeed" to="CameraController" method="camera_set_move_speed"]
-[connection signal="value_changed" from="UIManager/Sound Settings/Master" to="UIManager/Sound Settings" method="_on_master_value_changed"]
-[connection signal="value_changed" from="UIManager/Sound Settings/Music" to="UIManager/Sound Settings" method="_on_music_value_changed"]
-[connection signal="value_changed" from="UIManager/Sound Settings/SFX" to="UIManager/Sound Settings" method="_on_sfx_value_changed"]
