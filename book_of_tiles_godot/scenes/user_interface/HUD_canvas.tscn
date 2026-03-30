@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7hxqdrqm3ca2"]
+[gd_scene load_steps=5 format=3 uid="uid://c7hxqdrqm3ca2"]
 
 [ext_resource type="Script" uid="uid://c7w5iggacgnnk" path="res://scripts/managers/UI_manager.gd" id="1_3eudk"]
 [ext_resource type="Texture2D" uid="uid://b52pala8cxhg8" path="res://textures/playtest/undo.png" id="2_bpem0"]
 [ext_resource type="Texture2D" uid="uid://eohnhlx87ee7" path="res://textures/playtest/next_day.png" id="3_bpem0"]
+[ext_resource type="PackedScene" uid="uid://c2q2ys53elenm" path="res://scenes/user_interface/menus/pause_ui.tscn" id="4_dmdn1"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_3eudk")
@@ -110,6 +111,8 @@ size_flags_vertical = 2
 text = "Next Day"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="PauseUI" parent="." instance=ExtResource("4_dmdn1")]
 
 [connection signal="pressed" from="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox/TextureButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/HBoxContainer/TurnOver/TurnOverButtonVBox/TextureButton" to="." method="_on_turnover_button_pressed"]
