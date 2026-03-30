@@ -1,0 +1,178 @@
+[gd_scene format=3 uid="uid://p10npgedo60j"]
+
+[node name="Playtest UI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1743.0
+offset_top = 230.0
+offset_right = 1783.0
+offset_bottom = 270.0
+
+[node name="Reset" type="Button" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_right = 71.0
+offset_bottom = 31.0
+text = "Reset
+"
+
+[node name="MinZoom" type="HSlider" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 54.0
+offset_right = 123.0
+offset_bottom = 70.0
+min_value = -20.0
+max_value = 0.0
+step = 0.5
+value = -7.5
+
+[node name="name" type="Label" parent="MinZoom"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = -22.0
+offset_right = 79.0
+offset_bottom = 1.0
+text = "Min Zoom"
+
+[node name="value" type="Label" parent="MinZoom"]
+layout_mode = 0
+offset_left = 119.0
+offset_top = -20.0
+offset_right = 159.0
+offset_bottom = 3.0
+text = "-7.0"
+
+[node name="MaxZoom" type="HSlider" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 91.0
+offset_right = 123.0
+offset_bottom = 107.0
+min_value = 0.5
+max_value = 30.0
+step = 0.5
+value = 20.0
+
+[node name="name" type="Label" parent="MaxZoom"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = -25.0
+offset_right = 85.0
+offset_bottom = -2.0
+text = "Max Zoom"
+
+[node name="value" type="Label" parent="MaxZoom"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = -23.0
+offset_right = 160.0
+text = "20.0"
+
+[node name="MinPitch" type="HSlider" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 124.0
+offset_right = 123.0
+offset_bottom = 140.0
+min_value = -100.0
+max_value = 0.0
+step = 0.5
+value = -75.0
+
+[node name="name" type="Label" parent="MinPitch"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -23.0
+offset_right = 80.0
+text = "Min Pitch"
+
+[node name="value" type="Label" parent="MinPitch"]
+layout_mode = 0
+offset_left = 113.0
+offset_top = -21.0
+offset_right = 153.0
+offset_bottom = 2.0
+text = "-75.0"
+
+[node name="MaxPitch" type="HSlider" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 157.0
+offset_right = 123.0
+offset_bottom = 173.0
+max_value = 20.0
+step = 0.5
+
+[node name="name" type="Label" parent="MaxPitch"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -23.0
+offset_right = 82.0
+text = "Max Pitch"
+
+[node name="value" type="Label" parent="MaxPitch"]
+layout_mode = 0
+offset_left = 122.0
+offset_top = -21.0
+offset_right = 162.0
+offset_bottom = 2.0
+text = "0.0"
+
+[node name="ZoomSpeed" type="HSlider" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 189.0
+offset_right = 123.0
+offset_bottom = 205.0
+max_value = 10.0
+step = 0.5
+value = 3.0
+
+[node name="name" type="Label" parent="ZoomSpeed"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -21.0
+offset_right = 100.0
+offset_bottom = 2.0
+text = "Zoom Speed"
+
+[node name="value" type="Label" parent="ZoomSpeed"]
+layout_mode = 0
+offset_left = 122.0
+offset_top = -19.0
+offset_right = 162.0
+offset_bottom = 4.0
+text = "3.0"
+
+[node name="MoveSpeed" type="HSlider" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 0
+offset_left = -27.0
+offset_top = 223.0
+offset_right = 123.0
+offset_bottom = 239.0
+max_value = 1.0
+step = 0.1
+value = 0.2
+
+[node name="name" type="Label" parent="MoveSpeed"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -21.0
+offset_right = 98.0
+offset_bottom = 2.0
+text = "Move Speed"
+
+[node name="value" type="Label" parent="MoveSpeed"]
+layout_mode = 0
+offset_left = 122.0
+offset_top = -19.0
+offset_right = 162.0
+offset_bottom = 4.0
+text = "0.2"
