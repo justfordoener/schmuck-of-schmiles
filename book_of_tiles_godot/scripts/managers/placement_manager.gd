@@ -8,7 +8,8 @@ var current_tile : PackedScene
 var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
-
+var previous_position : Vector3 = Vector3.ZERO
+var saved_rotation : float = 0.
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
@@ -21,7 +22,6 @@ func place_tile(tile : PackedScene) -> void:
 func _ready() -> void:
 	camera = camera_controller.camera
 	plane = Plane(Vector3.UP, 0)
-	
 	
 func _create_preview_instance(tile : PackedScene) -> void:
 	current_tile = tile
@@ -47,31 +47,55 @@ func _process(_delta):
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
-		preview_instance.global_position = Grid.snap_to_layer(hit, preview_instance.layer_type)
+		var snap_position = Grid.snap_position(hit, preview_instance.layer_type)
+		var base_rotation = Grid.get_rotation_value(preview_instance.layer_type)
+		preview_instance.global_position = snap_position
+		if snap_position != previous_position:
+			previous_position = snap_position
+			preview_instance.rotation.y = deg_to_rad(Grid.snap_rotation(snap_position, preview_instance.layer_type))
+			preview_instance.rotate_y(saved_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_down"):
-			preview_instance.rotate_y(deg_to_rad(60))
-			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
+			preview_instance.rotate_y(deg_to_rad(base_rotation))
+			saved_rotation = deg_to_rad(base_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_up"):
-			preview_instance.rotate_y(deg_to_rad(-60))
-			preview_instance.tile_rotation = _round_rotation(preview_instance.rotation_degrees.y)
+			preview_instance.rotate_y(deg_to_rad(-base_rotation))
+			saved_rotation = deg_to_rad(-base_rotation)
 		if Input.is_action_just_pressed("mouse_left"):
 			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
-			Signals.on_instance_spawned.emit()
 
-func _round_rotation(value : float) -> int:
-	return int(ceil(value / 60.0) * 60.0) + 120
-	
-func _spawn_instance(_position: Vector3, _rotation : float):
+func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> void:
 	var instance = current_tile.instantiate()
 	get_tree().current_scene.add_child(instance)
 	tiles_placed_today.append(instance)
-	instance.global_position = _position
-	instance.global_rotation.y = _rotation
-	for child in instance.get_children():
-		if child is Module:
-			pass
-	preview_instance.queue_free()
+	instance.global_position = instance_position
+	instance.rotation.y = instance_rotation
 	
+	var module_placements = []
+	
+	# Pass 1: Check if all children are allowed and gather their placement data
+	for child : Module in instance.get_children():
+		var child_position = Grid.snap_position(child.global_position, child.module_type)
+		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
+		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation + child.rotation.y))
+		
+		if not Grid.does_module_fit(child_index, child, child_rotation):
+			print("failed child: ", child.module_type, child_index, child_rotation, " ", child_position)
+			# Clean up if even a single module of the tile fails
+			instance.queue_free()
+			tiles_placed_today.pop_back() 
+			return
+			
+		module_placements.append({
+			"index": child_index,
+			"module": child,
+			"rotation": child_rotation
+		})
+
+	# Pass 2: If everything fits, batch place them and trigger WFC propagation once
+	Grid.batch_place_modules(module_placements)
+	
+	preview_instance.queue_free()
+	Signals.on_instance_spawned.emit()
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()

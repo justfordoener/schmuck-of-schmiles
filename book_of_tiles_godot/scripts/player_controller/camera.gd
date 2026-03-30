@@ -35,11 +35,16 @@ var zoom_target: float
 # spherecast
 @export var spherecast: ShapeCast3D
 
+# Easing
+@export var move_speed_ease := 2.0
+var current_move_speed := 0.0
+
 # Reset to original Values (For the Playtest)
 var _initial_values = {}
 var _initial_transform: Transform3D
 var _initial_rotation_x: Vector3
 var _initial_zoom: float
+var _initial_camera_position: Vector3
 
 func _ready() -> void:
 	move_target = position
@@ -60,9 +65,10 @@ func _ready() -> void:
 	_initial_values.max_pitch = max_pitch
 	_initial_values.zoom_speed = zoom_speed
 	_initial_values.move_speed = move_speed
+	_initial_camera_position = camera.position
 	
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("rotate"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if Input.is_action_just_released("rotate"):
@@ -85,7 +91,19 @@ func _process(_delta: float) -> void:
 	
 	# set movement targets
 	var zoom_move_factor = 1.0 - current_zoom + 0.2
-	move_target += move_speed * zoom_move_factor * movement_direction
+	
+	# Easing movement
+	var target_speed = move_speed if input_direction != Vector2.ZERO else 0.0
+	if input_direction == Vector2.ZERO:
+		current_move_speed = 0.0
+	else:
+		current_move_speed = lerp(
+			current_move_speed,
+			target_speed,
+			move_speed_ease * _delta
+		)
+	
+	move_target += current_move_speed * zoom_move_factor * movement_direction 
 	
 	# Zoom - fast in the middle, slow at edges
 	var zoom_curve = 1.0 - abs(current_zoom - 0.5) * 2.0
@@ -94,8 +112,8 @@ func _process(_delta: float) -> void:
 	zoom_target = clamp(zoom_target, min_zoom, max_zoom)
 	
 	# lerp to movement targets
-	position = lerp(position, move_target, floatyness)
-	camera.position.z = lerp(camera.position.z, zoom_target, floatyness)
+	position = lerp(position, move_target, floatyness * _delta * 60)
+	camera.position.z = lerp(camera.position.z, zoom_target, floatyness * _delta * 60)
 	spherecast.force_shapecast_update()
 	if spherecast.is_colliding():
 		var collider = spherecast.get_collider(0)
@@ -110,7 +128,7 @@ func _process(_delta: float) -> void:
 	rotation_x.rotation_degrees.x = lerp(
 		rotation_x.rotation_degrees.x,
 		target_pitch,
-		floatyness
+		floatyness * _delta * 60
 	)
 	
 	# raycast
@@ -132,17 +150,19 @@ func _process(_delta: float) -> void:
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards
 # -----------------------------------------------------
-@onready var min_zoom_label = $"../Playtest UI/MinZoom/value"
-@onready var max_zoom_label = $"../Playtest UI/MaxZoom/value"
-@onready var min_pitch_label = $"../Playtest UI/MinPitch/value"
-@onready var max_pitch_label = $"../Playtest UI/MaxPitch/value"
-@onready var zoom_speed_label = $"../Playtest UI/ZoomSpeed/value"
-@onready var move_speed_label = $"../Playtest UI/MoveSpeed/value"
+@onready var min_zoom_label = $"../UIManager/Playtest UI/MinZoom/value"
+@onready var max_zoom_label = $"../UIManager/Playtest UI/MaxZoom/value"
+@onready var min_pitch_label = $"../UIManager/Playtest UI/MinPitch/value"
+@onready var max_pitch_label = $"../UIManager/Playtest UI/MaxPitch/value"
+@onready var zoom_speed_label = $"../UIManager/Playtest UI/ZoomSpeed/value"
+@onready var move_speed_label = $"../UIManager/Playtest UI/MoveSpeed/value"
 
 func reset_camera_values():
 	global_transform = _initial_transform
 	rotation_x.rotation_degrees = _initial_rotation_x
 	camera.position.z = _initial_zoom
+	zoom_target = _initial_zoom
+	camera.position = _initial_camera_position
 	
 	min_zoom = _initial_values.min_zoom
 	max_zoom = _initial_values.max_zoom
@@ -151,12 +171,12 @@ func reset_camera_values():
 	zoom_speed = _initial_values.zoom_speed
 	move_speed = _initial_values.move_speed
 	
-	$"../Playtest UI/MinZoom".value = min_zoom
-	$"../Playtest UI/MaxZoom".value = max_zoom
-	$"../Playtest UI/MinPitch".value = min_pitch
-	$"../Playtest UI/MaxPitch".value = max_pitch
-	$"../Playtest UI/ZoomSpeed".value = zoom_speed
-	$"../Playtest UI/MoveSpeed".value = move_speed
+	$"../UIManager/Playtest UI/MinZoom".value = min_zoom
+	$"../UIManager/Playtest UI/MaxZoom".value = max_zoom
+	$"../UIManager/Playtest UI/MinPitch".value = min_pitch
+	$"../UIManager/Playtest UI/MaxPitch".value = max_pitch
+	$"../UIManager/Playtest UI/ZoomSpeed".value = zoom_speed
+	$"../UIManager/Playtest UI/MoveSpeed".value = move_speed
 
 
 func camera_set_min_zoom(value: float):
