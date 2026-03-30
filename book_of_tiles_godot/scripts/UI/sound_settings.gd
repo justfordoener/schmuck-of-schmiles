@@ -13,6 +13,7 @@ var previous_master: float = 1.0
 var max_volume # max possible volume in db
 
 func _ready() -> void:
+	return#
 	max_volume = FileManager.balancing_data["max_volume"] 
 	
 	# Get current volumes from AudioServer in dB

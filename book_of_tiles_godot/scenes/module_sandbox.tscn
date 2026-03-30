@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_wgu8i"]
 [ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="5_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="6_wgu8i"]
-[ext_resource type="Script" uid="uid://b1spq0oln5srw" path="res://scenes/sound_settings.gd" id="7_jed05"]
+[ext_resource type="Script" uid="uid://b1spq0oln5srw" path="res://scripts/UI/sound_settings.gd" id="7_jed05"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6o6k0"]
 size = Vector3(100, 1, 100)
