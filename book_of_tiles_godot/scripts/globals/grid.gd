@@ -161,8 +161,6 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 #-------------------------------- wfc ----------------------------
 
 func batch_place_modules(placements: Array) -> void:
-	# 1. SCRUB SOFT RULES: Wipe temporary connection profiles from soft cells
-	# so they don't block your new hard tiles from propagating correctly.
 	for index in grid.keys():
 		if grid[index].module_reference == null:
 			grid[index].profiles = get_hard_profiles_for_cell(index)
@@ -170,7 +168,6 @@ func batch_place_modules(placements: Array) -> void:
 	var queue : Array[Vector3i] = []
 	var placed_indices : Array[Vector3i] = []
 	
-	# 2. PLACE HARD TILES
 	for p in placements:
 		var cell_index = p["index"]
 		var cell : Cell = grid[cell_index]
@@ -187,10 +184,8 @@ func batch_place_modules(placements: Array) -> void:
 			queue.append(cell_index)
 			placed_indices.append(cell_index)
 			
-	# 3. PROPAGATE NEW HARD CONSTRAINTS GLOBALLY
 	_process_propagation_queue(queue)
 	
-	# 4. CHECK ALL SOFT MODULES: Did the new WFC ripple break them?
 	var gaps_to_fill : Array[Vector3i] = []
 	for index in grid.keys():
 		var cell = grid[index]
@@ -213,7 +208,6 @@ func batch_place_modules(placements: Array) -> void:
 				cell.instanced_module = null
 				gaps_to_fill.append(index)
 				
-	# 5. REGENERATE: Sprout new soft modules around the new tile AND in any gaps
 	var cells_to_populate = placed_indices + gaps_to_fill
 	_soft_populate_immediate_neighbors(placed_indices, gaps_to_fill)
 		
@@ -235,11 +229,9 @@ func _process_propagation_queue(queue: Array[Vector3i]) -> void:
 func _soft_populate_immediate_neighbors(trigger_indices: Array[Vector3i], explicit_gaps: Array[Vector3i]) -> void:
 	var cells_to_fill = {}
 	
-	# 1. Add the gaps that need refilling directly
 	for gap in explicit_gaps:
 		cells_to_fill[gap] = true
 	
-	# 2. Add empty neighbors of the newly placed hard tiles
 	for index in trigger_indices:
 		var cell = grid[index]
 		for neighbor_key in cell.neighbors.keys():
@@ -248,11 +240,8 @@ func _soft_populate_immediate_neighbors(trigger_indices: Array[Vector3i], explic
 			if grid[n_index].module_reference == null and grid[n_index].instanced_module == null:
 				cells_to_fill[n_index] = true
 				
-	# 3. Populate all identified cells
 	for n_index in cells_to_fill.keys():
 		var n_cell = grid[n_index]
-		
-		# Filter valid choices ON THE FLY based on the cell's current profile constraints.
 		var valid_choices : Array[Possibility] = []
 		for poss in n_cell.possibilities:
 			if do_profiles_match(poss.profiles, n_cell.profiles):
@@ -262,14 +251,8 @@ func _soft_populate_immediate_neighbors(trigger_indices: Array[Vector3i], explic
 		if valid_choices.size() > 0:
 			var random_choice = valid_choices[randi() % valid_choices.size()]
 			
-			# FIX A: Use .duplicate() so we don't accidentally mutate the master template dictionary!
 			n_cell.profiles = random_choice.profiles.duplicate()
-			
-			# FIX B & C: Leaving module_reference null and keeping possibilities intact
-			
 			spawn_module(random_choice, n_index)
-			
-			# FIX D: Manually pass the new connection requirements to neighbors
 			for neighbor_key in n_cell.neighbors.keys():
 				var neighbor_index = get_axial_index(n_cell.neighbors[neighbor_key].axial_position)
 				var neighbor = grid[neighbor_index]
@@ -299,18 +282,12 @@ func collapse(cell_index : Vector3i) -> bool:
 	cell.possibilities = new_possibilities
 	var changed = possibilities_before_collapse != cell.possibilities.size()
 	
-	# --- SPAWN LOGIC ---
 	if cell.possibilities.size() == 1:
 		cell.module_reference = cell.possibilities[0].module_reference
 		# print("WFC [SUCCESS]: Collapsed cell ", cell_index, " to module ID ", cell.module_reference.module_id)
 		spawn_module(cell.possibilities[0], cell_index)
 		
 	elif cell.possibilities.size() == 0 and possibilities_before_collapse > 0:
-		# Gracefully accept the contradiction as an empty space
-		# print("WFC [EMPTY]: No fitting modules left for cell ", cell_index, ". Leaving as empty space.")
-		
-		# CRITICAL: Return false so this dead cell doesn't get added back to the queue.
-		# This prevents it from spreading impossible constraints to its neighbors!
 		return false
 		
 	return changed
@@ -318,11 +295,9 @@ func collapse(cell_index : Vector3i) -> bool:
 func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	var cell = grid[cell_index]
 	
-	# 1. If a soft-placed module already exists here, delete it!
 	if cell.instanced_module != null:
 		cell.instanced_module.queue_free()
 	
-	# 2. Spawn the new module
 	var module_instance = poss.module_reference.duplicate() 
 	add_child(module_instance)
 	
@@ -330,7 +305,6 @@ func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	module_instance.global_position = cart_pos
 	module_instance.rotation_degrees.y = -poss.module_rotation
 	
-	# 3. Save the reference so we can delete it if the cell re-collapses later
 	cell.instanced_module = module_instance
 
 func propagate(cell_index : Vector3i) -> void:
@@ -385,13 +359,9 @@ func clear_all_soft_modules() -> void:
 		
 		# If the cell is not hard-locked by a player
 		if cell.module_reference == null:
-			
-			# 1. Delete the soft mesh if one exists
 			if cell.instanced_module != null:
 				cell.instanced_module.queue_free()
 				cell.instanced_module = null
-			
-			# 2. Scrub any soft constraints from its profile, reverting to hard truth
 			cell.profiles = get_hard_profiles_for_cell(index)
 	
 func place_module(cell_index : Vector3i, module : Module, rotation : int) -> void:
