@@ -11,13 +11,37 @@ var hand : Array[PackedScene] = []
 var cards_played_today : Array[PackedScene] = []
 
 func _ready():
-	var dir_path := tile_card_directory
-	var dir : DirAccess = DirAccess.open(tile_card_directory)
-	dir.list_dir_begin()
-	for file in dir.get_files():
-		tile_cards.append(load(dir_path + "/" + file))
+	_load_tile_cards()
 	refill_tiles()
 	_check_visibility()
+
+func _load_tile_cards():
+	if tile_card_directory == "":
+		printerr("Tile card directory is not set!")
+		return
+		
+	var dir = DirAccess.open(tile_card_directory)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		
+		while file_name != "":
+			if !dir.current_is_dir():
+				# Remove export suffixes (.remap for scenes, .import for textures/others)
+				var clean_path = tile_card_directory + "/" + file_name.replace(".remap", "").replace(".import", "")
+				
+				# Only load if it's a scene file and we haven't loaded this exact path yet
+				# (The check prevents loading the same resource twice if both .tscn and .tscn.remap are listed)
+				if clean_path.ends_with(".tscn"):
+					var res = load(clean_path)
+					if res is PackedScene and not tile_cards.has(res):
+						tile_cards.append(res)
+						print("Loaded card: ", clean_path)
+			
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	else:
+		printerr("Could not open directory: ", tile_card_directory)
 	
 func refill_tiles():
 	if hand.size() > 0:

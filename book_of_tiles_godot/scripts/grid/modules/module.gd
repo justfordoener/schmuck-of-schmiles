@@ -1,6 +1,6 @@
-@abstract class_name Module extends MeshInstance3D
+class_name Module extends Node3D
 
-var type : Layout.CELL_TYPE
-var cell_shape : ArrayMesh
-@abstract func get_tile_reference() -> String
-@abstract func create_cell_shape() -> void
+@export var module_type : Layout.CELL_TYPE
+@export var module_id : int
+# dict key is border direction in degrees (0 = right)
+@export var profiles : Dictionary[int, Layout.PROFILE_TYPE]

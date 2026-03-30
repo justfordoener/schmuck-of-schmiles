@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c80oiohis4dk6"]
+[gd_scene load_steps=10 format=3 uid="uid://c80oiohis4dk6"]
 
 [ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_6o6k0"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="2_c2dvl"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="3_wgu8i"]
 [ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="5_c2dvl"]
 [ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="6_wgu8i"]
+[ext_resource type="PackedScene" uid="uid://p10npgedo60j" path="res://scenes/user_interface/menus/playtest_ui.tscn" id="7_jed05"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6o6k0"]
 size = Vector3(100, 1, 100)
@@ -19,6 +20,7 @@ script = ExtResource("1_6o6k0")
 [node name="SfxTilePlacementSound" parent="." instance=ExtResource("2_wgu8i")]
 
 [node name="MusicIngame" parent="." instance=ExtResource("2_c2dvl")]
+process_mode = 3
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
@@ -26,9 +28,6 @@ transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952
 [node name="CameraController" parent="." instance=ExtResource("3_wgu8i")]
 
 [node name="PlacementManager" parent="." instance=ExtResource("6_wgu8i")]
-
-[node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
-tile_card_directory = "res://scenes/user_interface/tile cards"
 
 [node name="Area3D" type="Area3D" parent="."]
 
@@ -40,184 +39,8 @@ shape = SubResource("BoxShape3D_6o6k0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 mesh = SubResource("BoxMesh_6o6k0")
 
-[node name="Playtest UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 1743.0
-offset_top = 230.0
-offset_right = 1783.0
-offset_bottom = 270.0
+[node name="UIManager" parent="." instance=ExtResource("5_c2dvl")]
+tile_card_directory = "res://scenes/user_interface/tile cards"
 
-[node name="Reset" type="Button" parent="Playtest UI"]
-layout_mode = 0
-offset_left = 20.0
-offset_right = 71.0
-offset_bottom = 31.0
-text = "Reset
-"
-
-[node name="MinZoom" type="HSlider" parent="Playtest UI"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 54.0
-offset_right = -19.0
-offset_bottom = 70.0
-min_value = -20.0
-max_value = 0.0
-step = 0.5
-value = -7.5
-
-[node name="name" type="Label" parent="Playtest UI/MinZoom"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Min Zoom"
-
-[node name="value" type="Label" parent="Playtest UI/MinZoom"]
-layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
-text = "-7.0"
-
-[node name="MaxZoom" type="HSlider" parent="Playtest UI"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 91.0
-offset_right = 123.0
-offset_bottom = 107.0
-min_value = 0.5
-max_value = 30.0
-step = 0.5
-value = 20.0
-
-[node name="name" type="Label" parent="Playtest UI/MaxZoom"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Max Zoom"
-
-[node name="value" type="Label" parent="Playtest UI/MaxZoom"]
-layout_mode = 0
-offset_left = 117.0
-offset_top = -18.0
-offset_right = 157.0
-offset_bottom = 5.0
-text = "20.0"
-
-[node name="MinPitch" type="HSlider" parent="Playtest UI"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 124.0
-offset_right = 123.0
-offset_bottom = 140.0
-min_value = -100.0
-max_value = 0.0
-step = 0.5
-value = -75.0
-
-[node name="name" type="Label" parent="Playtest UI/MinPitch"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Min Pitch"
-
-[node name="value" type="Label" parent="Playtest UI/MinPitch"]
-layout_mode = 0
-offset_left = 111.0
-offset_top = -18.0
-offset_right = 151.0
-offset_bottom = 5.0
-text = "-25.0"
-
-[node name="MaxPitch" type="HSlider" parent="Playtest UI"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 157.0
-offset_right = 123.0
-offset_bottom = 173.0
-max_value = 20.0
-step = 0.5
-
-[node name="name" type="Label" parent="Playtest UI/MaxPitch"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Max Pitch"
-
-[node name="value" type="Label" parent="Playtest UI/MaxPitch"]
-layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
-text = "0.0"
-
-[node name="ZoomSpeed" type="HSlider" parent="Playtest UI"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 189.0
-offset_right = 123.0
-offset_bottom = 205.0
-max_value = 10.0
-step = 0.5
-value = 3.0
-
-[node name="name" type="Label" parent="Playtest UI/ZoomSpeed"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Zoom Speed"
-
-[node name="value" type="Label" parent="Playtest UI/ZoomSpeed"]
-layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
-text = "3.0"
-
-[node name="MoveSpeed" type="HSlider" parent="Playtest UI"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = -27.0
-offset_top = 223.0
-offset_right = 123.0
-offset_bottom = 239.0
-max_value = 1.0
-step = 0.1
-value = 0.2
-
-[node name="name" type="Label" parent="Playtest UI/MoveSpeed"]
-layout_mode = 0
-offset_top = -20.0
-offset_right = 78.0
-offset_bottom = 3.0
-text = "Move Speed"
-
-[node name="value" type="Label" parent="Playtest UI/MoveSpeed"]
-layout_mode = 0
-offset_left = 118.0
-offset_top = -18.0
-offset_right = 158.0
-offset_bottom = 5.0
-text = "0.2"
-
-[connection signal="pressed" from="Playtest UI/Reset" to="CameraController" method="reset_camera_values"]
-[connection signal="value_changed" from="Playtest UI/MinZoom" to="CameraController" method="camera_set_min_zoom"]
-[connection signal="value_changed" from="Playtest UI/MaxZoom" to="CameraController" method="camera_set_max_zoom"]
-[connection signal="value_changed" from="Playtest UI/MinPitch" to="CameraController" method="camera_set_min_pitch"]
-[connection signal="value_changed" from="Playtest UI/MaxPitch" to="CameraController" method="camera_set_max_pitch"]
-[connection signal="value_changed" from="Playtest UI/ZoomSpeed" to="CameraController" method="camera_set_zoom_speed"]
-[connection signal="value_changed" from="Playtest UI/MoveSpeed" to="CameraController" method="camera_set_move_speed"]
+[node name="Playtest UI" parent="UIManager" instance=ExtResource("7_jed05")]
+visible = false
