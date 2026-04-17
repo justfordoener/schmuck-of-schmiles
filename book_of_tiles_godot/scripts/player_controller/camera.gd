@@ -1,6 +1,8 @@
 class_name CameraController extends Node3D
 
 @export var path = camera
+@export var rotation_x: Node3D
+@export var camera: Camera3D
 
 # variables
 @export var floatyness : float = 0.1
@@ -11,6 +13,7 @@ var move_target: Vector3
 @export var rotate_keys_speed = 1.5
 var rotate_keys_target: float
 @export var initial_pitch := -40.0
+#var drag_rotate_mode := false
 
 # zoom
 @export var zoom_speed = 3.0 
@@ -24,9 +27,10 @@ var zoom_target: float
 # mouse
 @export var mouse_sensitivity = 0.3
 
-@export var rotation_x: Node3D
-@export var zoom_pivot: Node3D
-@export var camera: Camera3D
+# drag movement
+@export var drag_sensitivity := 15.0
+var is_dragging := false
+var drag_input := Vector2.ZERO
 
 # rotation
 @export var pivot: Node3D
@@ -66,7 +70,12 @@ func _ready() -> void:
 	_initial_values.zoom_speed = zoom_speed
 	_initial_values.move_speed = move_speed
 	_initial_camera_position = camera.position
-	
+
+
+func _input(event):
+	if event is InputEventMouseMotion and is_dragging:
+		drag_input = event.relative
+
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("rotate"):
@@ -76,10 +85,26 @@ func _physics_process(_delta: float) -> void:
 	
 	# get input directions
 	var input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	if is_dragging:
+		var drag_vector = Vector2(-drag_input.x, -drag_input.y) * drag_sensitivity
+		input_direction += drag_vector.limit_length(1.0)
+	drag_input = Vector2.ZERO
+	
 	var horizontal_basis = Basis(Vector3.UP, pivot.rotation.y)
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
-	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
+	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")	
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
+	
+	# drag movement
+	var was_dragging = is_dragging
+	is_dragging = Input.is_action_pressed("camera_drag")
+	
+	if is_dragging and not was_dragging:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		#drag_rotate_mode = true
+	elif not is_dragging and was_dragging:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		#drag_rotate_mode = false
 	
 	# spherecast to not zoome through the floor
 	spherecast.force_shapecast_update()
@@ -114,7 +139,7 @@ func _physics_process(_delta: float) -> void:
 	# lerp to movement targets
 	position = lerp(position, move_target, floatyness * _delta * 60)
 	camera.position.z = lerp(camera.position.z, zoom_target, floatyness * _delta * 60)
-	spherecast.force_shapecast_update()
+	#spherecast.force_shapecast_update()
 	if spherecast.is_colliding():
 		var collider = spherecast.get_collider(0)
 		if collider.collision_layer & (1 << 0):  
@@ -146,6 +171,7 @@ func _physics_process(_delta: float) -> void:
 	# pivot rotation
 	if rotate_keys_direction != 0:
 		pivot.rotate_y(rotate_keys_speed * rotate_keys_direction * _delta)
+
 
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards
