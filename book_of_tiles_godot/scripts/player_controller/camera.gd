@@ -11,9 +11,14 @@ var move_target: Vector3
 
 # rotation
 @export var rotate_keys_speed = 1.5
-var rotate_keys_target: float
 @export var initial_pitch := -40.0
-#var drag_rotate_mode := false
+@export var pivot: Node3D
+@export var raycast: RayCast3D
+@export var rotate_ease := 3.0
+@export var mouse_rotation_boost := 4.0
+var rotate_keys_target: float
+var drag_rotate_mode := false
+var rotate_current_speed := 0.0
 
 # zoom
 @export var zoom_speed = 3.0 
@@ -31,10 +36,6 @@ var zoom_target: float
 @export var drag_sensitivity := 15.0
 var is_dragging := false
 var drag_input := Vector2.ZERO
-
-# rotation
-@export var pivot: Node3D
-@export var raycast: RayCast3D
 
 # spherecast
 @export var spherecast: ShapeCast3D
@@ -92,19 +93,21 @@ func _physics_process(_delta: float) -> void:
 	
 	var horizontal_basis = Basis(Vector3.UP, pivot.rotation.y)
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
-	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")	
+	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
+	
+	if drag_rotate_mode: # zoom turned off while rotate_mode is true
+		zoom_direction = 0
 	
 	# drag movement
 	var was_dragging = is_dragging
 	is_dragging = Input.is_action_pressed("camera_drag")
+	drag_rotate_mode = is_dragging
 	
 	if is_dragging and not was_dragging:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		#drag_rotate_mode = true
 	elif not is_dragging and was_dragging:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		#drag_rotate_mode = false
 	
 	# spherecast to not zoome through the floor
 	spherecast.force_shapecast_update()
@@ -167,11 +170,22 @@ func _physics_process(_delta: float) -> void:
 			pivot_y_target,
 			floatyness
 		)
-		
-	# pivot rotation
-	if rotate_keys_direction != 0:
-		pivot.rotate_y(rotate_keys_speed * rotate_keys_direction * _delta)
 
+	var rotate_input := 0.0
+	if rotate_keys_direction != 0:
+		rotate_input = rotate_keys_direction
+	
+	if drag_rotate_mode:
+		var scroll_direction = (int(Input.is_action_just_released("move_down")) - int(Input.is_action_just_released("move_up")))
+		rotate_input = scroll_direction * mouse_rotation_boost
+	
+	if rotate_input != 0.0:
+		rotate_current_speed = lerp(rotate_current_speed, rotate_input * rotate_keys_speed, rotate_ease * _delta)
+	else:
+		rotate_current_speed = lerp(rotate_current_speed, 0.0,  rotate_ease * _delta)
+	
+	pivot.rotate_y(rotate_current_speed * _delta)
+	
 
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards
