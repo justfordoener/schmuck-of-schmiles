@@ -98,8 +98,11 @@ func _physics_process(_delta: float) -> void:
 	var horizontal_basis = Basis(Vector3.UP, pivot.rotation.y)
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
-	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down"))) + Input.get_axis("move_down", "move_up") * controller_zoom_factor
-
+	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
+	
+	if Input.is_action_pressed("controller_camera_mode"):
+		rotate_keys_direction += Input.get_axis("controller_rotate_left", "controller_rotate_right")
+		zoom_direction += Input.get_axis("controller_move_down", "controller_move_up") * controller_zoom_factor
 	
 	if drag_rotate_mode: # zoom turned off while rotate_mode is true
 		zoom_direction = 0
