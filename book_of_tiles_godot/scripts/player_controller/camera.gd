@@ -5,35 +5,35 @@ class_name CameraController extends Node3D
 @export var camera: Camera3D
 
 # variables
-@export var floatyness : float = 0.1
-@export var move_speed = 0.2
+var floatyness : float = 0.0
+var move_speed = 0.0
 var move_target: Vector3
 
 # rotation
-@export var rotate_keys_speed = 1.5
-@export var initial_pitch := -40.0
 @export var pivot: Node3D
 @export var raycast: RayCast3D
-@export var rotate_ease := 3.0
-@export var mouse_rotation_boost := 4.0
+var rotate_keys_speed = 0.0
+var initial_pitch := 0.0
+var rotate_ease := 0.0
+var mouse_rotation_boost := 0.0
 var rotate_keys_target: float
 var drag_rotate_mode := false
 var rotate_current_speed := 0.0
 
 # zoom
-@export var zoom_speed = 3.0 
-@export var min_zoom = -7.0 
-@export var max_zoom = 20.0
-@export var min_zoom_speed = 0.15 # as % of max speed (max_speed = 1.0)
+var zoom_speed = 0.0 
+var min_zoom = 0.0 
+var max_zoom = 0.0
+var min_zoom_speed = 0.0 # as % of max speed (max_speed = 1.0)
 var zoom_target: float
-@export var min_pitch := -75.0   # when zoomed out
-@export var max_pitch :=  0.0   # when zoomed in
+var min_pitch := 0.0   # when zoomed out
+var max_pitch :=  0.0   # when zoomed in
 
 # mouse
-@export var mouse_sensitivity = 0.3
+var mouse_sensitivity = 0.0
 
 # drag movement
-@export var drag_sensitivity := 15.0
+var drag_sensitivity := 0.0
 var is_dragging := false
 var drag_input := Vector2.ZERO
 
@@ -41,7 +41,7 @@ var drag_input := Vector2.ZERO
 @export var spherecast: ShapeCast3D
 
 # Easing
-@export var move_speed_ease := 2.0
+var move_speed_ease := 0.0
 var current_move_speed := 0.0
 
 # Reset to original Values (For the Playtest)
@@ -52,6 +52,7 @@ var _initial_zoom: float
 var _initial_camera_position: Vector3
 
 func _ready() -> void:
+	load_camera_variables()
 	move_target = position
 	rotate_keys_target = rotation_degrees.y
 	var initial_pitch_t := inverse_lerp(min_pitch, max_pitch, initial_pitch)
@@ -76,6 +77,8 @@ func _ready() -> void:
 func _input(event):
 	if event is InputEventMouseMotion and is_dragging:
 		drag_input = event.relative
+	if event.is_action_pressed("reload_files"):
+		load_camera_variables()
 
 
 func _physics_process(_delta: float) -> void:
@@ -142,7 +145,6 @@ func _physics_process(_delta: float) -> void:
 	# lerp to movement targets
 	position = lerp(position, move_target, floatyness * _delta * 60)
 	camera.position.z = lerp(camera.position.z, zoom_target, floatyness * _delta * 60)
-	#spherecast.force_shapecast_update()
 	if spherecast.is_colliding():
 		var collider = spherecast.get_collider(0)
 		if collider.collision_layer & (1 << 0):  
@@ -170,7 +172,8 @@ func _physics_process(_delta: float) -> void:
 			pivot_y_target,
 			floatyness
 		)
-
+	
+	# rotation
 	var rotate_input := 0.0
 	if rotate_keys_direction != 0:
 		rotate_input = rotate_keys_direction
@@ -186,6 +189,28 @@ func _physics_process(_delta: float) -> void:
 	
 	pivot.rotate_y(rotate_current_speed * _delta)
 	
+
+func load_camera_variables():
+	# camera, mouse, drag and easing
+	floatyness             = FileManager.balancing_data["camera"]["floatyness"]
+	move_speed             = FileManager.balancing_data["camera"]["move_speed"]
+	mouse_sensitivity      = FileManager.balancing_data["camera"]["mouse_sensitivity"]
+	drag_sensitivity       = FileManager.balancing_data["camera"]["drag_sensitivity"]
+	move_speed_ease        = FileManager.balancing_data["camera"]["move_speed_ease"]
+	
+	# camera/rotation
+	rotate_keys_speed      = FileManager.balancing_data["camera"]["rotation"]["rotate_keys_speed"]
+	initial_pitch          = FileManager.balancing_data["camera"]["rotation"]["initial_pitch"]
+	rotate_ease            = FileManager.balancing_data["camera"]["rotation"]["rotate_ease"]
+	mouse_rotation_boost   = FileManager.balancing_data["camera"]["rotation"]["mouse_rotation_boost"]
+	
+	# camera/zoom
+	zoom_speed             = FileManager.balancing_data["camera"]["zoom"]["zoom_speed"]
+	min_zoom               = FileManager.balancing_data["camera"]["zoom"]["min_zoom"]
+	max_zoom               = FileManager.balancing_data["camera"]["zoom"]["max_zoom"]
+	min_zoom_speed         = FileManager.balancing_data["camera"]["zoom"]["min_zoom_speed"]
+	min_pitch              = FileManager.balancing_data["camera"]["zoom"]["min_pitch"]
+	max_pitch              = FileManager.balancing_data["camera"]["zoom"]["max_pitch"]
 
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards
