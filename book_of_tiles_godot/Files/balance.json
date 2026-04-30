@@ -24,6 +24,8 @@
 		"_comment": "when zoomed out",
 		"max_pitch": 0.0,
 		"_comment": "when zoomed in",
+		"controller_zoom_factor": 0.08,
+		"_comment": "to slow down zoom when using controller"
 	}
 }
 }

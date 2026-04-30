@@ -28,6 +28,7 @@ var min_zoom_speed = 0.0 # as % of max speed (max_speed = 1.0)
 var zoom_target: float
 var min_pitch := 0.0   # when zoomed out
 var max_pitch :=  0.0   # when zoomed in
+var controller_zoom_factor := 0.0 # to slow down zoom when using controller
 
 # mouse
 var mouse_sensitivity = 0.0
@@ -97,7 +98,8 @@ func _physics_process(_delta: float) -> void:
 	var horizontal_basis = Basis(Vector3.UP, pivot.rotation.y)
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
 	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
-	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
+	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down"))) + Input.get_axis("move_down", "move_up") * controller_zoom_factor
+
 	
 	if drag_rotate_mode: # zoom turned off while rotate_mode is true
 		zoom_direction = 0
@@ -211,6 +213,8 @@ func load_camera_variables():
 	min_zoom_speed         = FileManager.balancing_data["camera"]["zoom"]["min_zoom_speed"]
 	min_pitch              = FileManager.balancing_data["camera"]["zoom"]["min_pitch"]
 	max_pitch              = FileManager.balancing_data["camera"]["zoom"]["max_pitch"]
+	controller_zoom_factor = FileManager.balancing_data["camera"]["zoom"]["controller_zoom_factor"]
+
 
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards
