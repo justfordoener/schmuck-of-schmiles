@@ -35,7 +35,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Settings" type="Button" parent="PauseMenu/PauseMenu"]
+[node name="Settings" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Settings"
 
@@ -43,7 +43,7 @@ text = "Settings"
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BackToMenu" type="Button" parent="PauseMenu/PauseMenu"]
+[node name="BackToMenu" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Back to Main Menu"
 
@@ -51,7 +51,7 @@ text = "Back to Main Menu"
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="CloseMenu" type="Button" parent="PauseMenu/PauseMenu"]
+[node name="CloseMenu" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Close Menu"
 
@@ -59,7 +59,7 @@ text = "Close Menu"
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="QuitGame" type="Button" parent="PauseMenu/PauseMenu"]
+[node name="QuitGame" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Quit"
 

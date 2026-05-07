@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://c7hxqdrqm3ca2"]
 
 [ext_resource type="Script" uid="uid://c7w5iggacgnnk" path="res://scripts/managers/UI_manager.gd" id="1_3eudk"]
-[ext_resource type="Texture2D" uid="uid://b52pala8cxhg8" path="res://textures/playtest/undo.png" id="2_bpem0"]
-[ext_resource type="Texture2D" uid="uid://eohnhlx87ee7" path="res://textures/playtest/next_day.png" id="3_bpem0"]
+[ext_resource type="Texture2D" uid="uid://b52pala8cxhg8" path="res://assets/2D/textures/playtest/undo.png" id="2_bpem0"]
+[ext_resource type="Texture2D" uid="uid://eohnhlx87ee7" path="res://assets/2D/textures/playtest/next_day.png" id="3_bpem0"]
 [ext_resource type="PackedScene" uid="uid://c2q2ys53elenm" path="res://scenes/user_interface/menus/pause_ui.tscn" id="4_dmdn1"]
 
 [node name="UI" type="CanvasLayer"]
@@ -50,7 +50,7 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox"]
+[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox" groups=["snappable_ui"]]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
@@ -97,7 +97,7 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/HBoxContainer/TurnOver/TurnOverButtonVBox"]
+[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/HBoxContainer/TurnOver/TurnOverButtonVBox" groups=["snappable_ui"]]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6

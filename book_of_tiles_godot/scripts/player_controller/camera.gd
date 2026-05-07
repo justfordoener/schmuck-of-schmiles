@@ -32,6 +32,7 @@ var controller_zoom_factor := 0.0 # to slow down zoom when using controller
 
 # mouse
 var mouse_sensitivity = 0.0
+var controller_deadzone = 0.0
 
 # drag movement
 var drag_sensitivity := 0.0
@@ -89,7 +90,7 @@ func _physics_process(_delta: float) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
 	# get input directions
-	var input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var input_direction = deadzone_vector("move_left", "move_right", "move_forward", "move_back")
 	if is_dragging:
 		var drag_vector = Vector2(-drag_input.x, -drag_input.y) * drag_sensitivity
 		input_direction += drag_vector.limit_length(1.0)
@@ -97,12 +98,12 @@ func _physics_process(_delta: float) -> void:
 	
 	var horizontal_basis = Basis(Vector3.UP, pivot.rotation.y)
 	var movement_direction = (horizontal_basis * Vector3(input_direction.x, 0, input_direction.y)).normalized()
-	var rotate_keys_direction = Input.get_axis("rotate_left", "rotate_right")
+	var rotate_keys_direction = deadzone_axis("rotate_left", "rotate_right")
 	var zoom_direction = (int(Input.is_action_just_released("move_up")) - int(Input.is_action_just_released("move_down")))
 	
 	if Input.is_action_pressed("controller_camera_mode"):
-		rotate_keys_direction += Input.get_axis("controller_rotate_left", "controller_rotate_right")
-		zoom_direction += Input.get_axis("controller_move_down", "controller_move_up") * controller_zoom_factor
+		rotate_keys_direction += deadzone_axis("controller_rotate_left", "controller_rotate_right")
+		zoom_direction += deadzone_axis("controller_move_down", "controller_move_up") * controller_zoom_factor
 	
 	if drag_rotate_mode: # zoom turned off while rotate_mode is true
 		zoom_direction = 0
@@ -195,6 +196,16 @@ func _physics_process(_delta: float) -> void:
 	pivot.rotate_y(rotate_current_speed * _delta)
 	
 
+# deadzone to circumvent stick dragging with controller
+func deadzone_axis(negative: String, positive: String) -> float:
+	var value = Input.get_axis(negative, positive)
+	return value if abs(value) > controller_deadzone else 0.0
+
+# deadzone to circumvent stick dragging with controller
+func deadzone_vector(left: String, right: String, up: String, down: String) -> Vector2:
+	var value = Input.get_vector(left, right, up, down)
+	return value if value.length() > controller_deadzone else Vector2.ZERO
+
 func load_camera_variables():
 	# camera, mouse, drag and easing
 	floatyness             = FileManager.balancing_data["camera"]["floatyness"]
@@ -217,7 +228,9 @@ func load_camera_variables():
 	min_pitch              = FileManager.balancing_data["camera"]["zoom"]["min_pitch"]
 	max_pitch              = FileManager.balancing_data["camera"]["zoom"]["max_pitch"]
 	controller_zoom_factor = FileManager.balancing_data["camera"]["zoom"]["controller_zoom_factor"]
-
+	
+	# controller_controller
+	controller_deadzone    = FileManager.balancing_data["controller_controller"]["controller_deadzone"]
 
 # -----------------------------------------------------
 # Playtest Value sliders - not really needed afterwards

@@ -27,7 +27,7 @@ layout_mode = 2
 tab_alignment = 1
 current_tab = 0
 
-[node name="Sound" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("slider_master", "slider_music", "slider_sfx", "value_master", "value_music", "value_sfx")]
+[node name="Sound" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("slider_master", "slider_music", "slider_sfx", "value_master", "value_music", "value_sfx") groups=["snappable_ui"]]
 layout_mode = 2
 script = ExtResource("1_nisuv")
 slider_master = NodePath("VBoxContainer/Master/Master")
@@ -136,7 +136,7 @@ step = 0.05
 value = 1.0
 ticks_position = 3
 
-[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons")]
+[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons") groups=["snappable_ui"]]
 visible = false
 layout_mode = 2
 script = ExtResource("2_5308q")
@@ -170,7 +170,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Up:"
 
-[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2"]
+[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
 layout_mode = 2
 text = "W"
 
@@ -182,7 +182,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Left:"
 
-[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer"]
+[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
 layout_mode = 2
 text = "A"
 
@@ -194,7 +194,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Down:"
 
-[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3"]
+[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3" groups=["snappable_ui"]]
 layout_mode = 2
 text = "S"
 
@@ -206,7 +206,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Right:"
 
-[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4"]
+[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4" groups=["snappable_ui"]]
 layout_mode = 2
 text = "D"
 
@@ -214,7 +214,7 @@ text = "D"
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="CloseSettings" type="Button" parent="SettingsMenu"]
+[node name="CloseSettings" type="Button" parent="SettingsMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Close"
 
