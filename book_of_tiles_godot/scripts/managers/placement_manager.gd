@@ -18,6 +18,7 @@ func undo_last_placement() -> void:
 
 func place_tile(tile : PackedScene) -> void:
 	_create_preview_instance(tile)
+	ControllerController.placing_mode = true
 
 func _ready() -> void:
 	camera = camera_controller.camera
@@ -83,6 +84,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 			# Clean up if even a single module of the tile fails
 			instance.queue_free()
 			tiles_placed_today.pop_back() 
+			ControllerController.placing_mode = false
 			return
 			
 		module_placements.append({
@@ -95,6 +97,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	Grid.batch_place_modules(module_placements)
 	
 	preview_instance.queue_free()
+	ControllerController.placing_mode = false
 	Signals.on_instance_spawned.emit()
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:

@@ -27,7 +27,7 @@ layout_mode = 2
 tab_alignment = 1
 current_tab = 0
 
-[node name="Sound" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("slider_master", "slider_music", "slider_sfx", "value_master", "value_music", "value_sfx") groups=["snappable_ui"]]
+[node name="Sound" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("slider_master", "slider_music", "slider_sfx", "value_master", "value_music", "value_sfx")]
 layout_mode = 2
 script = ExtResource("1_nisuv")
 slider_master = NodePath("VBoxContainer/Master/Master")
@@ -72,7 +72,7 @@ custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 text = "25%"
 
-[node name="Master" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master"]
+[node name="Master" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 max_value = 4.0
@@ -100,7 +100,7 @@ custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 text = "25%"
 
-[node name="Music" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music"]
+[node name="Music" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 max_value = 4.0
@@ -128,7 +128,7 @@ custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 text = "25%"
 
-[node name="SFX" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX"]
+[node name="SFX" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 max_value = 4.0
@@ -136,7 +136,16 @@ step = 0.05
 value = 1.0
 ticks_position = 3
 
-[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons") groups=["snappable_ui"]]
+[node name="Snappoint_Keybinds" type="Control" parent="SettingsMenu/SettingsContainer/Sound" groups=["snappable_ui"]]
+anchors_preset = 0
+offset_left = 389.0
+offset_top = -31.0
+offset_right = 429.0
+offset_bottom = 9.0
+scale = Vector2(2.2966955, 0.79706556)
+mouse_filter = 2
+
+[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons")]
 visible = false
 layout_mode = 2
 script = ExtResource("2_5308q")
@@ -209,6 +218,15 @@ text = "Move Right:"
 [node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4" groups=["snappable_ui"]]
 layout_mode = 2
 text = "D"
+
+[node name="Snappoint_Sound" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds" groups=["snappable_ui"]]
+anchors_preset = 0
+offset_left = 320.0
+offset_top = -31.0
+offset_right = 360.0
+offset_bottom = 9.0
+scale = Vector2(1.7099533, 0.79706556)
+mouse_filter = 2
 
 [node name="Spacer" type="Control" parent="SettingsMenu"]
 custom_minimum_size = Vector2(0, 20)

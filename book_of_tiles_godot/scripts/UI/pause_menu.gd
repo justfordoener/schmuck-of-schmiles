@@ -28,6 +28,11 @@ func toggle_menu(menu: Control) -> void:
 	menu.visible = ! menu.visible
 	if menu == pause:
 		get_tree().paused = pause.visible
+	else:
+		if menu.visible == true:
+			pause.visible = false
+		elif menu.visible == false:
+			pause.visible = true
 
 func main_menu() -> void:
 	toggle_menu(pause)
