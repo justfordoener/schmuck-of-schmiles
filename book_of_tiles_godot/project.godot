@@ -26,7 +26,7 @@ Layout="*res://scripts/globals/layout.gd"
 Parameters="*res://scripts/globals/parameters.gd"
 Signals="*res://scripts/globals/signals.gd"
 FileManager="*res://scripts/globals/FileManager.gd"
-ControllerController="*res://scripts/player_controller/controller_controller.gd"
+ControllerSupport="*res://scripts/player_controller/controller_support.gd"
 
 [display]
 

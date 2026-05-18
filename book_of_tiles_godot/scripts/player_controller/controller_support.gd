@@ -72,13 +72,14 @@ func _get_nearest_ui(position: Vector2) -> Variant:
 	var nearest_position = null
 	var nearest_distance = controller_snap_radius
 	
-	for node in get_tree().get_nodes_in_group("snappable_ui"):
-		if node is Control and node.visible and node.can_process():
-			var center = node.get_global_rect().get_center()
-			var distance = position.distance_to(center)
-			if distance < nearest_distance:
-				nearest_distance = distance
-				nearest_position = center
+	if placing_mode == false:
+		for node in get_tree().get_nodes_in_group("snappable_ui"):
+			if node is Control and node.visible and node.can_process():
+				var center = node.get_global_rect().get_center()
+				var distance = position.distance_to(center)
+				if distance < nearest_distance:
+					nearest_distance = distance
+					nearest_position = center
 	
 	return nearest_position
 
