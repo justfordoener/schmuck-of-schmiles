@@ -17,6 +17,7 @@ func undo_last_placement() -> void:
 		tile.queue_free()
 
 func place_tile(tile : PackedScene) -> void:
+	ControllerSupport.placing_mode = true
 	_create_preview_instance(tile)
 
 func _ready() -> void:
@@ -83,6 +84,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 			# Clean up if even a single module of the tile fails
 			instance.queue_free()
 			tiles_placed_today.pop_back() 
+			ControllerSupport.placing_mode = false
 			return
 			
 		module_placements.append({
@@ -96,6 +98,8 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	
 	preview_instance.queue_free()
 	Signals.on_instance_spawned.emit()
+	
+	ControllerSupport.placing_mode = false
 	
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()

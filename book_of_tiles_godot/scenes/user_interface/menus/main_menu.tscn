@@ -41,7 +41,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LevelButton" type="TextureButton" parent="Buttons"]
+[node name="LevelButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
 layout_mode = 1
 offset_left = 541.0
 offset_top = 333.0
@@ -70,7 +70,7 @@ text = "Start"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SettingsButton" type="TextureButton" parent="Buttons"]
+[node name="SettingsButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
 layout_mode = 1
 offset_left = 780.0
 offset_top = 330.0
@@ -99,7 +99,7 @@ text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CreditsButton" type="TextureButton" parent="Buttons"]
+[node name="CreditsButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
 layout_mode = 1
 offset_left = 1063.0
 offset_top = 342.0
@@ -128,7 +128,7 @@ text = "Credits"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuitButton" type="TextureButton" parent="Buttons"]
+[node name="QuitButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
 layout_mode = 1
 offset_left = 1331.0
 offset_top = 346.0
@@ -202,7 +202,7 @@ theme_override_constants/separation = 40
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="Level1" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer"]
+[node name="Level1" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 
@@ -226,7 +226,7 @@ text = "Level 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Level2" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer"]
+[node name="Level2" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 
@@ -254,7 +254,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="Level3" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2"]
+[node name="Level3" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 
@@ -278,7 +278,7 @@ text = "Level 3"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Level4" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2"]
+[node name="Level4" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 
@@ -314,7 +314,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BackToMenu" type="Button" parent="LevelScreen/LevelSelection"]
+[node name="BackToMenu" type="Button" parent="LevelScreen/LevelSelection" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Back"
 
@@ -346,7 +346,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="CloseCredits" type="Button" parent="CreditsCanvasLayer/CreditsMenu"]
+[node name="CloseCredits" type="Button" parent="CreditsCanvasLayer/CreditsMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Close"
 
