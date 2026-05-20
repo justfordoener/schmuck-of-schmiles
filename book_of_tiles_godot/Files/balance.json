@@ -1,4 +1,39 @@
 {
 "max_volume": 4.0,
-"_comment": "maximum volume in dB - should not be lower then 1.0 or higher then 6.0"
+"_comment_max_volume": "maximum volume in dB - should not be lower then 1.0 or higher then 6.0",
+
+"camera": {
+	"floatyness": 0.1,
+	"move_speed": 0.2,
+	"mouse_sensitivity": 0.3,
+	"drag_sensitivity": 15.0,
+	"move_speed_ease": 2.0,
+	"rotation": {
+		"rotate_keys_speed": 1.5,
+		"initial_pitch": -40.0,
+		"rotate_ease": 3.0,
+		"mouse_rotation_boost": 4.0
+		},
+	"zoom": {
+		"zoom_speed": 3.0,
+		"min_zoom": -7.0,
+		"max_zoom": 20.0,
+		"min_zoom_speed": 0.15,
+		"_comment_min_zoom_speed": "as % of max speed (max_speed being 1.0)",
+		"min_pitch": -75.0,
+		"_comment_min_pitch": "when zoomed out",
+		"max_pitch": 0.0,
+		"_comment_max_pitch": "when zoomed in",
+		"controller_zoom_factor": 0.08,
+		"_comment_controller_zoom_factor": "to slow down zoom when using controller"
+		}
+	},
+
+"controller_controller": {
+	"controller_sensitivity": 25.0,
+	"controller_deadzone": 0.15,
+	"controller_snap_radius": 50.0,
+	"controller_snap_strength": 0.3,
+	"_comment_controller_snap_strength": "0.0 = no snap, 1.0 = instant snap -> too high value makes it impossible to move away"
+	}
 }

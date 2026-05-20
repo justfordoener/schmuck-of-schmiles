@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://be5qy5lmbx0pv" path="res://scenes/user_interface/tile_card.tscn" id="1_iplyg"]
 [ext_resource type="PackedScene" uid="uid://b7lpumrxpvgvh" path="res://scenes/tiles/land_tile.tscn" id="2_djcye"]
-[ext_resource type="Texture2D" uid="uid://bkc2mlqcp7yuf" path="res://textures/playtest/grass_tile.png" id="3_djcye"]
+[ext_resource type="Texture2D" uid="uid://bkc2mlqcp7yuf" path="res://assets/2D/textures/playtest/grass_tile.png" id="3_djcye"]
 
 [node name="TileCardGrass" instance=ExtResource("1_iplyg")]
 anchors_preset = 0
@@ -11,7 +11,7 @@ tile = ExtResource("2_djcye")
 [node name="VBoxContainer" parent="." index="0"]
 offset_bottom = 184.0
 
-[node name="TextureButton" parent="VBoxContainer" index="0"]
+[node name="TextureButton" parent="VBoxContainer" index="0" groups=["snappable_ui"]]
 texture_normal = ExtResource("3_djcye")
 
 [node name="RichTextLabel" parent="VBoxContainer" index="1"]

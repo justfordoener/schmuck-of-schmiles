@@ -72,7 +72,7 @@ custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 text = "25%"
 
-[node name="Master" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master"]
+[node name="Master" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Master" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 max_value = 4.0
@@ -100,7 +100,7 @@ custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 text = "25%"
 
-[node name="Music" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music"]
+[node name="Music" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/Music" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 max_value = 4.0
@@ -128,13 +128,22 @@ custom_minimum_size = Vector2(42, 0)
 layout_mode = 2
 text = "25%"
 
-[node name="SFX" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX"]
+[node name="SFX" type="HSlider" parent="SettingsMenu/SettingsContainer/Sound/VBoxContainer/SFX" groups=["snappable_ui"]]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 max_value = 4.0
 step = 0.05
 value = 1.0
 ticks_position = 3
+
+[node name="Snappoint_Keybinds" type="Control" parent="SettingsMenu/SettingsContainer/Sound" groups=["snappable_ui"]]
+anchors_preset = 0
+offset_left = 389.0
+offset_top = -31.0
+offset_right = 429.0
+offset_bottom = 9.0
+scale = Vector2(2.2966955, 0.79706556)
+mouse_filter = 2
 
 [node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons")]
 visible = false
@@ -170,7 +179,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Up:"
 
-[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2"]
+[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
 layout_mode = 2
 text = "W"
 
@@ -182,7 +191,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Left:"
 
-[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer"]
+[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
 layout_mode = 2
 text = "A"
 
@@ -194,7 +203,7 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Down:"
 
-[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3"]
+[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3" groups=["snappable_ui"]]
 layout_mode = 2
 text = "S"
 
@@ -206,15 +215,24 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Right:"
 
-[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4"]
+[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4" groups=["snappable_ui"]]
 layout_mode = 2
 text = "D"
+
+[node name="Snappoint_Sound" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds" groups=["snappable_ui"]]
+anchors_preset = 0
+offset_left = 320.0
+offset_top = -31.0
+offset_right = 360.0
+offset_bottom = 9.0
+scale = Vector2(1.7099533, 0.79706556)
+mouse_filter = 2
 
 [node name="Spacer" type="Control" parent="SettingsMenu"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="CloseSettings" type="Button" parent="SettingsMenu"]
+[node name="CloseSettings" type="Button" parent="SettingsMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Close"
 
