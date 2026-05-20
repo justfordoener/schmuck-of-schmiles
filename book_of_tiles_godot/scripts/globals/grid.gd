@@ -151,7 +151,8 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 				else:
 					possible_module.profiles[border_index] = module.profiles[border_deg]
 			cell.possibilities.append(possible_module)
-		
+		cell.initial_possibilities = cell.possibilities.duplicate()
+
 func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> void:
 	get_tree().root.add_child.call_deferred(module)
 	module.global_position = cartvec
@@ -162,12 +163,17 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 
 func batch_place_modules(placements: Array) -> void:
 	for index in grid.keys():
-		if grid[index].module_reference == null:
-			grid[index].profiles = get_hard_profiles_for_cell(index)
+		var cell = grid[index]
+		if not cell.is_player_placed:
+			cell.module_reference = null
+			cell.possibilities = cell.initial_possibilities.duplicate()
+			if cell.instanced_module != null:
+				cell.instanced_module.queue_free()
+				cell.instanced_module = null
+			cell.profiles = get_hard_profiles_for_cell(index)
 
-	var queue : Array[Vector3i] = []
 	var placed_indices : Array[Vector3i] = []
-	
+
 	for p in placements:
 		var cell_index = p["index"]
 		var cell : Cell = grid[cell_index]
@@ -181,35 +187,22 @@ func batch_place_modules(placements: Array) -> void:
 			cell.possibilities = [possibility]
 			cell.profiles = possibility.profiles
 			cell.module_reference = p["module"]
-			queue.append(cell_index)
+			cell.is_player_placed = true
 			placed_indices.append(cell_index)
-			
-	_process_propagation_queue(queue)
-	
-	var gaps_to_fill : Array[Vector3i] = []
+
+	# Propagate from every player-placed cell so historical constraints are all re-applied
+	var queue : Array[Vector3i] = []
 	for index in grid.keys():
-		var cell = grid[index]
-		
-		# If it is a soft module
-		if cell.module_reference == null and cell.instanced_module != null:
-			var soft_module : Module = cell.instanced_module
-			var is_still_legal = false
-			var wfc_rotation = posmod(-roundi(soft_module.rotation_degrees.y), 360)
-			
-			# Check if it is still allowed by the WFC possibilities list
-			for poss in cell.possibilities:
-				if poss.module_reference.module_id == soft_module.module_id and poss.module_rotation == wfc_rotation:
-					is_still_legal = true
-					break
-					
-			if not is_still_legal:
-				# The new hard tile made this soft module invalid! Delete it.
-				cell.instanced_module.queue_free()
-				cell.instanced_module = null
-				gaps_to_fill.append(index)
-				
-	var cells_to_populate = placed_indices + gaps_to_fill
-	_soft_populate_immediate_neighbors(placed_indices, gaps_to_fill)
+		if grid[index].is_player_placed:
+			queue.append(index)
+	_process_propagation_queue(queue)
+
+	# Soft-seed neighbors around every player-placed cell
+	var all_hard_indices : Array[Vector3i] = []
+	for index in grid.keys():
+		if grid[index].is_player_placed:
+			all_hard_indices.append(index)
+	_soft_populate_immediate_neighbors(all_hard_indices, [])
 		
 func _process_propagation_queue(queue: Array[Vector3i]) -> void:
 	while queue.size() > 0:
@@ -236,8 +229,8 @@ func _soft_populate_immediate_neighbors(trigger_indices: Array[Vector3i], explic
 		var cell = grid[index]
 		for neighbor_key in cell.neighbors.keys():
 			var n_index = get_axial_index(cell.neighbors[neighbor_key].axial_position)
-			# If it's empty space (no hard tile, no soft mesh), we want to fill it
-			if grid[n_index].module_reference == null and grid[n_index].instanced_module == null:
+			# If it's empty space (not player-placed, no soft mesh), we want to fill it
+			if not grid[n_index].is_player_placed and grid[n_index].instanced_module == null:
 				cells_to_fill[n_index] = true
 				
 	for n_index in cells_to_fill.keys():
@@ -257,16 +250,16 @@ func _soft_populate_immediate_neighbors(trigger_indices: Array[Vector3i], explic
 				var neighbor_index = get_axial_index(n_cell.neighbors[neighbor_key].axial_position)
 				var neighbor = grid[neighbor_index]
 				
-				# Only pass constraints to cells that aren't hard-locked
-				if neighbor.module_reference == null:
+				# Only pass constraints to cells that aren't player-placed
+				if not neighbor.is_player_placed:
 					neighbor.profiles[neighbor_key] = n_cell.profiles[neighbor_key]
 	
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
 	
-	# Skip if already fully collapsed
-	if cell.module_reference != null:
-		return false 
+	# Skip if already player-placed (immutable)
+	if cell.is_player_placed:
+		return false
 
 	# Skip if this cell has already "died" (become an empty space)
 	if cell.possibilities.size() == 0:
@@ -283,8 +276,6 @@ func collapse(cell_index : Vector3i) -> bool:
 	var changed = possibilities_before_collapse != cell.possibilities.size()
 	
 	if cell.possibilities.size() == 1:
-		cell.module_reference = cell.possibilities[0].module_reference
-		# print("WFC [SUCCESS]: Collapsed cell ", cell_index, " to module ID ", cell.module_reference.module_id)
 		spawn_module(cell.possibilities[0], cell_index)
 		
 	elif cell.possibilities.size() == 0 and possibilities_before_collapse > 0:
@@ -323,7 +314,7 @@ func propagate(cell_index : Vector3i) -> void:
 				propagate(neighbor_index)
 	
 func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> bool:
-	if grid[cell_index].module_reference != null:
+	if grid[cell_index].is_player_placed:
 		print("cell occupied")
 		return false
 	var possibility : Possibility = get_fitting_possibility(cell_index, module, rotation)
@@ -343,8 +334,8 @@ func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : 
 				if border_key.contains("7777"): 
 					continue # Ignore map edges
 				var neighbor = cell.neighbors.get(border_key)
-				# If it's a soft module (module_reference == null), we ignore it!
-				if neighbor != null and neighbor.module_reference != null:
+				# Only validate against player-placed neighbors; ignore soft modules
+				if neighbor != null and neighbor.is_player_placed:
 					if possibility.profiles[border_key] != neighbor.profiles[border_key]:
 						fits = false
 						break
@@ -358,7 +349,7 @@ func clear_all_soft_modules() -> void:
 		var cell = grid[index]
 		
 		# If the cell is not hard-locked by a player
-		if cell.module_reference == null:
+		if not cell.is_player_placed:
 			if cell.instanced_module != null:
 				cell.instanced_module.queue_free()
 				cell.instanced_module = null
@@ -401,7 +392,7 @@ func get_hard_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layo
 	
 	for border_key in cell.profiles.keys():
 		var neighbor = cell.neighbors.get(border_key)
-		if neighbor != null and neighbor.module_reference != null:
+		if neighbor != null and neighbor.is_player_placed:
 			hard_profiles[border_key] = neighbor.profiles[border_key]
 		else:
 			hard_profiles[border_key] = Layout.PROFILE_TYPE.EMPTY
