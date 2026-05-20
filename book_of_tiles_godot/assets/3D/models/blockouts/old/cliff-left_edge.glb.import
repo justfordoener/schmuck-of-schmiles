@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bsyrhirsu1yml"
-path="res://.godot/imported/cliff-left_edge.glb-f42152d15e532cf85d854dd231b9d47f.scn"
+path="res://.godot/imported/cliff-left_edge.glb-bd0193888395305c70465822901db1c6.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/cliff-left_edge.glb"
-dest_files=["res://.godot/imported/cliff-left_edge.glb-f42152d15e532cf85d854dd231b9d47f.scn"]
+source_file="res://assets/3D/models/blockouts/old/cliff-left_edge.glb"
+dest_files=["res://.godot/imported/cliff-left_edge.glb-bd0193888395305c70465822901db1c6.scn"]
 
 [params]
 

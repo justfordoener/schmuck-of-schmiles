@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cwtil88up3r5o"
-path="res://.godot/imported/tile-infrastructure-pathway_straight_edge.glb-0ed74d6e008a9d2efbf61483cd591407.scn"
+path="res://.godot/imported/tile-infrastructure-pathway_straight_edge.glb-ea6f4f3a5603e80bd8c2e4674da88ba7.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-pathway_straight_edge.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-pathway_straight_edge.glb-0ed74d6e008a9d2efbf61483cd591407.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-pathway_straight_edge.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-pathway_straight_edge.glb-ea6f4f3a5603e80bd8c2e4674da88ba7.scn"]
 
 [params]
 

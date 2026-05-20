@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://catqc2u4io4v"
-path="res://.godot/imported/Placement_Plop_01.mp3-40cf2c82ef08d6642b1ec57d82af8280.mp3str"
+path="res://.godot/imported/Placement_Plop_01.mp3-f6c4a89315edcb7843e3baa62560903d.mp3str"
 
 [deps]
 
-source_file="res://sounds/sfx/Placement_Sound_Plop/Placement_Plop_01.mp3"
-dest_files=["res://.godot/imported/Placement_Plop_01.mp3-40cf2c82ef08d6642b1ec57d82af8280.mp3str"]
+source_file="res://assets/sounds/sfx/Placement_Sound_Plop/Placement_Plop_01.mp3"
+dest_files=["res://.godot/imported/Placement_Plop_01.mp3-f6c4a89315edcb7843e3baa62560903d.mp3str"]
 
 [params]
 

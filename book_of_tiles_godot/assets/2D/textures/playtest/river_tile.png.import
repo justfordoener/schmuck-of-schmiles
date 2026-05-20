@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dox1f6r540bkh"
-path="res://.godot/imported/river_tile.png-2cf061062d58f6d0bf5f8d595a6d45c6.ctex"
+path="res://.godot/imported/river_tile.png-f63dd6ca4c06e1cb4d63f2e604cf09c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/playtest/river_tile.png"
-dest_files=["res://.godot/imported/river_tile.png-2cf061062d58f6d0bf5f8d595a6d45c6.ctex"]
+source_file="res://assets/2D/textures/playtest/river_tile.png"
+dest_files=["res://.godot/imported/river_tile.png-f63dd6ca4c06e1cb4d63f2e604cf09c9.ctex"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bvitp8xol47b"
-path="res://.godot/imported/module-face_river.glb-bb49e708ca93bdab7b65f7845af88c44.scn"
+path="res://.godot/imported/module-face_river.glb-87f82a3916db7ee0e998c92ada3dffdb.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-face_river.glb"
-dest_files=["res://.godot/imported/module-face_river.glb-bb49e708ca93bdab7b65f7845af88c44.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-face_river.glb"
+dest_files=["res://.godot/imported/module-face_river.glb-87f82a3916db7ee0e998c92ada3dffdb.scn"]
 
 [params]
 

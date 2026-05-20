@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ceuqf1vea2e5q"
-path="res://.godot/imported/tile-infrastructure-pathway_ending_corner.glb-cdf333fa163658396119b00cbf2d2fdf.scn"
+path="res://.godot/imported/tile-infrastructure-pathway_ending_corner.glb-cca9db0b03d1a27adf68f69eedfdbad8.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-pathway_ending_corner.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-pathway_ending_corner.glb-cdf333fa163658396119b00cbf2d2fdf.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-pathway_ending_corner.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-pathway_ending_corner.glb-cca9db0b03d1a27adf68f69eedfdbad8.scn"]
 
 [params]
 

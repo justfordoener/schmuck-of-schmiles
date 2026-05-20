@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ihddms0um7ma"
-path="res://.godot/imported/module-corner_water_001.glb-cf034572e85c7d16a5840dd435943acd.scn"
+path="res://.godot/imported/module-corner_water_001.glb-c9e5f08ea134a2e18d8f047151ad17dd.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-corner_water_001.glb"
-dest_files=["res://.godot/imported/module-corner_water_001.glb-cf034572e85c7d16a5840dd435943acd.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-corner_water_001.glb"
+dest_files=["res://.godot/imported/module-corner_water_001.glb-c9e5f08ea134a2e18d8f047151ad17dd.scn"]
 
 [params]
 

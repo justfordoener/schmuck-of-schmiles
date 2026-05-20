@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dxxqmbf1hyysl"
-path="res://.godot/imported/tile-infrastructure-river_face.glb-138c11757ae3307bdfb574c68c1efb39.scn"
+path="res://.godot/imported/tile-infrastructure-river_face.glb-7f4b82bd77f251a71e6eb1293fad2f39.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-river_face.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-river_face.glb-138c11757ae3307bdfb574c68c1efb39.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-river_face.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-river_face.glb-7f4b82bd77f251a71e6eb1293fad2f39.scn"]
 
 [params]
 

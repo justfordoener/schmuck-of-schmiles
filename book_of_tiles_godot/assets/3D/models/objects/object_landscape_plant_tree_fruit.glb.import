@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://btpdqyk2t54ga"
-path="res://.godot/imported/object_landscape_plant_tree_fruit.glb-803d2ae7e9c0b7bb960e47301fd9443e.scn"
+path="res://.godot/imported/object_landscape_plant_tree_fruit.glb-1886493f489f92dac42cd94ed13127a2.scn"
 
 [deps]
 
-source_file="res://models/objects/object_landscape_plant_tree_fruit.glb"
-dest_files=["res://.godot/imported/object_landscape_plant_tree_fruit.glb-803d2ae7e9c0b7bb960e47301fd9443e.scn"]
+source_file="res://assets/3D/models/objects/object_landscape_plant_tree_fruit.glb"
+dest_files=["res://.godot/imported/object_landscape_plant_tree_fruit.glb-1886493f489f92dac42cd94ed13127a2.scn"]
 
 [params]
 

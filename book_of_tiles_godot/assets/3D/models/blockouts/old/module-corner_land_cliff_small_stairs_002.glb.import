@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://pmg0oy7imnv1"
-path="res://.godot/imported/module-corner_land_cliff_small_stairs_002.glb-8fd1604bb5575b674a93744cb4d5e2e2.scn"
+path="res://.godot/imported/module-corner_land_cliff_small_stairs_002.glb-60ab3658983242827cb4b34cc5191f84.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-corner_land_cliff_small_stairs_002.glb"
-dest_files=["res://.godot/imported/module-corner_land_cliff_small_stairs_002.glb-8fd1604bb5575b674a93744cb4d5e2e2.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-corner_land_cliff_small_stairs_002.glb"
+dest_files=["res://.godot/imported/module-corner_land_cliff_small_stairs_002.glb-60ab3658983242827cb4b34cc5191f84.scn"]
 
 [params]
 

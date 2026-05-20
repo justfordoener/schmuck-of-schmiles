@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bsesj8nk760cp"
-path="res://.godot/imported/beaver-house-fireplace_structure.glb-eec890a6d42b6b269738345f021e29b7.scn"
+path="res://.godot/imported/beaver-house-fireplace_structure.glb-01998bbbb1441bfd447e94aabd361da6.scn"
 
 [deps]
 
-source_file="res://models/structures/beaver-house-fireplace_structure.glb"
-dest_files=["res://.godot/imported/beaver-house-fireplace_structure.glb-eec890a6d42b6b269738345f021e29b7.scn"]
+source_file="res://assets/3D/models/structures/beaver-house-fireplace_structure.glb"
+dest_files=["res://.godot/imported/beaver-house-fireplace_structure.glb-01998bbbb1441bfd447e94aabd361da6.scn"]
 
 [params]
 

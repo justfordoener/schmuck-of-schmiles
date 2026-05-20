@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bhwhol4skyels"
-path="res://.godot/imported/module-corner_land_path_right.glb-b391e60527870b739c4fe8df16dd6750.scn"
+path="res://.godot/imported/module-corner_land_path_right.glb-7e2d0cbd757d25a03cf433b1c7dc8709.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-corner_land_path_right.glb"
-dest_files=["res://.godot/imported/module-corner_land_path_right.glb-b391e60527870b739c4fe8df16dd6750.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-corner_land_path_right.glb"
+dest_files=["res://.godot/imported/module-corner_land_path_right.glb-7e2d0cbd757d25a03cf433b1c7dc8709.scn"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cceamw6olnsee"
-path="res://.godot/imported/module-corner_land_path_straight_001.glb-845e26d431e3fc7498e8b9dbe9191eda.scn"
+path="res://.godot/imported/module-corner_land_path_straight_001.glb-a2f30f81f5df60eda204bdf276169b30.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-corner_land_path_straight_001.glb"
-dest_files=["res://.godot/imported/module-corner_land_path_straight_001.glb-845e26d431e3fc7498e8b9dbe9191eda.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-corner_land_path_straight_001.glb"
+dest_files=["res://.godot/imported/module-corner_land_path_straight_001.glb-a2f30f81f5df60eda204bdf276169b30.scn"]
 
 [params]
 

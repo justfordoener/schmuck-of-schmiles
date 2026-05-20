@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dftqkc1a86j8b"
-path="res://.godot/imported/tile-infrastructure-water_corner.glb-41602f5495074ae5a624061bcabd0f78.scn"
+path="res://.godot/imported/tile-infrastructure-water_corner.glb-25811bd3f866f3bd0f204238ae587494.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-water_corner.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-water_corner.glb-41602f5495074ae5a624061bcabd0f78.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-water_corner.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-water_corner.glb-25811bd3f866f3bd0f204238ae587494.scn"]
 
 [params]
 

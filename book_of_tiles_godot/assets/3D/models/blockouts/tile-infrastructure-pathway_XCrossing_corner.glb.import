@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://4upxghv2tjc8"
-path="res://.godot/imported/tile-infrastructure-pathway_XCrossing_corner.glb-46c5cd19ab3bb1a23a5bdb8accd797ac.scn"
+path="res://.godot/imported/tile-infrastructure-pathway_XCrossing_corner.glb-1d6dca3f7c9c9c9d5f57362602ba7694.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-pathway_XCrossing_corner.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-pathway_XCrossing_corner.glb-46c5cd19ab3bb1a23a5bdb8accd797ac.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-pathway_XCrossing_corner.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-pathway_XCrossing_corner.glb-1d6dca3f7c9c9c9d5f57362602ba7694.scn"]
 
 [params]
 

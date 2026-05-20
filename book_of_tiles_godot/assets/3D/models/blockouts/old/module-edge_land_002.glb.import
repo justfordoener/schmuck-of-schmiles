@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b8yeuugcmcufb"
-path="res://.godot/imported/module-edge_land_002.glb-94036577ebff596b85808954135b80d5.scn"
+path="res://.godot/imported/module-edge_land_002.glb-e5a4663048a768877f609b53ce3f2bda.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-edge_land_002.glb"
-dest_files=["res://.godot/imported/module-edge_land_002.glb-94036577ebff596b85808954135b80d5.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-edge_land_002.glb"
+dest_files=["res://.godot/imported/module-edge_land_002.glb-e5a4663048a768877f609b53ce3f2bda.scn"]
 
 [params]
 

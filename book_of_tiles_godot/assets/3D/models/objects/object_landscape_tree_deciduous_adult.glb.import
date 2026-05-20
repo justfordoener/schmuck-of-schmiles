@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bkr502x2a2hit"
-path="res://.godot/imported/object_landscape_tree_deciduous_adult.glb-6ae20221b930e5732eb41c471a0620eb.scn"
+path="res://.godot/imported/object_landscape_tree_deciduous_adult.glb-2f7939d85e52a33cf09f42cf8e10c55c.scn"
 
 [deps]
 
-source_file="res://models/objects/object_landscape_tree_deciduous_adult.glb"
-dest_files=["res://.godot/imported/object_landscape_tree_deciduous_adult.glb-6ae20221b930e5732eb41c471a0620eb.scn"]
+source_file="res://assets/3D/models/objects/object_landscape_tree_deciduous_adult.glb"
+dest_files=["res://.godot/imported/object_landscape_tree_deciduous_adult.glb-2f7939d85e52a33cf09f42cf8e10c55c.scn"]
 
 [params]
 

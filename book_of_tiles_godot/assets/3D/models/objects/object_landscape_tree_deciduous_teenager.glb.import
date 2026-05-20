@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://d1hputtoegcjn"
-path="res://.godot/imported/object_landscape_tree_deciduous_teenager.glb-c695d65b6d020c3a8ca0d5f36cc9c925.scn"
+path="res://.godot/imported/object_landscape_tree_deciduous_teenager.glb-7e1162394bdf02f1e2eacab5c0b4f02d.scn"
 
 [deps]
 
-source_file="res://models/objects/object_landscape_tree_deciduous_teenager.glb"
-dest_files=["res://.godot/imported/object_landscape_tree_deciduous_teenager.glb-c695d65b6d020c3a8ca0d5f36cc9c925.scn"]
+source_file="res://assets/3D/models/objects/object_landscape_tree_deciduous_teenager.glb"
+dest_files=["res://.godot/imported/object_landscape_tree_deciduous_teenager.glb-7e1162394bdf02f1e2eacab5c0b4f02d.scn"]
 
 [params]
 

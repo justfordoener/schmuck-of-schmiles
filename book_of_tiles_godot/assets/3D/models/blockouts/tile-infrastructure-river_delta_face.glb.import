@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://be7vmovpmgj5y"
-path="res://.godot/imported/tile-infrastructure-river_delta_face.glb-fb91618b95be29b28782a09ced3a73c0.scn"
+path="res://.godot/imported/tile-infrastructure-river_delta_face.glb-6ebceae2e0bed69b0706d38be2e492d5.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-river_delta_face.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-river_delta_face.glb-fb91618b95be29b28782a09ced3a73c0.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-river_delta_face.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-river_delta_face.glb-6ebceae2e0bed69b0706d38be2e492d5.scn"]
 
 [params]
 

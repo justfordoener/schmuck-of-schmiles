@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bmi0sesujg0vm"
-path="res://.godot/imported/tile-infrastructure-pathway_ending_edge.glb-a023f8d09fd06d8b54c259f906227fbd.scn"
+path="res://.godot/imported/tile-infrastructure-pathway_ending_edge.glb-2881c2c959db7ae81860ba5ff7be6b96.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-pathway_ending_edge.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-pathway_ending_edge.glb-a023f8d09fd06d8b54c259f906227fbd.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-pathway_ending_edge.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-pathway_ending_edge.glb-2881c2c959db7ae81860ba5ff7be6b96.scn"]
 
 [params]
 

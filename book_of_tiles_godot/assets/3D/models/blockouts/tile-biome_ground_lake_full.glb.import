@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://clo3jb61aw0pu"
-path="res://.godot/imported/tile-biome_ground_lake_full.glb-cfeda3702aa7e6390e8f08ed333b2e6b.scn"
+path="res://.godot/imported/tile-biome_ground_lake_full.glb-aa71a057bab7512a505676e352ac9ddc.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-biome_ground_lake_full.glb"
-dest_files=["res://.godot/imported/tile-biome_ground_lake_full.glb-cfeda3702aa7e6390e8f08ed333b2e6b.scn"]
+source_file="res://assets/3D/models/blockouts/tile-biome_ground_lake_full.glb"
+dest_files=["res://.godot/imported/tile-biome_ground_lake_full.glb-aa71a057bab7512a505676e352ac9ddc.scn"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dm822my75pie8"
-path="res://.godot/imported/module-edge_river_bridge_001.glb-bf7107b99671f33a786ddb3a234a5bd1.scn"
+path="res://.godot/imported/module-edge_river_bridge_001.glb-e67c2c98779b8b990fcd1693baa20b3e.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-edge_river_bridge_001.glb"
-dest_files=["res://.godot/imported/module-edge_river_bridge_001.glb-bf7107b99671f33a786ddb3a234a5bd1.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-edge_river_bridge_001.glb"
+dest_files=["res://.godot/imported/module-edge_river_bridge_001.glb-e67c2c98779b8b990fcd1693baa20b3e.scn"]
 
 [params]
 

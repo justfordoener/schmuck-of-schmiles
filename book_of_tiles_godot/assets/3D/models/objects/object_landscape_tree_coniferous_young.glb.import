@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://djd1duh23ivtb"
-path="res://.godot/imported/object_landscape_tree_coniferous_young.glb-e67f47b82acce93b0d54ef26cfcf952b.scn"
+path="res://.godot/imported/object_landscape_tree_coniferous_young.glb-7188bb82e9447e0761d86972f6a80d96.scn"
 
 [deps]
 
-source_file="res://models/objects/object_landscape_tree_coniferous_young.glb"
-dest_files=["res://.godot/imported/object_landscape_tree_coniferous_young.glb-e67f47b82acce93b0d54ef26cfcf952b.scn"]
+source_file="res://assets/3D/models/objects/object_landscape_tree_coniferous_young.glb"
+dest_files=["res://.godot/imported/object_landscape_tree_coniferous_young.glb-7188bb82e9447e0761d86972f6a80d96.scn"]
 
 [params]
 

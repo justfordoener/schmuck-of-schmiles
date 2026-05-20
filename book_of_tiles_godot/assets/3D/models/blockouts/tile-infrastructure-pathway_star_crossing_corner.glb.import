@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://boygl2h5t11qm"
-path="res://.godot/imported/tile-infrastructure-pathway_star_crossing_corner.glb-ae618ae9af34371eda72340f1d088f13.scn"
+path="res://.godot/imported/tile-infrastructure-pathway_star_crossing_corner.glb-6d822eb118fb3f5c33936379933f5fe5.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-pathway_star_crossing_corner.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-pathway_star_crossing_corner.glb-ae618ae9af34371eda72340f1d088f13.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-pathway_star_crossing_corner.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-pathway_star_crossing_corner.glb-6d822eb118fb3f5c33936379933f5fe5.scn"]
 
 [params]
 

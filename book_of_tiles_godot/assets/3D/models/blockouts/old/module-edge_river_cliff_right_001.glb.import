@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://12njcr77ln7f"
-path="res://.godot/imported/module-edge_river_cliff_right_001.glb-89682b8a13eaa5351b3e57d600367af3.scn"
+path="res://.godot/imported/module-edge_river_cliff_right_001.glb-595b02666d2fa2856f83252290e4fbae.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/module-edge_river_cliff_right_001.glb"
-dest_files=["res://.godot/imported/module-edge_river_cliff_right_001.glb-89682b8a13eaa5351b3e57d600367af3.scn"]
+source_file="res://assets/3D/models/blockouts/old/module-edge_river_cliff_right_001.glb"
+dest_files=["res://.godot/imported/module-edge_river_cliff_right_001.glb-595b02666d2fa2856f83252290e4fbae.scn"]
 
 [params]
 

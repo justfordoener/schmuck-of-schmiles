@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bt87s5gagryf8"
-path="res://.godot/imported/tile-infrastructure-land_corner.glb-dae7ac0ea7b9d9fd4e3d9f1f73c92783.scn"
+path="res://.godot/imported/tile-infrastructure-land_corner.glb-b48f5c6341de7553a06f10ae96145fac.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-land_corner.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-land_corner.glb-dae7ac0ea7b9d9fd4e3d9f1f73c92783.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-land_corner.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-land_corner.glb-b48f5c6341de7553a06f10ae96145fac.scn"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dock38htuiyqu"
-path="res://.godot/imported/object_landscape_plant_berry_bush_large.glb-0d3f4859a97fc4b7ab4ef9962f33d51b.scn"
+path="res://.godot/imported/object_landscape_plant_berry_bush_large.glb-979ee2ed64ff17372a490eaf608dd3e6.scn"
 
 [deps]
 
-source_file="res://models/objects/object_landscape_plant_berry_bush_large.glb"
-dest_files=["res://.godot/imported/object_landscape_plant_berry_bush_large.glb-0d3f4859a97fc4b7ab4ef9962f33d51b.scn"]
+source_file="res://assets/3D/models/objects/object_landscape_plant_berry_bush_large.glb"
+dest_files=["res://.godot/imported/object_landscape_plant_berry_bush_large.glb-979ee2ed64ff17372a490eaf608dd3e6.scn"]
 
 [params]
 

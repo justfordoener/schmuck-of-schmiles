@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://c8n8caypcikjk"
-path="res://.godot/imported/land_face.glb-5de24f65cff9b0dc83b376d9a4e315b2.scn"
+path="res://.godot/imported/land_face.glb-ae514718e09ef4a4fda640a2e10c4699.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/land_face.glb"
-dest_files=["res://.godot/imported/land_face.glb-5de24f65cff9b0dc83b376d9a4e315b2.scn"]
+source_file="res://assets/3D/models/blockouts/old/land_face.glb"
+dest_files=["res://.godot/imported/land_face.glb-ae514718e09ef4a4fda640a2e10c4699.scn"]
 
 [params]
 

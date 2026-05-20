@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://nre46nfdex7s"
-path="res://.godot/imported/tile-infrastructure-land_cliff_big_stairs_corner.glb-f53863a26c137714478570fb5c6a6c02.scn"
+path="res://.godot/imported/tile-infrastructure-land_cliff_big_stairs_corner.glb-5ec2f8df25e0d056cef97e08bf30975f.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-land_cliff_big_stairs_corner.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-land_cliff_big_stairs_corner.glb-f53863a26c137714478570fb5c6a6c02.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-land_cliff_big_stairs_corner.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-land_cliff_big_stairs_corner.glb-5ec2f8df25e0d056cef97e08bf30975f.scn"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b7pj1jwfvbupc"
-path="res://.godot/imported/corn_module.glb-965d084c9f4045b81d99e296f3cf419d.scn"
+path="res://.godot/imported/corn_module.glb-703e4d68592ccb498ee5c2582db2d01c.scn"
 
 [deps]
 
-source_file="res://models/shapes/corn_module.glb"
-dest_files=["res://.godot/imported/corn_module.glb-965d084c9f4045b81d99e296f3cf419d.scn"]
+source_file="res://assets/3D/models/shapes/corn_module.glb"
+dest_files=["res://.godot/imported/corn_module.glb-703e4d68592ccb498ee5c2582db2d01c.scn"]
 
 [params]
 

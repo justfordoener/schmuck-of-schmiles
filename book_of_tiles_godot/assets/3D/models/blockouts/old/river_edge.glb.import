@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://xgsgb8nvqcl1"
-path="res://.godot/imported/river_edge.glb-e1633bda9d6ed787f175ea5fb7fcc6db.scn"
+path="res://.godot/imported/river_edge.glb-32ff3aa4939dfe4dbc0c3967e9dc84d5.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/river_edge.glb"
-dest_files=["res://.godot/imported/river_edge.glb-e1633bda9d6ed787f175ea5fb7fcc6db.scn"]
+source_file="res://assets/3D/models/blockouts/old/river_edge.glb"
+dest_files=["res://.godot/imported/river_edge.glb-32ff3aa4939dfe4dbc0c3967e9dc84d5.scn"]
 
 [params]
 

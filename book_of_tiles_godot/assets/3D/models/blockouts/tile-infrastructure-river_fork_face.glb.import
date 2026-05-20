@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cwhpv1pw3p7po"
-path="res://.godot/imported/tile-infrastructure-river_fork_face.glb-2379ddc90b3649486db480f5791d35d4.scn"
+path="res://.godot/imported/tile-infrastructure-river_fork_face.glb-9e8ae0948270b8e93893f93c0217ab64.scn"
 
 [deps]
 
-source_file="res://models/blockouts/tile-infrastructure-river_fork_face.glb"
-dest_files=["res://.godot/imported/tile-infrastructure-river_fork_face.glb-2379ddc90b3649486db480f5791d35d4.scn"]
+source_file="res://assets/3D/models/blockouts/tile-infrastructure-river_fork_face.glb"
+dest_files=["res://.godot/imported/tile-infrastructure-river_fork_face.glb-9e8ae0948270b8e93893f93c0217ab64.scn"]
 
 [params]
 

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cdwsgukl6y2cx"
-path="res://.godot/imported/land_corner.glb-f026a3bfeb8e82d91c6d08e535aaf8bc.scn"
+path="res://.godot/imported/land_corner.glb-e179d2ab09eda053186557ef4c41c98d.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/land_corner.glb"
-dest_files=["res://.godot/imported/land_corner.glb-f026a3bfeb8e82d91c6d08e535aaf8bc.scn"]
+source_file="res://assets/3D/models/blockouts/old/land_corner.glb"
+dest_files=["res://.godot/imported/land_corner.glb-e179d2ab09eda053186557ef4c41c98d.scn"]
 
 [params]
 

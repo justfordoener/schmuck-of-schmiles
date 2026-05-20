@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dqnvixtjkekpr"
-path.s3tc="res://.godot/imported/land_corner_land_corner.png-15170bf6aaa7aef426b0f5dd40d2ffb8.s3tc.ctex"
+path.s3tc="res://.godot/imported/land_corner_land_corner.png-7b0af1714c4029c8c3aee21a4184e4c8.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://models/blockouts/old/land_corner_land_corner.png"
-dest_files=["res://.godot/imported/land_corner_land_corner.png-15170bf6aaa7aef426b0f5dd40d2ffb8.s3tc.ctex"]
+source_file="res://assets/3D/models/blockouts/old/land_corner_land_corner.png"
+dest_files=["res://.godot/imported/land_corner_land_corner.png-7b0af1714c4029c8c3aee21a4184e4c8.s3tc.ctex"]
 
 [params]
 

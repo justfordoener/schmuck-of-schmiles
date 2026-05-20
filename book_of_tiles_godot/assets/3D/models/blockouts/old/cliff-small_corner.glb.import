@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bwtpinlylj5ev"
-path="res://.godot/imported/cliff-small_corner.glb-e32505b49ea389ed33c6df83f4008028.scn"
+path="res://.godot/imported/cliff-small_corner.glb-44b42f65d8745230c09d0b6a0cd6a8b9.scn"
 
 [deps]
 
-source_file="res://models/blockouts/old/cliff-small_corner.glb"
-dest_files=["res://.godot/imported/cliff-small_corner.glb-e32505b49ea389ed33c6df83f4008028.scn"]
+source_file="res://assets/3D/models/blockouts/old/cliff-small_corner.glb"
+dest_files=["res://.godot/imported/cliff-small_corner.glb-44b42f65d8745230c09d0b6a0cd6a8b9.scn"]
 
 [params]
 
