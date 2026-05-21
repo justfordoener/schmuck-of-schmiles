@@ -23,4 +23,5 @@ stream_6/stream = ExtResource("7_2p01j")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamRandomizer_qua8t")
+bus = &"SFX"
 script = ExtResource("1_1nyan")

@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=4 uid="uid://c0drxklxykvo7"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_4f8pd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qipxv"]
+resource_name = "mat_land"
+cull_mode = 2
+albedo_color = Color(0.14349401, 0.7088492, 0.19965743, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o4vs2"]
+resource_name = "mat_water"
+cull_mode = 2
+albedo_color = Color(0.17128417, 0.22256415, 0.9063355, 1)
+roughness = 0.5
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qpprx"]
+_surfaces = [{
+"aabb": AABB(-0.433, 0, -0.5, 0.866, 0.5, 0.75),
+"format": 34359742465,
+"index_count": 90,
+"index_data": PackedByteArray("AAABAAIAAAADAAEAAwAAABIAEgABAAMABQASAAAAAQATAAIAEgATAAEAFAACABMAFQATABIAFQAUABMAEgAFAAoAEgAKABUABAAUABUACgAEABUABAAGABQACgAGAAQAFAAHAAIABwAUAAYACgAHAAYABwAIAAIABwAJAAgACgAFAAsADAALAAUADAANAAsADAAFAA4ADAAPAA0ADAAOAA8ADwAOAA0ADgAQAA0ADgARABAA"),
+"lods": [0.0001742098, PackedByteArray("AAABAAIAAAADAAEAAwAAAAQABAABAAMABQAEAAAAAQAGAAIABAAGAAEABgAHAAIABwAIAAIABwAJAAgACgAHAAYACgAGAAQABAAFAAoACgAFAAsADAALAAUADAANAAsADAAFAA4ADAAPAA0ADAAOAA8ADwAOAA0ADgAQAA0ADgARABAA")],
+"name": "mat_land",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 22,
+"vertex_data": PackedByteArray("MzOtvgAAAAAAAIA+LbLdvgAAAD8AAIA+MzOtvgAAAD8AAIA+LbLdvgAAAAAAAIA+AAAAAAAAAAAAAAC/okWmPgAAAAAAAIA+AAAAAAAAAD8AAAC/zARCPQAAAD8T/tW+MzOtvjMz8z4AAIA+zARCPTMz8z4T/tW+zARCPQAAAAAT/tW+EPzBPgAAAACMACA+LbLdPgAAAAAAAIA+EPzBPgAAAD+MACA+okWmPgAAAD8AAIA+LbLdPgAAAD8AAIA+EPzBPjMz8z6MACA+okWmPjMz8z4AAIA+03LFvgAAAAB5ACw+03LFvgAAAD95ACw+6LpdvQAAAD8c/s++6LpdvQAAAAAc/s++")
+}, {
+"aabb": AABB(-0.33828124, 0, -0.41795406, 0.7171575, 0.475, 0.6679541),
+"format": 34896613377,
+"index_count": 18,
+"index_data": PackedByteArray("AAABAAIAAwACAAEAAwABAAQAAAAFAAEABgAFAAAABgAHAAUA"),
+"name": "mat_water",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("rOz/////AACpif//AAAAAP////8R3AAA//8AABHcAACpiQAAAAAAAAAA/////wAArOwAAP//AAAAAAAA//8AAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_sa1i3"]
+resource_name = "river_face_Cylinder_003"
+_surfaces = [{
+"aabb": AABB(-0.433, 0, -0.5, 0.866, 0.5, 0.75),
+"attribute_data": PackedByteArray("VFW9PgAAAD+pqqo+AAAAAFRVvT4AAAAAqaqqPgAAAD+qqio/AAAAP///Hz8AAAAAqqoqPwAAAAD//x8/AAAAPwAAAAAAAIA/qaqqPgAAAACpqqo+AAAAPwAAAAAAAIA/LVyVPVz/cT8AAAAAAACAPwAAAAAAAIA/LVyVPbj+Yz+qqio/AAAAP3RVFT+Q/v89c1UVP+j/Dz+qqio/AAAAAKmqqj4AAAA/VFW9PgAAAD8AAAAAAACAP///Hz8AAAA/LVyVPVz/cT9zVRU/6P8PP6qqKj8AAAA/qaqqPgAAAAAAAAAAAACAP1RVvT4AAAAALVyVPbj+Yz+qqio/AAAAAP//Hz8AAAAAdFUVP5D+/z0tXJU9uP5jP1RVvT4AAAAAVFW9PgAAAAAtXJU9uP5jP///Hz8AAAAAdFUVP5D+/z10VRU/kP7/Pf//Hz8AAAAAGgCYPuz/DT8aAJg+wP7fPWKxKj1f/28/YbEqPb7+Xz8aAJg+7P8NP2KxKj1f/28/YbEqPb7+Xz8aAJg+wP7fPQ=="),
+"format": 34359742487,
+"index_count": 90,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUAKgAJAAoAKgArAAkALAArACoALAAtACsACAAtACwACAALAC0ADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVAC4AFwAuABUALgAXABgALgAYAC8AGAAWAC8AGAAXABkAGgAZABcAHgAwABwAMAAeAB0AMAAdADEAGwAxAB0AHwAgACEAIgAjACQAIgAlACMAJgAnACgAJgApACcA"),
+"lods": [0.0001742098, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEAFAAVABYAFwAWABUAFgAXABgAGAAXABkAGgAZABcAGwAcAB0AHAAeAB0AHwAgACEAIgAjACQAIgAlACMAJgAnACgAJgApACcA")],
+"material": SubResource("StandardMaterial3D_qipxv"),
+"name": "mat_land",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 50,
+"vertex_data": PackedByteArray("MzOtvgAAAAAAAIA+LbLdvgAAAD8AAIA+MzOtvgAAAD8AAIA+LbLdvgAAAAAAAIA+LbLdPgAAAAAAAIA+okWmPgAAAD8AAIA+LbLdPgAAAD8AAIA+okWmPgAAAAAAAIA+AAAAAAAAAAAAAAC/LbLdvgAAAD8AAIA+LbLdvgAAAAAAAIA+AAAAAAAAAD8AAAC/zARCPQAAAAAT/tW+AAAAAAAAAD8AAAC/AAAAAAAAAAAAAAC/zARCPQAAAD8T/tW+LbLdPgAAAAAAAIA+EPzBPgAAAD+MACA+EPzBPgAAAACMACA+LbLdPgAAAD8AAIA+LbLdvgAAAAAAAIA+MzOtvgAAAAAAAIA+AAAAAAAAAAAAAAC/okWmPgAAAAAAAIA+zARCPQAAAAAT/tW+EPzBPgAAAACMACA+LbLdPgAAAAAAAIA+LbLdvgAAAD8AAIA+AAAAAAAAAD8AAAC/MzOtvgAAAD8AAIA+zARCPQAAAD8T/tW+LbLdPgAAAD8AAIA+okWmPgAAAD8AAIA+EPzBPgAAAD+MACA+zARCPQAAAD8T/tW+MzOtvjMz8z4AAIA+MzOtvgAAAD8AAIA+zARCPTMz8z4T/tW+okWmPgAAAD8AAIA+EPzBPjMz8z6MACA+EPzBPgAAAD+MACA+okWmPjMz8z4AAIA+03LFvgAAAAB5ACw+03LFvgAAAD95ACw+6LpdvQAAAAAc/s++6LpdvQAAAD8c/s++03LFvgAAAAB5ACw+6LpdvQAAAAAc/s++6LpdvQAAAD8c/s++03LFvgAAAD95ACw+/3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////v/9//3////+//3//f////7//f/9/////vwAA2a5NdZuOAADZrt5mU6IAANmuEF/7rAAA2a7///+////Zrl2Fqnj//9muXYWqeP//2a7///+////Zrl2Fqnj//9muw574Vf//2a4/miRc///Zrpaf2FT//9muY5lQXf9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/9/AAD///+//3///////z//f///////P/9///////8//3///////z//f///////P/9///////8//3///////z8l0f9/////PyXR/3////8/JdH/f////z8l0f9/////PwAA2a7///+/AADZrv///78AANmu////vwAA2a7///+/AADZrihgfasAANmuNGiAoAAA2a7tcJWUAADZrlp5E4n/fwAA////v/9/AAD///+//3///////z//f///////Pw==")
+}, {
+"aabb": AABB(-0.33828124, 0, -0.41795406, 0.7171575, 0.475, 0.6679541),
+"attribute_data": PackedByteArray("/58AAKsS/eNUlf8fql4AAFSV/4+rEv3jqxL+8VSV/x//n/9/ql4AAP+fAACqXv9/"),
+"format": 34896613399,
+"index_count": 18,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkA"),
+"material": SubResource("StandardMaterial3D_o4vs2"),
+"name": "mat_water",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("rOz//////z+pif//AAD/P/////8R3P8/AAD//////z///wAAEdxHFamJ//8AABQXqYkAAAAAShr/////EdzREazsAAD//wCAAAD/////AICs7P////8AgAAAAAD//wCA////f////3/+//9/////f7S6mlzZuKxZYrU1VCq+EGL/f////3////9/////f///")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_qpprx")
+
+[node name="RiverFace" type="Node3D"]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
+script = ExtResource("1_4f8pd")
+module_type = 2
+module_id = 2
+profiles = Dictionary[int, int]({
+90: 3,
+210: 2,
+330: 3
+})
+
+[node name="river_face" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.0000005, 0, 0, 0, 1, 0, 0, 0, 1.0000005, 0, 0, 0)
+mesh = SubResource("ArrayMesh_sa1i3")
+skeleton = NodePath("")

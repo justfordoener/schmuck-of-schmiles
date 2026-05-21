@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://dhuq2bdla75id"]
+
+[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_gi88m"]
+[ext_resource type="PackedScene" uid="uid://c0drxklxykvo7" path="res://scenes/modules/river_face.tscn" id="3_xbrok"]
+[ext_resource type="PackedScene" uid="uid://ccd0cheo0o0j8" path="res://scenes/modules/river_edge.tscn" id="4_hjsf8"]
+[ext_resource type="PackedScene" uid="uid://dpxc0kfqikaj4" path="res://scenes/modules/land_face.tscn" id="5_5yama"]
+[ext_resource type="PackedScene" uid="uid://bpgrnrk3ekhqp" path="res://scenes/modules/river_corner_full.tscn" id="6_gi88m"]
+[ext_resource type="PackedScene" uid="uid://dw0fwmebsvjui" path="res://scenes/modules/land_edge.tscn" id="6_tpdep"]
+[ext_resource type="PackedScene" uid="uid://baidq4mli7f0l" path="res://models/structures/beaver-house_structure.glb" id="7_n7w83"]
+
+[node name="RiverTile" type="Node3D"]
+script = ExtResource("1_gi88m")
+
+[node name="RiverFace" parent="." instance=ExtResource("3_xbrok")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, -1, 0, -0.577)
+
+[node name="RiverFace2" parent="." instance=ExtResource("3_xbrok")]
+transform = Transform3D(0.5774999, 0, 1.0002594, 0, 1.155, 0, -1.0002594, 0, 0.5774999, -1, 0, 0.577)
+
+[node name="RiverFace3" parent="." instance=ExtResource("3_xbrok")]
+transform = Transform3D(-1.1550001, 0, -1.0097332e-07, 0, 1.155, 0, 1.0097332e-07, 0, -1.1550001, 0, 0, -1.155)
+
+[node name="RiverFace4" parent="." instance=ExtResource("3_xbrok")]
+transform = Transform3D(-0.5775001, 0, -1.0002594, 0, 1.155, 0, 1.0002594, 0, -0.5775001, 0, 0, 1.155)
+
+[node name="RiverEdge" parent="." instance=ExtResource("4_hjsf8")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, -1, 0, 0)
+
+[node name="RiverEdge2" parent="." instance=ExtResource("4_hjsf8")]
+transform = Transform3D(0.5774999, 0, 1.0002594, 0, 1.155, 0, -1.0002594, 0, 0.5774999, -0.5, 0, 0.866)
+
+[node name="RiverEdge3" parent="." instance=ExtResource("4_hjsf8")]
+transform = Transform3D(0.5775, 0, -1.0002595, 0, 1.155, 0, 1.0002595, 0, 0.5775, -0.5, 0, -0.866)
+
+[node name="LandFace" parent="." instance=ExtResource("5_5yama")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 1, 0, -0.577)
+
+[node name="LandFace2" parent="." instance=ExtResource("5_5yama")]
+transform = Transform3D(0.5774999, 0, 1.0002594, 0, 1.155, 0, -1.0002594, 0, 0.5774999, 1, 0, 0.577)
+
+[node name="LandEdge" parent="." instance=ExtResource("6_tpdep")]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 1, 0, 0)
+
+[node name="LandEdge2" parent="." instance=ExtResource("6_tpdep")]
+transform = Transform3D(-0.57750005, 0, 1.0002593, 0, 1.155, 0, -1.0002593, 0, -0.57750005, 0.5, 0, 0.866)
+
+[node name="LandEdge3" parent="." instance=ExtResource("6_tpdep")]
+transform = Transform3D(-0.57749987, 0, -1.0002594, 0, 1.155, 0, 1.0002594, 0, -0.57749987, 0.5, 0, -0.866)
+
+[node name="RiverCornerFull" parent="." instance=ExtResource("6_gi88m")]
+
+[node name="beaver-house_structure2" parent="RiverCornerFull" instance=ExtResource("7_n7w83")]
+transform = Transform3D(1.0324572e-08, 0, -0.86580086, 0, 0.86580086, 0, 0.86580086, 0, 1.0324572e-08, -0.2540822, 0.47670722, 0.15794514)

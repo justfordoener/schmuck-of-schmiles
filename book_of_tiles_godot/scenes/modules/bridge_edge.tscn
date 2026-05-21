@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cbqwrbv2xa25t"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_g250i"]
+[ext_resource type="PackedScene" uid="uid://bs8b5ldeackpf" path="res://models/blockouts/bridge_edge.glb" id="2_5qfvm"]
+
+[node name="BridgeEdge" type="Node3D"]
+transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
+script = ExtResource("1_g250i")
+module_type = 1
+module_id = 18
+profiles = Dictionary[int, int]({
+0: 4,
+90: 3,
+180: 4,
+270: 3
+})
+
+[node name="bridge_edge2" parent="." instance=ExtResource("2_5qfvm")]

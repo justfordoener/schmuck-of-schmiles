@@ -1,0 +1,353 @@
+[gd_scene load_steps=4 format=3 uid="uid://i8qyitdsh5pv"]
+
+[ext_resource type="Script" uid="uid://1gok5algkmqy" path="res://scripts/UI/main_menu.gd" id="1_dhggu"]
+[ext_resource type="PackedScene" uid="uid://v56eajf1t8eh" path="res://scenes/user_interface/menus/settings_UI.tscn" id="2_a05eb"]
+[ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="4_6je1p"]
+
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("level_button", "settings_button", "credits_button", "quit_button", "level_back_button", "level_buttons", "settings_back_button", "credits_back_button", "level_selection", "settings", "credits")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dhggu")
+level_button = NodePath("Buttons/LevelButton")
+settings_button = NodePath("Buttons/SettingsButton")
+credits_button = NodePath("Buttons/CreditsButton")
+quit_button = NodePath("Buttons/QuitButton")
+level_back_button = NodePath("LevelScreen/LevelSelection/BackToMenu")
+level_buttons = [NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level1"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level2"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level3"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level4")]
+settings_back_button = NodePath("SettingsCanvasLayer/SettingsMenu/CloseSettings")
+credits_back_button = NodePath("CreditsCanvasLayer/CreditsMenu/CloseCredits")
+level_selection = NodePath("LevelScreen/LevelSelection")
+settings = NodePath("SettingsCanvasLayer/SettingsMenu")
+credits = NodePath("CreditsCanvasLayer/CreditsMenu")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05967903, 0.24230221, 0.11811402, 1)
+
+[node name="Buttons" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LevelButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
+layout_mode = 1
+offset_left = 541.0
+offset_top = 333.0
+offset_right = 581.0
+offset_bottom = 373.0
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/LevelButton"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SettingsButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
+layout_mode = 1
+offset_left = 780.0
+offset_top = 330.0
+offset_right = 820.0
+offset_bottom = 370.0
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/SettingsButton"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CreditsButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
+layout_mode = 1
+offset_left = 1063.0
+offset_top = 342.0
+offset_right = 1103.0
+offset_bottom = 382.0
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/CreditsButton"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Credits"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="QuitButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
+layout_mode = 1
+offset_left = 1331.0
+offset_top = 346.0
+offset_right = 1371.0
+offset_bottom = 386.0
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/QuitButton"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Quit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelScreen" type="CanvasLayer" parent="."]
+
+[node name="LevelSelection" type="VBoxContainer" parent="LevelScreen"]
+visible = false
+custom_minimum_size = Vector2(1000, 600)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -675.0
+offset_top = -329.5
+offset_right = 498.0
+offset_bottom = 270.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelScreen/LevelSelection"]
+layout_mode = 2
+alignment = 1
+
+[node name="Page1" type="Panel" parent="LevelScreen/LevelSelection/HBoxContainer"]
+custom_minimum_size = Vector2(575, 500)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Level1" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level1"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Level 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Level2" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level2"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Level 2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Level3" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level3"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Level 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Level4" type="TextureButton" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level4"]
+custom_minimum_size = Vector2(150, 130)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -65.0
+offset_right = 75.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Level 4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="LevelScreen/LevelSelection/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="Page2" type="Panel" parent="LevelScreen/LevelSelection/HBoxContainer"]
+custom_minimum_size = Vector2(575, 500)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="LevelScreen/LevelSelection"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="BackToMenu" type="Button" parent="LevelScreen/LevelSelection" groups=["snappable_ui"]]
+layout_mode = 2
+text = "Back"
+
+[node name="SettingsCanvasLayer" parent="." instance=ExtResource("2_a05eb")]
+
+[node name="CreditsCanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="CreditsMenu" type="VBoxContainer" parent="CreditsCanvasLayer"]
+visible = false
+custom_minimum_size = Vector2(800, 660)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="CreditsPanel" type="Panel" parent="CreditsCanvasLayer/CreditsMenu"]
+custom_minimum_size = Vector2(650, 600)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="CreditsCanvasLayer/CreditsMenu"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="CloseCredits" type="Button" parent="CreditsCanvasLayer/CreditsMenu" groups=["snappable_ui"]]
+layout_mode = 2
+text = "Close"
+
+[node name="MusicIngame" parent="." instance=ExtResource("4_6je1p")]
