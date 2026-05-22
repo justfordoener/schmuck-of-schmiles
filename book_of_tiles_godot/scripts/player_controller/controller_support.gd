@@ -43,7 +43,7 @@ func _physics_process(_delta: float) -> void:
 	
 	if current_node:
 		if current_node.is_inside_tree() and current_node.visible and current_node.can_process() and current_node.is_visible_in_tree():
-			Input.warp_mouse(current_node.get_global_rect().get_center())
+			Input.warp_mouse(get_viewport().get_final_transform() * current_node.get_global_rect().get_center())
 		else:
 			current_node = null
 	else:
@@ -54,7 +54,7 @@ func _physics_process(_delta: float) -> void:
 			var nearest = _get_nearest_ui(new_position)
 			if nearest:
 				new_position = new_position.lerp(nearest, controller_snap_strength)
-			Input.warp_mouse(new_position)
+			Input.warp_mouse(get_viewport().get_final_transform() * new_position)
 		
 	if Input.is_action_just_pressed("controller_mouse_click"):
 		_simulate_mouse_click(true)
