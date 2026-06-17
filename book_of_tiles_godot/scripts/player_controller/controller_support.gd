@@ -19,6 +19,10 @@ func _input(event):
 	
 	if (event is InputEventMouseButton and event.pressed) or event is InputEventKey: #or (event is InputEventMouseMotion and event.relative.length() > 0):
 		current_node = null
+		controller_ui_mode = false
+	
+	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		controller_ui_mode = true 
 	
 	if event.is_action_pressed("controller_next_ui") and placing_mode == false:
 		_navigate_ui(Vector2.RIGHT, Vector2.DOWN)
@@ -39,6 +43,7 @@ func _physics_process(_delta: float) -> void:
 	
 	if (joystick_movement.length() > controller_deadzone or Input.is_action_pressed("controller_mouse_click")) and not navigating:
 		current_node = null
+		controller_ui_mode = true
 
 	
 	if current_node:
