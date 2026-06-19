@@ -5,7 +5,12 @@ var controller_deadzone := 0.0
 var controller_snap_radius := 0.0
 var controller_snap_strength := 0.0 # 0.0 = no snap, 1.0 = instant snap
 
-var controller_ui_mode = false
+signal controller_ui_mode_changed(is_controller: bool)
+var controller_ui_mode = false:
+	set(value):
+		if controller_ui_mode != value:
+			controller_ui_mode = value
+			controller_ui_mode_changed.emit(value)
 var current_node: Control = null
 var placing_mode = false
 

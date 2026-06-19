@@ -23,10 +23,13 @@ func _ready():
 		default_controller_events[action] = get_first_controller_event(action)
 		controller_action_buttons[action].pressed.connect(_on_controller_button_pressed.bind(action))
 	update_buttons()
+	
+	ControllerSupport.controller_ui_mode_changed.connect(_on_controller_ui_mode_changed)
+	_on_controller_ui_mode_changed(ControllerSupport.controller_ui_mode)
 
-func _process(_delta: float) -> void:
-	controller_settings.visible = ControllerSupport.controller_ui_mode
-	keyboard_settings.visible = !ControllerSupport.controller_ui_mode
+func _on_controller_ui_mode_changed(is_controller: bool) -> void:
+	controller_settings.visible = is_controller
+	keyboard_settings.visible = !is_controller
 
 func reset_to_defaults():
 	for action in default_key_events.keys():
@@ -95,10 +98,14 @@ func _input(event: InputEvent) -> void:
 	# Keyboard
 	if waiting_for_input != "":
 		if event is InputEventKey and event.pressed:
-			for other_action in action_buttons.keys():
-				var existing = get_first_key_event(other_action)
-				if existing and existing.keycode == event.keycode:
-					InputMap.action_erase_event(other_action, existing)
+			if event.keycode == KEY_ESCAPE or event.keycode == KEY_DELETE or event.keycode == KEY_SPACE or event.keycode == KEY_ENTER:
+				waiting_for_input = ""
+				update_buttons()
+			else:
+				for other_action in action_buttons.keys():
+					var existing = get_first_key_event(other_action)
+					if existing and existing.keycode == event.keycode:
+						InputMap.action_erase_event(other_action, existing)
 
 			var old_event = get_first_key_event(waiting_for_input)
 			if old_event:
