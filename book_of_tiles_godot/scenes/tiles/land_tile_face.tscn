@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7lpumrxpvgvh"]
+
+[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_q4ft2"]
+[ext_resource type="PackedScene" uid="uid://dpxc0kfqikaj4" path="res://scenes/modules/land_face.tscn" id="3_lts2p"]
+
+[node name="LandTile" type="Node3D"]
+script = ExtResource("1_q4ft2")
+layer_type = 2
+
+[node name="LandFace6" parent="." instance=ExtResource("3_lts2p")]
+transform = Transform3D(1.1550001, 0, 0, 0, 1.1549999, 0, 0, 0, 1.1550001, 0, 0, 0)
