@@ -32,6 +32,7 @@ func _initialize_grid_layers() -> void:
 	face_mesh = ArrayMesh.new()
 	for pos in axial_spiral(Layout.CENTER_TILE_AXIAL, Layout.GRID_RADIUS): #leave on tile empty
 		var corner_cell : CornerCell = CornerCell.new(pos)
+		corner_cell.base_rotation = 0 # corners are rotationally symmetric -> always 0
 		grid[get_axial_index(pos)] = corner_cell
 		_add_edges_and_faces(pos)
 	
@@ -120,11 +121,23 @@ func _add_edges_and_faces(center : Vector3) -> void:
 		var pos_edge : Vector3 = (center + n1) / 2
 		if not grid.has(get_axial_index(pos_edge)):
 			var edge_cell : EdgeCell = EdgeCell.new(pos_edge)
+			edge_cell.base_rotation = _base_rotation_for(Layout.CELL_TYPE.EDGE, i)
 			grid[get_axial_index(pos_edge)] = edge_cell
 		var pos_face : Vector3 = (center + n1 + n2) / 3
 		if not grid.has(get_axial_index(pos_face)):
 			var face_cell : FaceCell = FaceCell.new(pos_face)
+			face_cell.base_rotation = _base_rotation_for(Layout.CELL_TYPE.FACE, i)
 			grid[get_axial_index(pos_face)] = face_cell
+
+func _base_rotation_for(cell_type : Layout.CELL_TYPE, dir_index : int) -> int:
+	var result : int = 0 # CORNERs have base rotaion of zero
+	match cell_type:
+		Layout.CELL_TYPE.EDGE:
+			var edge_rotations : Array[int] = [0, 120, 60]
+			result = edge_rotations[dir_index % 3]
+		Layout.CELL_TYPE.FACE:
+			result = 60 if dir_index % 2 == 0 else 0
+	return result
 			
 func _init_cell_possibilities(cell_index : Vector3i) -> void:
 	var cell : Cell = grid[cell_index]
@@ -133,7 +146,7 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 		if module.module_type != grid[cell_index].type:
 			module.queue_free()
 			continue
-		var base_rotation : int = -round_rotation(snap_rotation(axial_to_cartesian(cell.axial_position), module.module_type))
+		var base_rotation : int = -cell.base_rotation
 		var rotation_value : int = round_rotation(get_rotation_value(module.module_type))
 		var possible_rotations : int = floor(360.0 / rotation_value)
 		for i in range(possible_rotations): 
@@ -451,10 +464,11 @@ func axial_round(axial_coordinate : Vector3) -> Vector3:
 	#print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
 	return return_vector
 	
-func snap_position(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:
-	var closest_pos : Vector3 = point # Fallback to original point
+# Returns the nearest cell of the given type to a world-space point, or null if none exist.
+func snap_to_cell(point : Vector3, cell_type : Layout.CELL_TYPE) -> Cell:
+	var closest_cell : Cell = null
 	var min_dist : float = INF
-	
+
 	# might need to limit the grid and only check for cells within a given radius for performance
 	for index_key in grid.keys():
 		var cell = grid[index_key]
@@ -463,8 +477,12 @@ func snap_position(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:
 			var dist = point.distance_to(cell_world_pos)
 			if dist < min_dist:
 				min_dist = dist
-				closest_pos = cell_world_pos
-	return closest_pos
+				closest_cell = cell
+	return closest_cell
+
+func snap_position(point : Vector3, cell_type : Layout.CELL_TYPE) -> Vector3:
+	var cell := snap_to_cell(point, cell_type)
+	return axial_to_cartesian(cell.axial_position) if cell != null else point # fallback to original point
 	
 func get_rotation_value(type : Layout.CELL_TYPE) -> float:
 	match type:
@@ -476,29 +494,7 @@ func get_rotation_value(type : Layout.CELL_TYPE) -> float:
 			return 120.0
 		_:
 			return 0
-			
-func snap_rotation(snap_point: Vector3, cell_type : Layout.CELL_TYPE) -> float:
-	var y_degrees : float = 0.0
-	var axial_point : Vector3 = cartesian_to_axial(snap_point)
-	match cell_type:
-		Layout.CELL_TYPE.EDGE:
-			if (roundi(axial_point.x) % 2) == 0:
-				y_degrees = 120.0
-			elif (roundi(axial_point.z) % 2) == 0:
-				y_degrees = 0.0
-			else:
-				y_degrees = 60.0
-		Layout.CELL_TYPE.FACE:
-			var fract_sum : float = axial_point.x + axial_point.z
-			var round_sum : int = roundi(axial_point.x) + roundi(axial_point.z)
-			y_degrees = 60.0 if fract_sum < round_sum else 0.0
-		Layout.CELL_TYPE.CORNER:
-			y_degrees = 0.0
-		_:
-			printerr("ERR: something that doesn't have a cell type wants to snap")			
-			y_degrees = 30
-	return y_degrees
-	
+
 func debug_placement(pos : Vector3) -> void:
 	spawn_debug_sphere(pos + axial_to_cartesian((
 		Layout.AXIAL_DIRECTION[0] +

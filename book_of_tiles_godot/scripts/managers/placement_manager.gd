@@ -48,12 +48,15 @@ func _process(_delta):
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
-		var snap_position = Grid.snap_position(hit, preview_instance.layer_type)
+		var target_cell = Grid.snap_to_cell(hit, preview_instance.layer_type)
+		if target_cell == null:
+			return
+		var snap_position = Grid.axial_to_cartesian(target_cell.axial_position)
 		var base_rotation = Grid.get_rotation_value(preview_instance.layer_type)
 		preview_instance.global_position = snap_position
 		if snap_position != previous_position:
 			previous_position = snap_position
-			preview_instance.rotation.y = deg_to_rad(Grid.snap_rotation(snap_position, preview_instance.layer_type))
+			preview_instance.rotation.y = deg_to_rad(target_cell.base_rotation)
 			preview_instance.rotate_y(saved_rotation)
 		if Input.is_action_just_pressed("mouse_wheel_down"):
 			preview_instance.rotate_y(deg_to_rad(base_rotation))
