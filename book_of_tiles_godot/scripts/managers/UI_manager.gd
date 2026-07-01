@@ -10,6 +10,9 @@ var tile_cards : Array[PackedScene] = []
 var hand : Array[PackedScene] = []
 var cards_played_today : Array[PackedScene] = []
 
+var active_pack : int = TileCard.PACK_ANIMALS
+var active_theme : int = TileCard.THEME_FOREST
+
 func _ready():
 	_load_tile_cards()
 	refill_tiles()
@@ -99,3 +102,7 @@ func _on_undo_button_pressed() -> void:
 	main_manager.undo()
 	var last_card : PackedScene = cards_played_today.pop_back()
 	add_card_to_hand(hand.size(), last_card)
+
+func choose_tile_pack() :
+	var active_pack : int
+	active_pack = TileCard.PACK_ANIMALS
