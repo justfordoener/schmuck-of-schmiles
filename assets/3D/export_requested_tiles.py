@@ -126,6 +126,7 @@ def main():
         # origin, which is what gets baked into the .glb.
         bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
         obj.location = (0.0, 0.0, 0.0)
+        view_layer.update()   # refresh matrix_world before reading it back
 
         # Confirm the geometry really is centred now.
         c = bound_center(obj)
