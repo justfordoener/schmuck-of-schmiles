@@ -11,7 +11,7 @@ var corner_mesh : ArrayMesh
 var face_mesh : ArrayMesh
 var edge_mesh : ArrayMesh
 var modules : Array[PackedScene]
-var module_directory : String = "res://scenes/modules/"
+var module_directory : String = "res://scenes/modules/blockout/"
 var link_counter : int = 0
 
 func _ready() -> void:
@@ -347,9 +347,10 @@ func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : 
 				if border_key.contains("7777"): 
 					continue # Ignore map edges
 				var neighbor = cell.neighbors.get(border_key)
-				# Only validate against player-placed neighbors; ignore soft modules
+				# Only validate against player-placed neighbors; ignore soft modules.
+				# neighbor stores its own clockwise reading -> compare against its mirror.
 				if neighbor != null and neighbor.is_player_placed:
-					if possibility.profiles[border_key] != neighbor.profiles[border_key]:
+					if possibility.profiles[border_key] != Layout.reverse(neighbor.profiles[border_key]):
 						fits = false
 						break
 			
@@ -436,7 +437,10 @@ func do_profiles_match(p1 : Dictionary[String, Layout.PROFILE_TYPE], p2 : Dictio
 	for border_key : String in p1.keys():
 		if border_key.contains("7777"):
 			continue
-		if (p1[border_key] != p2[border_key]
+		# p1 = candidate's own clockwise reading; p2 = value sourced from the neighbour
+		# (its own reading), so compare against its mirror. reverse() is identity for
+		# single-biome/EMPTY values, keeping old behaviour intact.
+		if (p1[border_key] != Layout.reverse(p2[border_key])
 		and not (p1[border_key] == Layout.PROFILE_TYPE.EMPTY
 		or p2[border_key] == Layout.PROFILE_TYPE.EMPTY)):
 			return false

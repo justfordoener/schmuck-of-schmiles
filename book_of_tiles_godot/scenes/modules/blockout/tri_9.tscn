@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://rrb8vmsj16ne9"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_f3exy"]
+[ext_resource type="PackedScene" uid="uid://du4apgujlyiq" path="res://assets/3D/models/blockouts/blockout/tri_9.glb" id="2_jvptx"]
+
+[node name="Tri9" type="Node3D"]
+script = ExtResource("1_f3exy")
+module_type = 2
+module_id = 9
+profiles = Dictionary[int, int]({
+90: 9,
+210: 1,
+330: 10
+})
+
+[node name="tri_9" parent="." instance=ExtResource("2_jvptx")]

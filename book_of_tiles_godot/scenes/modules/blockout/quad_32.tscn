@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://plviz107purcu"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_5wcse"]
+[ext_resource type="PackedScene" uid="uid://bwnv3siveg88q" path="res://assets/3D/models/blockouts/blockout/quad_32.glb" id="2_8d4uq"]
+
+[node name="Quad32" type="Node3D"]
+script = ExtResource("1_5wcse")
+module_type = 1
+module_id = 32
+profiles = Dictionary[int, int]({
+0: 1,
+90: 9,
+180: 1,
+270: 1
+})
+
+[node name="quad_32" parent="." instance=ExtResource("2_8d4uq")]

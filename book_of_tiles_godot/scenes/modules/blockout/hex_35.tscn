@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://z56b5kfk1rg33"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_xwu3h"]
+[ext_resource type="PackedScene" uid="uid://b2uq74i7c0nve" path="res://assets/3D/models/blockouts/blockout/hex_35.glb" id="2_4x08r"]
+
+[node name="Hex35" type="Node3D"]
+script = ExtResource("1_xwu3h")
+module_type = 0
+module_id = 35
+profiles = Dictionary[int, int]({
+0: 12,
+60: 8,
+120: 8,
+180: 13,
+240: 1,
+300: 1
+})
+
+[node name="hex_35" parent="." instance=ExtResource("2_4x08r")]

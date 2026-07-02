@@ -2,7 +2,41 @@
 extends Node
 
 enum CELL_TYPE {CORNER, EDGE, FACE}
-enum PROFILE_TYPE {EMPTY, WATER, LAND, RIVER, PATH, CLIFF_UP, CLIFF_DOWN}
+# Single-biome values first (EMPTY stays 0 so existing wildcard/ordinal logic holds),
+# then the ordered TWO-biome edge values. A two-biome edge is directional: the two
+# halves are listed in clockwise order, so a neighbour reads the same physical edge
+# reversed (GRASS_FOREST <-> FOREST_GRASS). See reverse() below and Grid.do_profiles_match.
+enum PROFILE_TYPE {
+	EMPTY, WATER, LAND, RIVER, PATH, CLIFF_UP, CLIFF_DOWN, 
+	GRASS, FOREST, CLIFF,
+	WATER_GRASS, GRASS_WATER,
+	WATER_FOREST, FOREST_WATER,
+	WATER_CLIFF, CLIFF_WATER,
+	GRASS_FOREST, FOREST_GRASS,
+	GRASS_CLIFF, CLIFF_GRASS,
+	FOREST_CLIFF, CLIFF_FOREST,
+}
+
+# Mirror of each two-biome edge (swap the halves). Singles and EMPTY map to themselves,
+# so reverse() is identity for the old single-biome content -> fully backward compatible.
+const PROFILE_REVERSE := {
+	PROFILE_TYPE.WATER_GRASS: PROFILE_TYPE.GRASS_WATER,
+	PROFILE_TYPE.GRASS_WATER: PROFILE_TYPE.WATER_GRASS,
+	PROFILE_TYPE.WATER_FOREST: PROFILE_TYPE.FOREST_WATER,
+	PROFILE_TYPE.FOREST_WATER: PROFILE_TYPE.WATER_FOREST,
+	PROFILE_TYPE.WATER_CLIFF: PROFILE_TYPE.CLIFF_WATER,
+	PROFILE_TYPE.CLIFF_WATER: PROFILE_TYPE.WATER_CLIFF,
+	PROFILE_TYPE.GRASS_FOREST: PROFILE_TYPE.FOREST_GRASS,
+	PROFILE_TYPE.FOREST_GRASS: PROFILE_TYPE.GRASS_FOREST,
+	PROFILE_TYPE.GRASS_CLIFF: PROFILE_TYPE.CLIFF_GRASS,
+	PROFILE_TYPE.CLIFF_GRASS: PROFILE_TYPE.GRASS_CLIFF,
+	PROFILE_TYPE.FOREST_CLIFF: PROFILE_TYPE.CLIFF_FOREST,
+	PROFILE_TYPE.CLIFF_FOREST: PROFILE_TYPE.FOREST_CLIFF,
+}
+
+# Returns the mirrored profile for reading a shared edge from the opposite side.
+func reverse(p : PROFILE_TYPE) -> PROFILE_TYPE:
+	return PROFILE_REVERSE.get(p, p)
 
 var CELL_SIZE   : float = 1 / sqrt(3) # length of a side of a hexagon
 var CELL_STATE  : int = 1
