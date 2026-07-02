@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cbqwrbv2xa25t"]
 
 [ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_g250i"]
-[ext_resource type="PackedScene" uid="uid://bs8b5ldeackpf" path="res://models/blockouts/bridge_edge.glb" id="2_5qfvm"]
+[ext_resource type="PackedScene" uid="uid://bs8b5ldeackpf" path="res://assets/3D/models/blockouts/old/bridge_edge.glb" id="2_5qfvm"]
 
 [node name="BridgeEdge" type="Node3D"]
 transform = Transform3D(1.155, 0, 0, 0, 1.155, 0, 0, 0, 1.155, 0, 0, 0)
