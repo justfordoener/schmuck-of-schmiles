@@ -8,8 +8,6 @@
 anchors_preset = 0
 tile = ExtResource("2_djcye")
 themes = 1
-weight_animals = 1
-weight_infrastructure = 1
 weight_landscape = 1
 
 [node name="VBoxContainer" parent="." index="0"]

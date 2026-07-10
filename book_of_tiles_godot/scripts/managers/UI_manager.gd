@@ -5,6 +5,12 @@ extends CanvasLayer
 @onready var turn_over : VBoxContainer = $Control/MarginContainer/HBoxContainer/TurnOver/TurnOverButtonVBox
 @onready var undo : VBoxContainer = $Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox
 
+@export var pack_selection_overlay : Control
+@export var pack_button_1 : Button
+@export var pack_button_2 : Button
+@export var pack_button_3 : Button
+var _day_started : bool = false
+
 @export var tile_card_directory : String
 var tile_cards : Array[PackedScene] = []
 var hand : Array[PackedScene] = []
@@ -15,7 +21,8 @@ var active_theme : int = TileCard.THEME_FOREST
 
 func _ready():
 	_load_tile_cards()
-	refill_tiles()
+	#refill_tiles()
+	start_new_day()
 	_check_visibility()
 
 func _load_tile_cards():
@@ -98,7 +105,8 @@ func _check_visibility():
 		undo.show()
 	
 func _on_turnover_button_pressed() -> void:
-	refill_tiles()
+	#refill_tiles()
+	start_new_day()
 	
 func _on_undo_button_pressed() -> void:
 	main_manager.undo()
@@ -136,3 +144,46 @@ func _pick_weighted(available : Array[PackedScene]) -> PackedScene:
 		if roll <= cumulative:
 			return card_scene
 	return available[-1]
+
+
+func start_new_day() -> void:
+	var offered_packs := _get_available_packs()
+	
+	if _day_started:
+		pack_button_1.pressed.disconnect(_on_pack_chosen)
+		pack_button_2.pressed.disconnect(_on_pack_chosen)
+		pack_button_3.pressed.disconnect(_on_pack_chosen)
+	_day_started = true
+	
+	pack_button_1.text = TileCard.get_pack_name(offered_packs[0])
+	pack_button_2.text = TileCard.get_pack_name(offered_packs[1])
+	pack_button_3.text = TileCard.get_pack_name(offered_packs[2])
+	
+	pack_button_1.pressed.connect(_on_pack_chosen.bind(offered_packs[0]), CONNECT_ONE_SHOT)
+	pack_button_2.pressed.connect(_on_pack_chosen.bind(offered_packs[1]), CONNECT_ONE_SHOT)
+	pack_button_3.pressed.connect(_on_pack_chosen.bind(offered_packs[2]), CONNECT_ONE_SHOT)
+	
+	pack_selection_overlay.show()
+
+func _get_available_packs() -> Array[int]:
+	var all_packs : Array[int] = [
+		TileCard.PACK_ANIMALS,
+		TileCard.PACK_INFRASTRUCTURE,
+		TileCard.PACK_LANDSCAPE
+	]
+	var valid_packs : Array[int] = []
+	for pack in all_packs:
+		for card_scene in tile_cards:
+			var instance := card_scene.instantiate() as TileCard
+			if instance.is_in_theme(active_theme) and instance.is_in_pack(pack):
+				valid_packs.append(pack)
+				instance.queue_free()
+				break
+			instance.queue_free()
+	valid_packs.shuffle()
+	return valid_packs.slice(0, 3)
+
+func _on_pack_chosen(pack : int) -> void:
+	active_pack = pack
+	pack_selection_overlay.hide()
+	refill_tiles()

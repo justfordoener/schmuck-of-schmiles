@@ -9,8 +9,6 @@ anchors_preset = 0
 tile = ExtResource("2_w6ykq")
 themes = 1
 weight_animals = 1
-weight_infrastructure = 1
-weight_landscape = 1
 
 [node name="TextureButton" parent="VBoxContainer" index="0" groups=["snappable_ui"]]
 texture_normal = ExtResource("3_v7l15")
