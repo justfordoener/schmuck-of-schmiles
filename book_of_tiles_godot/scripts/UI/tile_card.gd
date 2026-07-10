@@ -33,3 +33,10 @@ func is_in_pack(pack_flag : int) -> bool:
 
 func is_in_theme(theme_flag : int) -> bool:
 	return (themes & theme_flag) != 0
+
+static func get_pack_name(pack_flag : int) -> String:
+	match pack_flag:
+		PACK_ANIMALS: return "Animal Pack"
+		PACK_INFRASTRUCTURE: return "Infrastructure Pack"
+		PACK_LANDSCAPE: return "Landscape Pack"
+	return "Unknown"
