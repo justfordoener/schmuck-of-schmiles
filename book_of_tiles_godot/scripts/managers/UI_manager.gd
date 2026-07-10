@@ -50,10 +50,12 @@ func refill_tiles():
 	if hand.size() > 0:
 		printerr("ERROR, hand not empty!")
 		return
+	var available := _get_available_cards()
+	if available.is_empty():
+		printerr("No cards available for theme/pack combination!")
+		return
 	for i in Parameters.HAND_SIZE:
-		var rng_tile_index = randi_range(0, tile_cards.size()-1)
-		var card = tile_cards[rng_tile_index]
-		add_card_to_hand(i, card)
+		add_card_to_hand(i, _pick_weighted(available))
 	_check_visibility()
 	cards_played_today = []
 
@@ -103,6 +105,34 @@ func _on_undo_button_pressed() -> void:
 	var last_card : PackedScene = cards_played_today.pop_back()
 	add_card_to_hand(hand.size(), last_card)
 
-func choose_tile_pack() :
-	var active_pack : int
-	active_pack = TileCard.PACK_ANIMALS
+#func choose_tile_pack() :
+#	active_pack = TileCard.PACK_ANIMALS
+func choose_tile_pack(pack : int, theme : int) -> void:
+	active_pack = pack
+	active_theme = theme
+
+func _get_available_cards() -> Array[PackedScene]:
+	var filtered : Array[PackedScene] = []
+	for card_scene in tile_cards:
+		var instance := card_scene.instantiate() as TileCard
+		if instance.is_in_theme(active_theme) and instance.is_in_pack(active_pack):
+			filtered.append(card_scene)
+		instance.queue_free()
+	return filtered
+
+func _pick_weighted(available : Array[PackedScene]) -> PackedScene:
+	var total_weight := 0
+	for card_scene in available:
+		var instance := card_scene.instantiate() as TileCard
+		total_weight += instance.get_weight_for_pack(active_pack)
+		instance.queue_free()
+	
+	var roll := randi_range(1, total_weight)
+	var cumulative := 0
+	for card_scene in available:
+		var instance := card_scene.instantiate() as TileCard
+		cumulative += instance.get_weight_for_pack(active_pack)
+		instance.queue_free()
+		if roll <= cumulative:
+			return card_scene
+	return available[-1]
