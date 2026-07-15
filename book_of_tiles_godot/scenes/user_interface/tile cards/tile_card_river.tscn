@@ -7,7 +7,7 @@
 [node name="TileCardRiver" instance=ExtResource("1_1ye3b")]
 anchors_preset = 0
 tile = ExtResource("2_2nl88")
-themes = 1
+export_theme = 1
 weight_infrastructure = 1
 
 [node name="TextureButton" parent="VBoxContainer" index="0" groups=["snappable_ui"]]

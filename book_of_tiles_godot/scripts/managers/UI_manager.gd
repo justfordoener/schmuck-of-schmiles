@@ -16,12 +16,11 @@ var tile_cards : Array[PackedScene] = []
 var hand : Array[PackedScene] = []
 var cards_played_today : Array[PackedScene] = []
 
-var active_pack : int = TileCard.PACK_ANIMALS
-var active_theme : int = TileCard.THEME_FOREST
+var active_pack : int = TileCard.packs.animal
+var active_theme : int = TileCard.themes.forest
 
 func _ready():
 	_load_tile_cards()
-	#refill_tiles()
 	start_new_day()
 	_check_visibility()
 
@@ -105,7 +104,6 @@ func _check_visibility():
 		undo.show()
 	
 func _on_turnover_button_pressed() -> void:
-	#refill_tiles()
 	start_new_day()
 	
 func _on_undo_button_pressed() -> void:
@@ -113,8 +111,7 @@ func _on_undo_button_pressed() -> void:
 	var last_card : PackedScene = cards_played_today.pop_back()
 	add_card_to_hand(hand.size(), last_card)
 
-#func choose_tile_pack() :
-#	active_pack = TileCard.PACK_ANIMALS
+
 func choose_tile_pack(pack : int, theme : int) -> void:
 	active_pack = pack
 	active_theme = theme
@@ -167,9 +164,9 @@ func start_new_day() -> void:
 
 func _get_available_packs() -> Array[int]:
 	var all_packs : Array[int] = [
-		TileCard.PACK_ANIMALS,
-		TileCard.PACK_INFRASTRUCTURE,
-		TileCard.PACK_LANDSCAPE
+		TileCard.packs.animal,
+		TileCard.packs.infrastructure,
+		TileCard.packs.landscape
 	]
 	var valid_packs : Array[int] = []
 	for pack in all_packs:
