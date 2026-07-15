@@ -7,7 +7,7 @@
 [node name="TileCardGrass" instance=ExtResource("1_iplyg")]
 anchors_preset = 0
 tile = ExtResource("2_djcye")
-themes = 1
+export_theme = 1
 weight_landscape = 1
 
 [node name="VBoxContainer" parent="." index="0"]

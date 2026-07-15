@@ -1,16 +1,12 @@
 class_name TileCard extends Control
 
-const THEME_FOREST  = 1
-const THEME_DESERT  = 2
-const THEME_SNOW    = 4
-const THEME_SWAMP   = 8
+enum themes { forest = 1, desert = 2, snow = 4, swamp = 8 }
 
-const PACK_ANIMALS        = 1
-const PACK_INFRASTRUCTURE = 2
-const PACK_LANDSCAPE      = 4
+enum packs { animal = 1, infrastructure = 2, landscape = 3}
+
 
 @export var tile : PackedScene
-@export_flags("forest", "desert", "snow", "swamp") var themes : int = 0
+@export_flags("forest", "desert", "snow", "swamp") var export_theme : int = 0
 @export var weight_animals : int = 0
 @export var weight_infrastructure : int = 0
 @export var weight_landscape : int = 0
@@ -23,20 +19,20 @@ func on_button_pressed():
 
 func get_weight_for_pack(pack_flag : int) -> int:
 	match pack_flag:
-		PACK_ANIMALS: return weight_animals
-		PACK_INFRASTRUCTURE: return weight_infrastructure
-		PACK_LANDSCAPE: return weight_landscape
+		packs.animal: return weight_animals
+		packs.infrastructure: return weight_infrastructure
+		packs.landscape: return weight_landscape
 	return 0
 
 func is_in_pack(pack_flag : int) -> bool:
 	return get_weight_for_pack(pack_flag) > 0
 
 func is_in_theme(theme_flag : int) -> bool:
-	return (themes & theme_flag) != 0
+	return (export_theme & theme_flag) != 0
 
 static func get_pack_name(pack_flag : int) -> String:
 	match pack_flag:
-		PACK_ANIMALS: return "Animal Pack"
-		PACK_INFRASTRUCTURE: return "Infrastructure Pack"
-		PACK_LANDSCAPE: return "Landscape Pack"
+		packs.animal: return "Animal Pack"
+		packs.infrastructure: return "Infrastructure Pack"
+		packs.landscape: return "Landscape Pack"
 	return "Unknown"
