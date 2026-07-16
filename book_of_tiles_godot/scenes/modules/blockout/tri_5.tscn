@@ -1,16 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://yucj8bh5opmbm"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_ebu9t"]
-[ext_resource type="PackedScene" uid="uid://bpjaq5b6si75w" path="res://assets/3D/models/blockouts/blockout/tri_5.glb" id="2_3bet7"]
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/tri_5_grassland_lake-grassland_grassland-lake.glb" id="2_glb"]
 
 [node name="Tri5" type="Node3D"]
-script = ExtResource("1_ebu9t")
+script = ExtResource("1_script")
 module_type = 2
 module_id = 5
 profiles = Dictionary[int, int]({
-90: 9,
-210: 1,
-330: 1
+90: 3,
+210: 12,
+330: 13
 })
 
-[node name="tri_5" parent="." instance=ExtResource("2_3bet7")]
+[node name="tri_5_grassland_lake-grassland_grassland-lake" parent="." instance=ExtResource("2_glb")]

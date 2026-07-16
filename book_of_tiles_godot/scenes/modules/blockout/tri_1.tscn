@@ -1,16 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://ls38469cyvbrl"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_07ilq"]
-[ext_resource type="PackedScene" uid="uid://c6cf612vqr3hc" path="res://assets/3D/models/blockouts/blockout/tri_1.glb" id="2_pck1s"]
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/tri_1_lake_lake_lake.glb" id="2_glb"]
 
 [node name="Tri1" type="Node3D"]
-script = ExtResource("1_07ilq")
+script = ExtResource("1_script")
 module_type = 2
 module_id = 1
 profiles = Dictionary[int, int]({
-90: 1,
-210: 1,
-330: 1
+90: 2,
+210: 2,
+330: 2
 })
 
-[node name="tri_1" parent="." instance=ExtResource("2_pck1s")]
+[node name="tri_1_lake_lake_lake" parent="." instance=ExtResource("2_glb")]

@@ -1,16 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://jplspdynue4us"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_sh8gn"]
-[ext_resource type="PackedScene" uid="uid://b3f4f2ral4e5f" path="res://assets/3D/models/blockouts/blockout/tri_11.glb" id="2_wuh9x"]
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/tri_11_cliff_air-cliff_cliff-air.glb" id="2_glb"]
 
 [node name="Tri11" type="Node3D"]
-script = ExtResource("1_sh8gn")
+script = ExtResource("1_script")
 module_type = 2
 module_id = 11
 profiles = Dictionary[int, int]({
-90: 7,
-210: 1,
-330: 1
+90: 4,
+210: 11,
+330: 10
 })
 
-[node name="tri_11" parent="." instance=ExtResource("2_wuh9x")]
+[node name="tri_11_cliff_air-cliff_cliff-air" parent="." instance=ExtResource("2_glb")]

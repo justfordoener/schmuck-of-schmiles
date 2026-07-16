@@ -2,36 +2,33 @@
 extends Node
 
 enum CELL_TYPE {CORNER, EDGE, FACE}
-# Single-biome values first (EMPTY stays 0 so existing wildcard/ordinal logic holds),
-# then the ordered TWO-biome edge values. A two-biome edge is directional: the two
-# halves are listed in clockwise order, so a neighbour reads the same physical edge
-# reversed (GRASS_FOREST <-> FOREST_GRASS). See reverse() below and Grid.do_profiles_match.
+# EMPTY stays 0: it's the "no profile assigned yet" sentinel used directly by
+# border.gd and grid.gd matching logic (distinct from AIR, which is a real
+# WFC value meaning "open to air"). The remaining 13 values are the current
+# blockout v005 profile vocabulary. A two-biome edge is directional: the two
+# halves are listed in clockwise order, read from *outside* the module looking
+# at that edge, so a neighbour reads the same physical edge reversed
+# (FOREST_AIR <-> AIR_FOREST). See reverse() below and Grid.do_profiles_match.
 enum PROFILE_TYPE {
-	EMPTY, WATER, LAND, RIVER, PATH, CLIFF_UP, CLIFF_DOWN, 
-	GRASS, FOREST, CLIFF,
-	WATER_GRASS, GRASS_WATER,
-	WATER_FOREST, FOREST_WATER,
-	WATER_CLIFF, CLIFF_WATER,
-	GRASS_FOREST, FOREST_GRASS,
-	GRASS_CLIFF, CLIFF_GRASS,
+	EMPTY,
+	AIR, WATER, GRASS, CLIFF, FOREST,
+	FOREST_AIR, AIR_FOREST,
 	FOREST_CLIFF, CLIFF_FOREST,
+	CLIFF_AIR, AIR_CLIFF,
+	WATER_GRASS, GRASS_WATER,
 }
 
-# Mirror of each two-biome edge (swap the halves). Singles and EMPTY map to themselves,
-# so reverse() is identity for the old single-biome content -> fully backward compatible.
+# Mirror of each two-biome edge (swap the halves). EMPTY and the single-biome
+# values map to themselves, so reverse() is identity for them.
 const PROFILE_REVERSE := {
-	PROFILE_TYPE.WATER_GRASS: PROFILE_TYPE.GRASS_WATER,
-	PROFILE_TYPE.GRASS_WATER: PROFILE_TYPE.WATER_GRASS,
-	PROFILE_TYPE.WATER_FOREST: PROFILE_TYPE.FOREST_WATER,
-	PROFILE_TYPE.FOREST_WATER: PROFILE_TYPE.WATER_FOREST,
-	PROFILE_TYPE.WATER_CLIFF: PROFILE_TYPE.CLIFF_WATER,
-	PROFILE_TYPE.CLIFF_WATER: PROFILE_TYPE.WATER_CLIFF,
-	PROFILE_TYPE.GRASS_FOREST: PROFILE_TYPE.FOREST_GRASS,
-	PROFILE_TYPE.FOREST_GRASS: PROFILE_TYPE.GRASS_FOREST,
-	PROFILE_TYPE.GRASS_CLIFF: PROFILE_TYPE.CLIFF_GRASS,
-	PROFILE_TYPE.CLIFF_GRASS: PROFILE_TYPE.GRASS_CLIFF,
+	PROFILE_TYPE.FOREST_AIR: PROFILE_TYPE.AIR_FOREST,
+	PROFILE_TYPE.AIR_FOREST: PROFILE_TYPE.FOREST_AIR,
 	PROFILE_TYPE.FOREST_CLIFF: PROFILE_TYPE.CLIFF_FOREST,
 	PROFILE_TYPE.CLIFF_FOREST: PROFILE_TYPE.FOREST_CLIFF,
+	PROFILE_TYPE.CLIFF_AIR: PROFILE_TYPE.AIR_CLIFF,
+	PROFILE_TYPE.AIR_CLIFF: PROFILE_TYPE.CLIFF_AIR,
+	PROFILE_TYPE.WATER_GRASS: PROFILE_TYPE.GRASS_WATER,
+	PROFILE_TYPE.GRASS_WATER: PROFILE_TYPE.WATER_GRASS,
 }
 
 # Returns the mirrored profile for reading a shared edge from the opposite side.
