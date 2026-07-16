@@ -263,74 +263,53 @@ func batch_place_modules(placements: Array) -> void:
 			cell.is_player_placed = true
 			placed_indices.append(cell_index)
 
-	# Propagate and settle the wave outward from just this batch's placements - not every
-	# historical player placement on the map, which would re-roll far-away, already-settled
-	# cells on every unrelated future placement.
-	_process_propagation_queue(placed_indices.duplicate())
-	_soft_populate_wave(placed_indices)
+	# Update the two rings around this batch's placements: the cells directly touching a
+	# hard cell (e.g. the 6 edges around a placed corner), then the cells touching those
+	# (e.g. the 6 faces beyond them). Ring 2 only starts once ring 1 has fully settled, so a
+	# face touched by two ring-1 edges always sees both of their constraints before it picks
+	# anything - no dependency on which edge happened to resolve first.
+	var ring1 := _soft_populate_ring(placed_indices)
+	_soft_populate_ring(ring1)
 
-func _process_propagation_queue(queue: Array[Vector3i]) -> void:
-	while queue.size() > 0:
-		var current_index = queue.pop_front()
-		var cell = grid[current_index]
-
-		# Contradicted cells (see collapse()) have no well-defined committed profile left to
-		# share - don't propagate their partial/stale state further.
-		if not cell.is_player_placed and cell.possibilities.size() == 0:
-			continue
-
-		for neighbor_key : String in cell.neighbors.keys():
-			var neighbor_index : Vector3i = get_axial_index(cell.neighbors[neighbor_key].axial_position)
-			var neighbor : Cell = grid[neighbor_index]
-
-			neighbor.profiles[neighbor_key] = cell.profiles[neighbor_key]
-
-			if collapse(neighbor_index):
-				if not queue.has(neighbor_index):
-					queue.append(neighbor_index)
-
-# Continues the propagation wave outward from seed_indices' neighbors, arbitrarily settling
-# any cell the deterministic collapse() pass left ambiguous (more than one valid
-# possibility) so every reachable cell ends up with a concrete, on-screen module - then
-# keeps propagating that pick's profile onward, letting collapse() re-narrow further cells,
-# until the wave has nothing left to change. This is what turns "6 edges around a corner"
-# into "6 edges, then the 6 faces beyond them" instead of stopping after one ring.
-func _soft_populate_wave(seed_indices: Array[Vector3i]) -> void:
-	var queue : Array[Vector3i] = []
-	for index in seed_indices:
+# For every non-player-placed neighbor of trigger_indices: rebuilds its whole profile dict
+# from scratch via get_settled_profiles_for_cell() (so e.g. an edge between two placed
+# corners picks up both, and any not-yet-settled border is a clean EMPTY wildcard rather
+# than a stale leftover value from the old filler module), then narrows it (collapse()
+# first, so an unambiguous winner is picked deterministically), and if more than one
+# possibility still remains, arbitrarily settles on one of the valid ones so the cell always
+# ends up with a concrete, on-screen module. Returns the touched indices, to feed the next
+# ring (its neighbors will then see this ring's just-committed profiles).
+func _soft_populate_ring(trigger_indices: Array[Vector3i]) -> Array[Vector3i]:
+	var cells_to_fill := {}
+	for index in trigger_indices:
 		for neighbor_key in grid[index].neighbors.keys():
 			var n_index = get_axial_index(grid[index].neighbors[neighbor_key].axial_position)
-			if not grid[n_index].is_player_placed and not queue.has(n_index):
-				queue.append(n_index)
+			# Corners are hard (only ever set by an explicit player placement) - never
+			# auto-narrowed here, even when reached through an edge's neighbor list.
+			if grid[n_index].type != Layout.CELL_TYPE.CORNER and not grid[n_index].is_player_placed:
+				cells_to_fill[n_index] = true
 
-	while queue.size() > 0:
-		var n_index : Vector3i = queue.pop_front()
+	var touched : Array[Vector3i] = []
+	for n_index : Vector3i in cells_to_fill.keys():
 		var n_cell : Cell = grid[n_index]
+		n_cell.profiles = get_settled_profiles_for_cell(n_index)
+		collapse(n_index) # deterministic narrow first, in case this alone resolves it
 
-		if n_cell.is_player_placed:
-			continue
 		if n_cell.possibilities.size() == 0:
-			continue # contradicted (see collapse()) - leave existing filler, don't spread it
+			# Contradiction - logged by collapse(), filler left in place. Not appended to
+			# touched: it has no real committed profile, so the next ring shouldn't treat it
+			# as a source of constraints (that border just stays unconstrained downstream).
+			continue
 
 		if n_cell.possibilities.size() > 1:
-			# Deterministic narrowing left this cell ambiguous - arbitrarily settle it on one
-			# of its still-valid choices so it has a concrete module, same as any other commit.
 			var random_choice : Possibility = n_cell.possibilities[randi() % n_cell.possibilities.size()]
 			n_cell.possibilities = [random_choice]
 			n_cell.profiles = random_choice.profiles.duplicate()
 			spawn_module(random_choice, n_index)
-		# else: already settled to exactly one by collapse() (profile already synced there);
-		# nothing to pick, just propagate its already-correct profile onward below.
+		# else: collapse() already synced profiles + spawned when it settled to exactly 1.
 
-		for neighbor_key in n_cell.neighbors.keys():
-			var next_index = get_axial_index(n_cell.neighbors[neighbor_key].axial_position)
-			var next_cell = grid[next_index]
-			if next_cell.is_player_placed:
-				continue
-			next_cell.profiles[neighbor_key] = n_cell.profiles[neighbor_key]
-			collapse(next_index) # re-narrow with the new info; syncs/spawns if it settles to 1
-			if not queue.has(next_index):
-				queue.append(next_index)
+		touched.append(n_index)
+	return touched
 
 # Narrows cell_index's possibilities against its currently accumulated profiles. Always
 # re-derives from initial_possibilities (not the previously-narrowed possibilities list) so
@@ -477,15 +456,48 @@ func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> b
 func get_hard_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layout.PROFILE_TYPE]:
 	var cell = grid[cell_index]
 	var hard_profiles : Dictionary[String, Layout.PROFILE_TYPE] = {}
-	
+
 	for border_key in cell.profiles.keys():
 		var neighbor = cell.neighbors.get(border_key)
 		if neighbor != null and neighbor.is_player_placed:
 			hard_profiles[border_key] = neighbor.profiles[border_key]
 		else:
 			hard_profiles[border_key] = Layout.PROFILE_TYPE.EMPTY
-			
+
 	return hard_profiles
+
+# Same idea as get_hard_profiles_for_cell(), but also trusts a soft (non-player-placed)
+# neighbor once it has a real committed module showing - not just hard corners. A neighbor
+# counts as committed if: it's player-placed, it has narrowed to exactly one possibility via
+# collapse()/an arbitrary pick, OR it's still showing its untouched default filler (grass on
+# the ground layer, AIR above it - see initialize_grass_layer()/initialize_air_layers()).
+# That last case matters most: it's what makes a newly-placed corner's soft neighbors
+# transition to AIR-compatible modules (FOREST_AIR, CLIFF_AIR, ...) when nothing else has
+# been built nearby yet, instead of treating open air as an unconstrained EMPTY wildcard.
+#
+# FACE neighbors are always treated as unsettled (EMPTY), regardless of their current state.
+# Propagation only ever flows CORNER -> EDGE -> FACE (see batch_place_modules): an edge must
+# be serious about its corner neighbors (hard, upstream) but must NOT be blocked by whatever
+# a face neighbor currently happens to show, since that face hasn't been resolved for this
+# placement yet - it adapts to the edge in ring 2, not the other way around. Faces only ever
+# have edge neighbors (never other faces), so this exclusion is a no-op when resolving a face.
+func get_settled_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layout.PROFILE_TYPE]:
+	var cell = grid[cell_index]
+	var settled_profiles : Dictionary[String, Layout.PROFILE_TYPE] = {}
+
+	for border_key in cell.profiles.keys():
+		var neighbor = cell.neighbors.get(border_key)
+		var neighbor_committed = neighbor != null and neighbor.type != Layout.CELL_TYPE.FACE and (
+			neighbor.is_player_placed
+			or neighbor.possibilities.size() == 1
+			or neighbor.instanced_module != null
+		)
+		if neighbor_committed:
+			settled_profiles[border_key] = neighbor.profiles[border_key]
+		else:
+			settled_profiles[border_key] = Layout.PROFILE_TYPE.EMPTY
+
+	return settled_profiles
 		
 func get_neighbor_from_rot(cell_index : Vector3i, rot_degree : int) -> Vector3i:
 	var cell = grid[cell_index]
