@@ -7,6 +7,10 @@
 [node name="TileCardBeaver" instance=ExtResource("1_uaf7j")]
 anchors_preset = 0
 tile = ExtResource("2_w6ykq")
+export_theme = 1
+weight_animals = 5
+weight_infrastructure = 1
+weight_landscape = 1
 
 [node name="TextureButton" parent="VBoxContainer" index="0" groups=["snappable_ui"]]
 texture_normal = ExtResource("3_v7l15")
