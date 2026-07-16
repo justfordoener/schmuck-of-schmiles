@@ -48,7 +48,7 @@ func _process(_delta):
 	preview_instance.visible = not _is_mouse_over_ui_rect(mouse_pos)
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
-		var target_cell = Grid.snap_to_cell(hit, preview_instance.layer_type)
+		var target_cell = Grid.snap_to_cell(hit, preview_instance.layer_type, preview_instance.is_water)
 		if target_cell == null:
 			return
 		var snap_position = Grid.axial_to_cartesian(target_cell.axial_position)
@@ -78,7 +78,7 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	
 	# Pass 1: Check if all children are allowed and gather their placement data
 	for child : Module in instance.get_children():
-		var child_position = Grid.snap_position(child.global_position, child.module_type)
+		var child_position = Grid.snap_position(child.global_position, child.module_type, instance.is_water)
 		var child_index = Grid.get_axial_index(Grid.cartesian_to_axial(child_position))
 		var child_rotation = -Grid.round_rotation(rad_to_deg(instance_rotation + child.rotation.y))
 		

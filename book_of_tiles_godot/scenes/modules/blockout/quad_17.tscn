@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/quad_17_lake_grassland-lake_grassland_lake-grassland.glb" id="2_glb"]
+
+[node name="Quad17" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 1
+module_id = 17
+profiles = Dictionary[int, int]({
+0: 2,
+90: 13,
+180: 3,
+270: 12
+})
+
+[node name="quad_17_lake_grassland-lake_grassland_lake-grassland" parent="." instance=ExtResource("2_glb")]

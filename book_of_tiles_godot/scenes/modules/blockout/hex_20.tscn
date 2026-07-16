@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/hex_20_grassland_grassland_grassland_grassland_grassland_grassland.glb" id="2_glb"]
+
+[node name="Hex20" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 0
+module_id = 20
+profiles = Dictionary[int, int]({
+0: 3,
+60: 3,
+120: 3,
+180: 3,
+240: 3,
+300: 3
+})
+
+[node name="hex_20_grassland_grassland_grassland_grassland_grassland_grassland" parent="." instance=ExtResource("2_glb")]

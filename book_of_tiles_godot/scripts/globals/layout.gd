@@ -2,12 +2,44 @@
 extends Node
 
 enum CELL_TYPE {CORNER, EDGE, FACE}
-enum PROFILE_TYPE {EMPTY, WATER, LAND, RIVER, PATH, CLIFF_UP, CLIFF_DOWN}
+# EMPTY stays 0: it's the "no profile assigned yet" sentinel used directly by
+# border.gd and grid.gd matching logic (distinct from AIR, which is a real
+# WFC value meaning "open to air"). The remaining 13 values are the current
+# blockout v005 profile vocabulary. A two-biome edge is directional: the two
+# halves are listed in clockwise order, read from *outside* the module looking
+# at that edge, so a neighbour reads the same physical edge reversed
+# (FOREST_AIR <-> AIR_FOREST). See reverse() below and Grid.do_profiles_match.
+enum PROFILE_TYPE {
+	EMPTY,
+	AIR, WATER, GRASS, CLIFF, FOREST,
+	FOREST_AIR, AIR_FOREST,
+	FOREST_CLIFF, CLIFF_FOREST,
+	CLIFF_AIR, AIR_CLIFF,
+	WATER_GRASS, GRASS_WATER,
+}
+
+# Mirror of each two-biome edge (swap the halves). EMPTY and the single-biome
+# values map to themselves, so reverse() is identity for them.
+const PROFILE_REVERSE := {
+	PROFILE_TYPE.FOREST_AIR: PROFILE_TYPE.AIR_FOREST,
+	PROFILE_TYPE.AIR_FOREST: PROFILE_TYPE.FOREST_AIR,
+	PROFILE_TYPE.FOREST_CLIFF: PROFILE_TYPE.CLIFF_FOREST,
+	PROFILE_TYPE.CLIFF_FOREST: PROFILE_TYPE.FOREST_CLIFF,
+	PROFILE_TYPE.CLIFF_AIR: PROFILE_TYPE.AIR_CLIFF,
+	PROFILE_TYPE.AIR_CLIFF: PROFILE_TYPE.CLIFF_AIR,
+	PROFILE_TYPE.WATER_GRASS: PROFILE_TYPE.GRASS_WATER,
+	PROFILE_TYPE.GRASS_WATER: PROFILE_TYPE.WATER_GRASS,
+}
+
+# Returns the mirrored profile for reading a shared edge from the opposite side.
+func reverse(p : PROFILE_TYPE) -> PROFILE_TYPE:
+	return PROFILE_REVERSE.get(p, p)
 
 var CELL_SIZE   : float = 1 / sqrt(3) # length of a side of a hexagon
+var CELL_HEIGHT : float = 0.5 # vertical spacing between stacked layers
 var CELL_STATE  : int = 1
 var GRID_RADIUS : int = 5
-var GRID_HEIGHT : int = 1
+var GRID_HEIGHT : int = 3
 var CENTER_TILE_EUCLIDIC : Vector3 = Vector3(0,0,0)
 var CENTER_TILE_AXIAL : Vector3 = Vector3(0,0,0)
 var AXIAL_DIRECTION := {

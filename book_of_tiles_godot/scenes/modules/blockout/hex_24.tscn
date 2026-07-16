@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+
+[node name="Hex24" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 0
+module_id = 24
+profiles = Dictionary[int, int]({
+0: 1,
+60: 1,
+120: 1,
+180: 1,
+240: 1,
+300: 1
+})

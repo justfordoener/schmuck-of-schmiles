@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqi617wyj40xs"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://d0v2wmvk78ogp" path="res://assets/3D/models/blockouts/blockout/tri_6_forest_forest_forest.glb" id="2_glb"]
+
+[node name="Tri6" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 2
+module_id = 6
+profiles = Dictionary[int, int]({
+90: 5,
+210: 5,
+330: 5
+})
+
+[node name="tri_6_forest_forest_forest" parent="." instance=ExtResource("2_glb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)

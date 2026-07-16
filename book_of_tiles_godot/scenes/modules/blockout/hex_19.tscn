@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/hex_19_forest_forest_forest_forest_forest_forest.glb" id="2_glb"]
+
+[node name="Hex19" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 0
+module_id = 19
+profiles = Dictionary[int, int]({
+0: 5,
+60: 5,
+120: 5,
+180: 5,
+240: 5,
+300: 5
+})
+
+[node name="hex_19_forest_forest_forest_forest_forest_forest" parent="." instance=ExtResource("2_glb")]
