@@ -14,6 +14,13 @@ var modules : Array[PackedScene]
 var module_directory : String = "res://scenes/modules/blockout/"
 var link_counter : int = 0
 
+# Uniform-grassland module used to seed the base layer, keyed by cell type.
+const GRASS_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
+	Layout.CELL_TYPE.CORNER: 20, # hex_20
+	Layout.CELL_TYPE.EDGE: 12,   # quad_12
+	Layout.CELL_TYPE.FACE: 3,    # tri_3
+}
+
 func _ready() -> void:
 	grid = {}
 	_initialize_grid_layers()
@@ -25,6 +32,7 @@ func _ready() -> void:
 	for cell_index in grid.keys(): #.slice(0, 5):
 		_init_cell_possibilities(cell_index)
 		#print("cell: ", grid[cell_index].axial_position, " of type ", grid[cell_index].type, " has ", grid[cell_index].possibilities.size(), " possibilites")
+	initialize_grass_layer()
 
 func _initialize_grid_layers() -> void:
 	corner_mesh = ArrayMesh.new()
@@ -165,6 +173,24 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 					possible_module.profiles[border_index] = module.profiles[border_deg]
 			cell.possibilities.append(possible_module)
 		cell.initial_possibilities = cell.possibilities.duplicate()
+
+# Seeds every cell in the grid with its uniform-grassland module (see GRASS_MODULE_ID),
+# using the already-rotated possibilities computed in _init_cell_possibilities so each
+# module seats with the correct mesh orientation for its cell.
+func initialize_grass_layer() -> void:
+	for cell_index in grid.keys():
+		var cell : Cell = grid[cell_index]
+		var grass_id : int = GRASS_MODULE_ID[cell.type]
+		var possibility : Possibility = null
+		for poss : Possibility in cell.possibilities:
+			if poss.module_reference.module_id == grass_id:
+				possibility = poss
+				break
+		if possibility == null:
+			printerr("initialize_grass_layer: no grass module (id ", grass_id, ") found for cell ", cell_index, " of type ", cell.type)
+			continue
+		cell.profiles = possibility.profiles.duplicate()
+		spawn_module(possibility, cell_index)
 
 func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> void:
 	get_tree().root.add_child.call_deferred(module)
