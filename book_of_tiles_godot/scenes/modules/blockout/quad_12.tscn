@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://cqahk0rq0xve4"]
 
-[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/quad_12_grassland_grassland_grassland_grassland.glb" id="2_glb"]
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://byynyy35xwslf" path="res://assets/3D/models/blockouts/blockout/quad_12_grassland_grassland_grassland_grassland.glb" id="2_glb"]
 
 [node name="Quad12" type="Node3D"]
 script = ExtResource("1_script")

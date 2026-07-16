@@ -9,21 +9,27 @@ What it does
   The "Building Blocks.001" sub-collection is excluded (we read collection.objects,
   not all_objects, so nested collections are never touched).
 - Classifies each object by its name prefix: Tri -> tri, Quad -> quad, Hex -> hex.
-- For each object, derives its per-edge connection profile from the mesh
-  geometry (see derive_tri_profile / derive_quad_or_hex_profile below) and
-  validates every token against the 13-value profile vocabulary.
+- Rotates each object 90 deg clockwise in place, around its own origin (the
+  Blender staging objects are authored 90 deg off the canonical "flat/long
+  side on X" orientation). This does not move the origin -- only orientation
+  changes, so the preserved pivot (see below) is unaffected.
+- For each (now correctly oriented) object, derives its per-edge connection
+  profile from the mesh geometry (see derive_tri_profile /
+  derive_quad_or_hex_profile below) and validates every token against the
+  13-value profile vocabulary.
 - Renames objects to "type_ID_edge1_edge2_..." using a single continuous
   counter grouped by type in the order tri, quad, hex, with edge tokens in
   fixed clockwise angle order (tri: 90/210/330, quad: 0/90/180/270,
   hex: 0/60/120/180/240/300), e.g. "tri_1_lake_lake_lake",
   "quad_16_lake_lake-grassland_grassland_grassland-lake".
   Within a type, objects are ordered by their original name (deterministic).
-- Centres each tile on the origin *after* profile derivation (derivation
-  depends on the object's original origin, which sits at the tile's true
-  grid-cell center even for fragment/air tiles -- see memory
-  v005-profile-derivation). Moves the object origin to the geometry's
-  bounding-box centre and zeroes the location, so the mesh's bbox centre
-  lands at world (0,0,0) in the exported file.
+- Moves each tile to world origin by zeroing its location *after* profile
+  derivation, without ever recentring the origin itself. The artist-set
+  origin (the pivot the WFC algorithm places and rotates modules around) is
+  preserved exactly as authored -- it's the same reference point the profile
+  derivation relies on as the tile's true grid-cell center, including for
+  fragment/air tiles where it deliberately does not sit at the mesh's
+  bounding-box center. See memory v005-profile-derivation.
 - Exports one .glb per object into assets/3D/modules/ (Blender-standard glTF
   binary, +Y up -> imports cleanly in Godot).
 - Backs up the .blend (.bak) and then saves the renames + zeroed locations
@@ -57,10 +63,13 @@ QUAD_ANGLES = [0, 90, 180, 270]
 HEX_ANGLES = [0, 60, 120, 180, 240, 300]
 ANGLES_BY_TYPE = {"tri": TRI_ANGLES, "quad": QUAD_ANGLES, "hex": HEX_ANGLES}
 
-# The Blender staging triangles have their flat side on local Y, a fixed 90 deg
-# offset from the canonical "flat bottom on X" authoring convention. See memory
-# v005-profile-derivation for how this was derived and validated.
-TRI_PHASE = 90
+# The Blender staging objects (all types) are authored rotated 90 deg off the
+# canonical orientation (flat/long side on local Y instead of X). Rather than
+# compensate in the angle math, we physically rotate each object 90 deg
+# clockwise in place (around its own origin, so the preserved pivot doesn't
+# move) before deriving its profile -- so the exported geometry and the
+# profile's angle labels are genuinely consistent with each other.
+ROTATION_DEG_CLOCKWISE = 90
 
 MAT_TOKEN = {"Lake": "lake", "Grassland": "grassland", "Forest": "forest", "Stone": "cliff"}
 
@@ -79,12 +88,6 @@ def classify(obj):
         if obj.name.startswith(prefix):
             return PREFIX_TO_TYPE[prefix]
     return None
-
-
-def bound_center(obj):
-    """World-space center of the object's bounding box (post-transform)."""
-    corners = [obj.matrix_world @ Vector(c) for c in obj.bound_box]
-    return sum(corners, Vector((0.0, 0.0, 0.0))) / len(corners)
 
 
 def outward_dir(theta_deg):
@@ -123,11 +126,13 @@ def mat_token(mat_name):
 def derive_tri_profile(obj):
     """Tri meshes subdivide into 3 vertex-centered kites (centroid to each edge
     midpoint), each touching half of its two adjacent edges -- not one wedge per
-    whole edge. See memory v005-profile-derivation for the full derivation."""
+    whole edge. Assumes the object has already been rotated to canonical
+    orientation (see ROTATION_DEG_CLOCKWISE). See memory v005-profile-derivation
+    for the full derivation."""
     polys = get_top_polys(obj)
     corner_claim = {}
     for a in TRI_ANGLES:
-        corner_dir = -outward_dir(a + TRI_PHASE)
+        corner_dir = -outward_dir(a)
         best, best_score = None, 0.5
         for p in polys:
             if p["d"].length < 1e-6:
@@ -140,9 +145,9 @@ def derive_tri_profile(obj):
     result = {}
     for a in TRI_ANGLES:
         o1, o2 = [x for x in TRI_ANGLES if x != a]
-        t = tangent_dir(a + TRI_PHASE)
-        s1 = (-outward_dir(o1 + TRI_PHASE)).dot(t)
-        s2 = (-outward_dir(o2 + TRI_PHASE)).dot(t)
+        t = tangent_dir(a)
+        s1 = (-outward_dir(o1)).dot(t)
+        s2 = (-outward_dir(o2)).dot(t)
         first_o, second_o = (o1, o2) if s1 > s2 else (o2, o1)
 
         def tok(o):
@@ -241,10 +246,21 @@ def main():
     for name, why in skipped:
         print(f"[skip] {name}: {why}")
 
-    # --- Derive profiles BEFORE any transform change: the object's current
-    # origin is the true tile-center reference the derivation relies on. ---
+    # --- Rotate each object 90 deg clockwise in place (around its own origin,
+    # so the preserved pivot position is untouched), then derive its profile
+    # from the now-canonically-oriented geometry. Rotating first (rather than
+    # compensating in the angle math) keeps the exported mesh and its profile
+    # labels genuinely consistent with each other. ---
+    view_layer = bpy.context.view_layer
     profiles = {}
     for t, obj in ordered:
+        # Verified empirically against the previously-validated Tri.009 result
+        # (see memory v005-profile-derivation): += is the direction that lands
+        # cleanly on the canonical corner directions; -= produces an ambiguous
+        # exact 60 deg tie between two corners, which is a strong tell it's the
+        # wrong direction.
+        obj.rotation_euler.z += math.radians(ROTATION_DEG_CLOCKWISE)
+        view_layer.update()
         profiles[obj.name] = derive_profile(obj, t)
         print(f"[profile] {obj.name} ({t}) -> {'_'.join(profiles[obj.name])}")
 
@@ -254,7 +270,6 @@ def main():
     print(f"[info] backed up source blend -> {backup}")
 
     # --- Rename (type_ID_profile...) + zero location, exporting one .glb each ---
-    view_layer = bpy.context.view_layer
     counter = 0
     exported = []
     for t, obj in ordered:
@@ -266,26 +281,22 @@ def main():
         if obj.name != target:                  # Blender silently appends .001 on clash
             raise SystemExit(f'Rename collision: wanted "{target}", got "{obj.name}".')
 
-        # Isolate this object (needed for the origin operator and the export).
+        # Isolate this object (needed for the export).
         bpy.ops.object.select_all(action="DESELECT")
         obj.hide_set(False)
         obj.hide_viewport = False
         obj.select_set(True)
         view_layer.objects.active = obj
 
-        # The grid layout is baked into the mesh verts, so location alone won't
-        # centre a tile. Move the object origin to the geometry's bounding-box
-        # centre, then zero the location -> the mesh's bbox centre lands at world
-        # origin, which is what gets baked into the .glb.
-        bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
+        # Preserve the artist-set origin (the pivot the WFC algorithm places
+        # and rotates around) exactly as authored -- move the whole object to
+        # world origin by zeroing location only. Never recentre the origin to
+        # the bounding box: that would overwrite the same pivot the profile
+        # derivation above relies on as the true tile-center reference (see
+        # memory v005-profile-derivation), and for fragment/air tiles the
+        # bbox center is deliberately *not* where the artist put the origin.
         obj.location = (0.0, 0.0, 0.0)
         view_layer.update()   # refresh matrix_world before reading it back
-
-        # Confirm the geometry really is centred now.
-        c = bound_center(obj)
-        if max(abs(c.x), abs(c.y), abs(c.z)) > 1e-4:
-            print(f"[warn] {target}: bbox center still {tuple(round(v, 4) for v in c)} "
-                  f"after centring.")
 
         filepath = os.path.join(out_dir, f"{target}.glb")
         bpy.ops.export_scene.gltf(

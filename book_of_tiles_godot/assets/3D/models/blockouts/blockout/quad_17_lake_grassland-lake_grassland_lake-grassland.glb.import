@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://d3kkp6hg07vra"
-path="res://.godot/imported/quad_17_lake-grassland_lake_grassland-lake_grassland.glb-5a65df122bc1ee5cd0dd1bbfbdf04bc5.scn"
+uid="uid://cdrluj42tgm7r"
+path="res://.godot/imported/quad_17_lake_grassland-lake_grassland_lake-grassland.glb-5f2ffd70dbff522e9af34d6d0549700f.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/blockouts/blockout/quad_17_lake-grassland_lake_grassland-lake_grassland.glb"
-dest_files=["res://.godot/imported/quad_17_lake-grassland_lake_grassland-lake_grassland.glb-5a65df122bc1ee5cd0dd1bbfbdf04bc5.scn"]
+source_file="res://assets/3D/models/blockouts/blockout/quad_17_lake_grassland-lake_grassland_lake-grassland.glb"
+dest_files=["res://.godot/imported/quad_17_lake_grassland-lake_grassland_lake-grassland.glb-5f2ffd70dbff522e9af34d6d0549700f.scn"]
 
 [params]
 

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c4tylc2r8iknx"
-path="res://.godot/imported/quad_15_cliff-forest_cliff_forest-cliff_forest.glb-07373b96ab27cb31d7a5334cfd455f90.scn"
+uid="uid://chc6fseikwbu4"
+path="res://.godot/imported/quad_15_cliff_forest-cliff_forest_cliff-forest.glb-f32cad48badc26e5874787024e08474b.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/blockouts/blockout/quad_15_cliff-forest_cliff_forest-cliff_forest.glb"
-dest_files=["res://.godot/imported/quad_15_cliff-forest_cliff_forest-cliff_forest.glb-07373b96ab27cb31d7a5334cfd455f90.scn"]
+source_file="res://assets/3D/models/blockouts/blockout/quad_15_cliff_forest-cliff_forest_cliff-forest.glb"
+dest_files=["res://.godot/imported/quad_15_cliff_forest-cliff_forest_cliff-forest.glb-f32cad48badc26e5874787024e08474b.scn"]
 
 [params]
 
