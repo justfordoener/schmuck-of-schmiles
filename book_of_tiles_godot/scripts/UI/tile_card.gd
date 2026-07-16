@@ -2,7 +2,7 @@ class_name TileCard extends Control
 
 enum themes { forest = 1, desert = 2, snow = 4, swamp = 8 }
 
-enum packs { animal = 1, infrastructure = 2, landscape = 3}
+enum packs { animal, infrastructure, landscape }
 
 
 @export var tile : PackedScene
