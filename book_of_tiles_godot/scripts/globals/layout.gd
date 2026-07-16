@@ -36,9 +36,10 @@ func reverse(p : PROFILE_TYPE) -> PROFILE_TYPE:
 	return PROFILE_REVERSE.get(p, p)
 
 var CELL_SIZE   : float = 1 / sqrt(3) # length of a side of a hexagon
+var CELL_HEIGHT : float = 0.5 # vertical spacing between stacked layers
 var CELL_STATE  : int = 1
 var GRID_RADIUS : int = 5
-var GRID_HEIGHT : int = 1
+var GRID_HEIGHT : int = 3
 var CENTER_TILE_EUCLIDIC : Vector3 = Vector3(0,0,0)
 var CENTER_TILE_AXIAL : Vector3 = Vector3(0,0,0)
 var AXIAL_DIRECTION := {
