@@ -5,7 +5,12 @@ var controller_deadzone := 0.0
 var controller_snap_radius := 0.0
 var controller_snap_strength := 0.0 # 0.0 = no snap, 1.0 = instant snap
 
-var controller_ui_mode = false
+signal controller_ui_mode_changed(is_controller: bool)
+var controller_ui_mode = false:
+	set(value):
+		if controller_ui_mode != value:
+			controller_ui_mode = value
+			controller_ui_mode_changed.emit(value)
 var current_node: Control = null
 var placing_mode = false
 
@@ -19,6 +24,10 @@ func _input(event):
 	
 	if (event is InputEventMouseButton and event.pressed) or event is InputEventKey: #or (event is InputEventMouseMotion and event.relative.length() > 0):
 		current_node = null
+		controller_ui_mode = false
+	
+	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		controller_ui_mode = true 
 	
 	if event.is_action_pressed("controller_next_ui") and placing_mode == false:
 		_navigate_ui(Vector2.RIGHT, Vector2.DOWN)
@@ -39,6 +48,7 @@ func _physics_process(_delta: float) -> void:
 	
 	if (joystick_movement.length() > controller_deadzone or Input.is_action_pressed("controller_mouse_click")) and not navigating:
 		current_node = null
+		controller_ui_mode = true
 
 	
 	if current_node:

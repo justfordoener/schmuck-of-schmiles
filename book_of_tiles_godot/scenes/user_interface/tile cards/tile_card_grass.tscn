@@ -7,6 +7,10 @@
 [node name="TileCardGrass" instance=ExtResource("1_iplyg")]
 anchors_preset = 0
 tile = ExtResource("2_wkqom")
+export_theme = 1
+weight_animals = 1
+weight_infrastructure = 1
+weight_landscape = 5
 
 [node name="VBoxContainer" parent="." index="0"]
 offset_bottom = 184.0

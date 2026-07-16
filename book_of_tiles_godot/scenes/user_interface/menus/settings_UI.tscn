@@ -145,79 +145,476 @@ offset_bottom = 9.0
 scale = Vector2(2.2966955, 0.79706556)
 mouse_filter = 2
 
-[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons")]
+[node name="Keybinds" type="TabBar" parent="SettingsMenu/SettingsContainer" node_paths=PackedStringArray("action_buttons", "controller_action_buttons", "default_button", "controller_settings", "keyboard_settings")]
 visible = false
 layout_mode = 2
 script = ExtResource("2_5308q")
 action_buttons = {
-"move_back": NodePath("VBoxContainer/HBoxContainer3/move_back"),
-"move_forward": NodePath("VBoxContainer/HBoxContainer2/move_forward"),
-"move_left": NodePath("VBoxContainer/HBoxContainer/move_left"),
-"move_right": NodePath("VBoxContainer/HBoxContainer4/move_right")
+"camera_drag": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer10/camera_drag"),
+"mouse_left": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer7/mouse_left"),
+"mouse_wheel_down": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer9/mouse_wheel_down"),
+"mouse_wheel_up": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer8/mouse_wheel_up"),
+"move_back": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer3/move_back"),
+"move_forward": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer2/move_forward"),
+"move_left": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer/move_left"),
+"move_right": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer4/move_right"),
+"rotate_left": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer5/rotate_left"),
+"rotate_right": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer6/rotate_right")
 }
+controller_action_buttons = {
+"controller_camera_mode": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer10/controller_camera_mode"),
+"controller_mouse_click": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer15/controller_mouse_click"),
+"controller_move_down": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer12/controller_move_down"),
+"controller_move_up": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer11/controller_move_up"),
+"controller_next_ui": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer16/controller_next_ui"),
+"controller_prev_ui": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer17/controller_prev_ui"),
+"controller_rotate_left": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer13/controller_rotate_left"),
+"controller_rotate_right": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer14/controller_rotate_right"),
+"mouse_wheel_down": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer9/mouse_wheel_down"),
+"mouse_wheel_up": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer8/mouse_wheel_up"),
+"move_back": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer3/move_back"),
+"move_forward": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer2/move_forward"),
+"move_left": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer/move_left"),
+"move_right": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer4/move_right")
+}
+default_button = NodePath("HBoxContainer2/Restore Default")
+controller_settings = NodePath("HBoxContainer2/HBoxContainer/ControllerBinds")
+keyboard_settings = NodePath("HBoxContainer2/HBoxContainer/Keybinds")
 metadata/_tab_index = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds"]
+[node name="HBoxContainer2" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -185.5
+offset_top = -99.0
+offset_right = 189.5
+offset_bottom = 103.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2"]
+[node name="Keybinds" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+layout_mode = 2
+text = "Rebind Keyboard"
+fit_content = true
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer2"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Up:"
 
-[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "W"
+text_overrun_behavior = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Left:"
 
-[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "A"
+text_overrun_behavior = 1
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer3"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Down:"
 
-[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer3" groups=["snappable_ui"]]
+[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer3" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "S"
+text_overrun_behavior = 1
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4"]
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer4"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Move Right:"
 
-[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/VBoxContainer/HBoxContainer4" groups=["snappable_ui"]]
+[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer4" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "D"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer5"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Rotate Left:"
+
+[node name="rotate_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer5" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Q"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer6"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Rotate Right:"
+
+[node name="rotate_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer6" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "E"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+visible = false
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer7"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Select:"
+
+[node name="mouse_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer7" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Left Mouse Button"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer8"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Object Rotate Right:"
+fit_content = true
+
+[node name="mouse_wheel_up" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer8" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "x"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer9"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Object Rotate Left:"
+fit_content = true
+
+[node name="mouse_wheel_down" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer9" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "y"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds"]
+visible = false
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer10"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Drag Mode:"
+fit_content = true
+
+[node name="camera_drag" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer10" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Mouse Button"
+text_overrun_behavior = 1
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+
+[node name="ControllerBinds" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds"]
+visible = false
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+text = "Controller Binds"
+fit_content = true
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Up:"
+
+[node name="move_forward" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Leftstick Up"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Left:"
+
+[node name="move_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Leftstick Left"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Down:"
+
+[node name="move_back" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer3" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Leftstick Down"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Move Right:"
+
+[node name="move_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer4" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Leftstick Right"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer8"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Object Rotate Right:"
+fit_content = true
+
+[node name="mouse_wheel_up" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer8" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Shoulder"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer9"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Object Rotate Left:"
+fit_content = true
+
+[node name="mouse_wheel_down" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer9" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Left Shoulder"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer15" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer15"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Select:"
+fit_content = true
+
+[node name="controller_mouse_click" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer15" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Bottom Action"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer16" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer16"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Next UI Element:"
+fit_content = true
+
+[node name="controller_next_ui" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer16" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Shoulder"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer17" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer17"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Previous UI Element:"
+fit_content = true
+
+[node name="controller_prev_ui" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer17" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Left Shoulder"
+text_overrun_behavior = 1
+
+[node name="Spacer2" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+layout_mode = 2
+text = "Camera Controls"
+fit_content = true
+
+[node name="Spacer" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer10"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Camera Mode:"
+fit_content = true
+
+[node name="controller_camera_mode" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer10" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Trigger"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer11"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Zoom In:"
+fit_content = true
+
+[node name="controller_move_up" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer11" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Stick Down"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer12"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Zoom Out:"
+fit_content = true
+
+[node name="controller_move_down" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer12" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Stick Up"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer13"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Rotate Left:"
+fit_content = true
+
+[node name="controller_rotate_left" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer13" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Stick Left"
+text_overrun_behavior = 1
+
+[node name="HBoxContainer14" type="HBoxContainer" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer14"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Rotate Right"
+fit_content = true
+
+[node name="controller_rotate_right" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer14" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Right Stick Right"
+text_overrun_behavior = 1
+
+[node name="Spacer2" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="Restore Default" type="Button" parent="SettingsMenu/SettingsContainer/Keybinds/HBoxContainer2" groups=["snappable_ui"]]
+layout_mode = 2
+text = "Restore Default"
 
 [node name="Snappoint_Sound" type="Control" parent="SettingsMenu/SettingsContainer/Keybinds" groups=["snappable_ui"]]
 anchors_preset = 0
