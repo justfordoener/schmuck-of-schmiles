@@ -34,9 +34,9 @@ const AIR_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
 func _ready() -> void:
 	grid = {}
 	_initialize_grid_layers()
-	_initialize_layer_mesh(corner_mesh, Layout.CELL_TYPE.CORNER, Color.YELLOW)
-	_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
-	_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
+	#_initialize_layer_mesh(corner_mesh, Layout.CELL_TYPE.CORNER, Color.YELLOW)
+	#_initialize_layer_mesh(face_mesh, Layout.CELL_TYPE.FACE, Color.SKY_BLUE)
+	#_initialize_layer_mesh(edge_mesh, Layout.CELL_TYPE.EDGE, Color.LIME_GREEN)
 	_link_neighbors()
 	_load_modules_from_dir(module_directory)
 	for cell_index in grid.keys(): #.slice(0, 5):
