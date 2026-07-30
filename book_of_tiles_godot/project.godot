@@ -27,6 +27,7 @@ Parameters="*res://scripts/globals/parameters.gd"
 Signals="*res://scripts/globals/signals.gd"
 FileManager="*res://scripts/globals/FileManager.gd"
 ControllerSupport="*res://scripts/player_controller/controller_support.gd"
+GameState="*res://scripts/globals/gameState.gd"
 
 [display]
 
