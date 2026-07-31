@@ -90,6 +90,7 @@ func get_card_from_hand(index : int) -> TileCard:
 	return 
 	
 func _on_card_selected(card : TileCard) -> void:
+	GameState.change_state(GameState.State.TILES_PLACING)
 	remove_card_from_hand(card.hand_index)
 	main_manager.tile_selected(card.tile)
 	
@@ -144,6 +145,7 @@ func _pick_weighted(available : Array[PackedScene]) -> PackedScene:
 
 
 func start_new_day() -> void:
+	GameState.change_state(GameState.State.TILE_PACK_CHOOSING)
 	var offered_packs := _get_available_packs()
 	
 	if _day_started:
@@ -181,6 +183,7 @@ func _get_available_packs() -> Array[int]:
 	return valid_packs.slice(0, 3)
 
 func _on_pack_chosen(pack : int) -> void:
+	GameState.change_state(GameState.State.TILE_CHOOSING)
 	active_pack = pack
 	pack_selection_overlay.hide()
 	refill_tiles()

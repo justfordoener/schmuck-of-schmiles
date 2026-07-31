@@ -4,12 +4,13 @@ enum State {
 	MENU,
 	PAUSED,
 	TILE_PACK_CHOOSING,
+	TILE_CHOOSING,
 	TILES_PLACING,
 }
 
 signal state_changed(old_state: State, new_state: State)
 
-# change to MENU once we start in the main menu
+# change to MENU once we start in the main menu scene
 var current_state: State = State.TILE_PACK_CHOOSING
 var previous_state: State = State.MENU
 
@@ -30,7 +31,7 @@ func change_state(new_state: State) -> void:
 	state_changed.emit(previous_state, current_state)
 
 
-# remember previous state for when the game is paused
+# pause the game (remembers previous state to go back to when resuming)
 func toggle_pause() -> void:
 	if current_state == State.PAUSED:
 		change_state(previous_state)
@@ -41,17 +42,25 @@ func toggle_pause() -> void:
 func _enter_state(state: State) -> void:
 	match state:
 		State.MENU:
+			#print("menu")
 			pass
 		State.PAUSED:
-			# we could move get_tree().paused = true from pause_menu to here if needed (and to _exit_state)
-			pass
+			get_tree().paused = true
+			#print("paused")
 		State.TILE_PACK_CHOOSING:
-			pass 
+			#print("Choosing Pack") 
+			pass
+		State.TILE_CHOOSING:
+			#print("Choosing Tile")
+			pass
 		State.TILES_PLACING:
+			#print("Placing")
 			pass
 
-
+# as above, but for exiting instead of entering a state
 func _exit_state(state: State) -> void:
 	match state:
+		State.PAUSED:
+			get_tree().paused = false
 		_:
 			pass
