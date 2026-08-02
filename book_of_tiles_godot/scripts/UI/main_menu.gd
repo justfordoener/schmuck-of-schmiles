@@ -84,6 +84,7 @@ func check_levels():
 
 
 func load_level(scene_path: String) -> void:
+	GameState.change_state(GameState.State.TILE_PACK_CHOOSING)
 	get_tree().change_scene_to_file(scene_path)
 
 

@@ -27,12 +27,13 @@ func _unhandled_input(event: InputEvent) -> void:
 func toggle_menu(menu: Control) -> void:
 	menu.visible = ! menu.visible
 	if menu == pause:
-		get_tree().paused = pause.visible
+		GameState.toggle_pause()
 	else:
 		pause.visible = !menu.visible
 
 func main_menu() -> void:
 	toggle_menu(pause)
+	GameState.change_state(GameState.State.MENU)
 	get_tree().change_scene_to_file("res://scenes/user_interface/menus/main_menu.tscn")
 	# after the Main Menu scene is the new main_scene in the project, swap to:
 	#get_tree().change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))
