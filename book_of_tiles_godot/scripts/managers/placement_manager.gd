@@ -9,9 +9,9 @@ var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
 var previous_position : Vector3 = Vector3.ZERO
-var saved_rotation : float = 0.
+var saved_rotation : float
 var mouse_press_time : float
-var mouse_max_action_time : float = 0.0 # time how long you need to hold the left button down without placing the tile
+var mouse_max_action_time : float # time how long you need to hold the left button down without placing the tile
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
