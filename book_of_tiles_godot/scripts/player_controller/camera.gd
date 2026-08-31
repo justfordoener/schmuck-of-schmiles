@@ -105,7 +105,7 @@ func _physics_process(_delta: float) -> void:
 		rotate_keys_direction += deadzone_axis("controller_rotate_left", "controller_rotate_right")
 		zoom_direction += deadzone_axis("controller_move_down", "controller_move_up") * controller_zoom_factor
 	
-	if drag_rotate_mode: # zoom turned off while rotate_mode is true
+	if drag_rotate_mode or Input.is_action_pressed("mouse_left"): # zoom turned off while rotate_mode is true and while the left mouse button is pressed
 		zoom_direction = 0
 	
 	# drag movement

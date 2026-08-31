@@ -35,5 +35,10 @@
 	"controller_snap_radius": 50.0,
 	"controller_snap_strength": 0.3,
 	"_comment_controller_snap_strength": "0.0 = no snap, 1.0 = instant snap -> too high value makes it impossible to move away"
-	}
+	},
+
+"mouse_controller": {
+	"mouse_max_action_time": 1.0,
+	"comment_mouse_max_action_time": "time how long you need to hold the left button down without placing the tile"
+}
 }

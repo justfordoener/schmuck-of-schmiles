@@ -9,7 +9,9 @@ var camera : Camera3D
 var tiles_placed_today : Array[Node3D] = []
 var plane : Plane
 var previous_position : Vector3 = Vector3.ZERO
-var saved_rotation : float = 0.
+var saved_rotation : float
+var mouse_press_time : float
+var mouse_max_action_time : float # time how long you need to hold the left button down without placing the tile
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
@@ -23,6 +25,14 @@ func place_tile(tile : PackedScene) -> void:
 func _ready() -> void:
 	camera = camera_controller.camera
 	plane = Plane(Vector3.UP, 0)
+	load_mouse_variables()
+
+func _input(event):
+	if event.is_action_pressed("reload_files"):
+		load_mouse_variables()
+
+func load_mouse_variables():
+	mouse_max_action_time = FileManager.balancing_data["mouse_controller"]["mouse_max_action_time"]
 	
 func _create_preview_instance(tile : PackedScene) -> void:
 	current_tile = tile
@@ -58,14 +68,27 @@ func _process(_delta):
 			previous_position = snap_position
 			preview_instance.rotation.y = deg_to_rad(target_cell.base_rotation)
 			preview_instance.rotate_y(saved_rotation)
-		if Input.is_action_just_pressed("mouse_wheel_down"):
+		
+		if Input.is_action_just_pressed("rotate_key_down"):
 			preview_instance.rotate_y(deg_to_rad(base_rotation))
 			saved_rotation = deg_to_rad(base_rotation)
-		if Input.is_action_just_pressed("mouse_wheel_up"):
+		if Input.is_action_just_pressed("rotate_key_up"):
 			preview_instance.rotate_y(deg_to_rad(-base_rotation))
 			saved_rotation = deg_to_rad(-base_rotation)
+		if Input.is_action_pressed("mouse_left"):
+			if Input.is_action_just_pressed("mouse_wheel_down"):
+				preview_instance.rotate_y(deg_to_rad(base_rotation))
+				saved_rotation = deg_to_rad(base_rotation)
+			if Input.is_action_just_pressed("mouse_wheel_up"):
+				preview_instance.rotate_y(deg_to_rad(-base_rotation))
+				saved_rotation = deg_to_rad(-base_rotation)
 		if Input.is_action_just_pressed("mouse_left"):
-			_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
+			mouse_press_time = Time.get_ticks_msec() / 1000.0
+			
+		if Input.is_action_just_released("mouse_left"):
+			var hold_duration = Time.get_ticks_msec() / 1000.0 - mouse_press_time
+			if hold_duration < mouse_max_action_time:
+				_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
 
 func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> void:
 	var instance = current_tile.instantiate()
