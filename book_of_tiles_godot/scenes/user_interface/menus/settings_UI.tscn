@@ -152,12 +152,12 @@ script = ExtResource("2_5308q")
 action_buttons = {
 "camera_drag": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer10/camera_drag"),
 "mouse_left": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer7/mouse_left"),
-"mouse_wheel_down": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer9/mouse_wheel_down"),
-"mouse_wheel_up": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer8/mouse_wheel_up"),
 "move_back": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer3/move_back"),
 "move_forward": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer2/move_forward"),
 "move_left": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer/move_left"),
 "move_right": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer4/move_right"),
+"rotate_key_down": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer9/mouse_wheel_down"),
+"rotate_key_up": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer8/mouse_wheel_up"),
 "rotate_left": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer5/rotate_left"),
 "rotate_right": NodePath("HBoxContainer2/HBoxContainer/Keybinds/HBoxContainer6/rotate_right")
 }
@@ -170,12 +170,12 @@ controller_action_buttons = {
 "controller_prev_ui": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer17/controller_prev_ui"),
 "controller_rotate_left": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer13/controller_rotate_left"),
 "controller_rotate_right": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer2/HBoxContainer14/controller_rotate_right"),
-"mouse_wheel_down": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer9/mouse_wheel_down"),
-"mouse_wheel_up": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer8/mouse_wheel_up"),
 "move_back": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer3/move_back"),
 "move_forward": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer2/move_forward"),
 "move_left": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer/move_left"),
-"move_right": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer4/move_right")
+"move_right": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer4/move_right"),
+"rotate_key_down": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer9/mouse_wheel_down"),
+"rotate_key_up": NodePath("HBoxContainer2/HBoxContainer/ControllerBinds/VBoxContainer/HBoxContainer8/mouse_wheel_up")
 }
 default_button = NodePath("HBoxContainer2/Restore Default")
 controller_settings = NodePath("HBoxContainer2/HBoxContainer/ControllerBinds")
