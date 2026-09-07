@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bh3dh4jmoyqhj"]
+
+[ext_resource type="PackedScene" uid="uid://be5qy5lmbx0pv" path="res://scenes/user_interface/tile_card.tscn" id="1_vm2fl"]
+[ext_resource type="PackedScene" uid="uid://w1jsgiirome3" path="res://scenes/tiles/hex_water.tscn" id="2_vm2fl"]
+[ext_resource type="Texture2D" uid="uid://dox1f6r540bkh" path="res://assets/2D/textures/playtest/river_tile.png" id="3_q76u4"]
+
+[node name="TileCardRiver" instance=ExtResource("1_vm2fl")]
+anchors_preset = 0
+tile = ExtResource("2_vm2fl")
+export_theme = 1
+weight_animals = 1
+weight_infrastructure = 5
+weight_landscape = 1
+
+[node name="TextureButton" parent="VBoxContainer" index="0" groups=["snappable_ui"]]
+texture_normal = ExtResource("3_q76u4")
+
+[node name="RichTextLabel" parent="VBoxContainer" index="1"]
+text = "River"

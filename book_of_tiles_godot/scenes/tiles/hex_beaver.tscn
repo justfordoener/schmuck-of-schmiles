@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhrg2bn3rjrib"]
+
+[ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_xkilu"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/hex_21.tscn" id="2_hdvrb"]
+[ext_resource type="PackedScene" uid="uid://dm8bkk85lrh1b" path="res://scenes/tiles/parts/beaver_house.tscn" id="3_hdvrb"]
+
+[node name="Beaver" type="Node3D"]
+script = ExtResource("1_xkilu")
+is_water = true
+
+[node name="Hex21" parent="." instance=ExtResource("2_hdvrb")]
+
+[node name="beaver-house" parent="Hex21" instance=ExtResource("3_hdvrb")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.00079476833, 0.24880615, 0.0011344254)

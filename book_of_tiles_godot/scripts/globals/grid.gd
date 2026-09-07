@@ -1,4 +1,4 @@
-@tool
+#@tool
 extends Node
 # - pointy-top layout
 # - even-r layout
@@ -555,6 +555,9 @@ func axial_round(axial_coordinate : Vector3) -> Vector3:
 	#print("rounding: axial ", axial_coordinate, " rounded: ", return_vector)
 	return return_vector
 	
+# ------------------- refactor below code -----------------
+
+
 # Resolves the (x,z) column nearest to a world-space point, then returns either the lowest
 # unoccupied cell in that column (default - stack a new placement above whatever's there),
 # or, if target_topmost is set (water tiles), the topmost currently-occupied cell (replace
@@ -625,6 +628,8 @@ func _topmost_occupied_cell_in_column(ground_cell : Cell) -> Cell:
 			break
 		result = cell
 	return result
+	
+# ------------------------------- refactor above code ------------------
 
 func snap_position(point : Vector3, cell_type : Layout.CELL_TYPE, target_topmost : bool = false) -> Vector3:
 	var cell := snap_to_cell(point, cell_type, target_topmost)

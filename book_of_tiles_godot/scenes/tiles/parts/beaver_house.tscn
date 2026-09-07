@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://dm8bkk85lrh1b"]
+
+[ext_resource type="PackedScene" uid="uid://baidq4mli7f0l" path="res://assets/3D/models/structures/beaver-house_structure.glb" id="1_dvt5g"]
+
+[node name="beaver-house" instance=ExtResource("1_dvt5g")]
