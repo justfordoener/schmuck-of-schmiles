@@ -8,7 +8,7 @@ script = ExtResource("1_script")
 module_type = 1
 module_id = 18
 profiles = Dictionary[int, int]({
-0: 3,
+0: 14,
 90: 11,
 180: 1,
 270: 10

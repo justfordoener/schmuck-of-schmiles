@@ -117,11 +117,19 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 		module_placements.append({
 			"index": child_index,
 			"module": child,
-			"rotation": child_rotation
+			"rotation": child_rotation,
+			"instance": instance
 		})
 
 	# Pass 2: If everything fits, batch place them and trigger WFC propagation once
-	Grid.batch_place_modules(module_placements)
+	var displaced := Grid.batch_place_modules(module_placements)
+
+	# Placing into an occupied cell frees whatever was there (see batch_place_modules). If
+	# that was an earlier tile - water dropped onto land - drop it from the undo history so
+	# undo doesn't spend a press on a node that's about to be deleted. Displaced solver-spawned
+	# filler modules were never in the list, so erasing them is a no-op.
+	for tile : Node3D in displaced:
+		tiles_placed_today.erase(tile)
 	
 	preview_instance.queue_free()
 	Signals.on_instance_spawned.emit()

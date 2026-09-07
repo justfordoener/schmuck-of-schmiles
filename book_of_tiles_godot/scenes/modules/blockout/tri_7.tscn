@@ -14,4 +14,3 @@ profiles = Dictionary[int, int]({
 })
 
 [node name="tri_7_forest_air-forest_forest-air" parent="." instance=ExtResource("2_glb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)

@@ -43,6 +43,7 @@ Or open the .blend and run this from the Scripting workspace.
 
 import bpy
 import os
+import re
 import math
 import shutil
 from mathutils import Vector
@@ -116,11 +117,20 @@ def get_top_polys(obj):
     return polys
 
 
+# Blender appends a ".001"-style suffix when a datablock name collides -- duplicating
+# an object or appending from another file yields "Stone.001", which is the *same*
+# material as "Stone", not a new one. Strip that suffix before the lookup, otherwise
+# every duplicate silently breaks profile derivation (this is what made the exporter
+# unrunnable against blockout_v005 once Tri.003/Tri.004 picked up Forest.001/Stone.001).
+MAT_SUFFIX_RE = re.compile(r"\.\d{3}$")
+
+
 def mat_token(mat_name):
-    if mat_name not in MAT_TOKEN:
+    base = MAT_SUFFIX_RE.sub("", mat_name)
+    if base not in MAT_TOKEN:
         raise SystemExit(f"Unrecognised material '{mat_name}' on a top-facing polygon "
                           f"-> no profile token mapping.")
-    return MAT_TOKEN[mat_name]
+    return MAT_TOKEN[base]
 
 
 def derive_tri_profile(obj):
@@ -295,7 +305,17 @@ def main():
         # derivation above relies on as the true tile-center reference (see
         # memory v005-profile-derivation), and for fragment/air tiles the
         # bbox center is deliberately *not* where the artist put the origin.
-        obj.location = (0.0, 0.0, 0.0)
+        #
+        # Zero X/Y only, and keep the authored Z. The staging Z is not scratch
+        # layout -- it is the artist's vertical alignment of the tile against
+        # the grid plane. Tri origins are authored at the slab's *bottom* (local
+        # verts span z 0..0.5) and the objects are staged at z=-0.25 to line them
+        # up with the quads/hexes, whose origins sit at their vertical centre
+        # (verts span -0.25..0.25) and which stage at z=0. Zeroing Z as well
+        # discarded that compensation and exported every tri 0.25 too high, so
+        # its geometry straddled the cell above instead of the cell it belongs
+        # to. Keeping Z is a no-op for quads and hexes.
+        obj.location = (0.0, 0.0, obj.location.z)
         view_layer.update()   # refresh matrix_world before reading it back
 
         filepath = os.path.join(out_dir, f"{target}.glb")

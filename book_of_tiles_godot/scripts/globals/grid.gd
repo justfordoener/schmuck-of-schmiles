@@ -6,7 +6,6 @@ extends Node
 # for reference use: https://www.redblobgames.com/grids/cube_coords/#basics
 
 var grid : Dictionary[Vector3i, Cell] #TODO for cpp rework: make a seperate datastructure for axial indices
-var propagation_stack : Array[Vector3i]
 var corner_mesh : ArrayMesh
 var face_mesh : ArrayMesh
 var edge_mesh : ArrayMesh
@@ -235,32 +234,45 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 	
 #-------------------------------- wfc ----------------------------
 
-func batch_place_modules(placements: Array) -> void:
+# Places every module of one tile, then re-solves the two rings around them. Returns the
+# visuals it displaced (the module/tile nodes that were sitting in the placed-into cells),
+# already queue_free()d - the caller needs them to drop a replaced tile from its own undo
+# history, and can't detect them via is_instance_valid() because queue_free() only takes
+# effect at the end of the frame.
+func batch_place_modules(placements: Array) -> Array[Node3D]:
 	var placed_indices : Array[Vector3i] = []
+	var displaced : Array[Node3D] = []
 
 	for p in placements:
 		var cell_index = p["index"]
 		var cell : Cell = grid[cell_index]
 
-		# Reset only the cell(s) actually being placed into (dropping any stale soft-fill
-		# state from a previous WFC round) before re-fitting. Everything else in the grid -
-		# grass base, other columns, other layers - is left untouched.
-		if not cell.is_player_placed:
-			cell.module_reference = null
-			cell.possibilities = cell.initial_possibilities.duplicate()
-			cell.profiles = get_hard_profiles_for_cell(cell_index)
+		# Reset the cell(s) actually being placed into before re-fitting, dropping any stale
+		# state - a soft fill from a previous WFC round, the seeded grass/AIR filler, or an
+		# earlier placement being replaced (water dropped onto existing land). Without this
+		# the cell's possibilities are still narrowed to whatever it currently shows, and no
+		# other module could ever be fitted into it. Everything else in the grid - other
+		# columns, other layers - is left untouched.
+		cell.module_reference = null
+		cell.possibilities = cell.initial_possibilities.duplicate()
+		cell.profiles = get_hard_profiles_for_cell(cell_index)
 
 		var possibility : Possibility = get_fitting_possibility(cell_index, p["module"], p["rotation"])
 
 		if possibility != null:
 			if cell.instanced_module != null:
+				displaced.append(cell.instanced_module)
 				cell.instanced_module.queue_free()
 				cell.instanced_module = null
 
 			cell.possibilities = [possibility]
 			cell.profiles = possibility.profiles
 			cell.module_reference = p["module"]
-			cell.is_player_placed = true
+			# The placed tile node itself is this cell's visual from now on, so a later
+			# placement into the same cell (water dropped onto land) frees it through the
+			# same path that frees a solver-spawned filler, instead of leaving the old
+			# geometry sitting inside the new module.
+			cell.instanced_module = p["instance"]
 			placed_indices.append(cell_index)
 
 	# Update the two rings around this batch's placements: the cells directly touching a
@@ -271,7 +283,9 @@ func batch_place_modules(placements: Array) -> void:
 	var ring1 := _soft_populate_ring(placed_indices)
 	_soft_populate_ring(ring1)
 
-# For every non-player-placed neighbor of trigger_indices: rebuilds its whole profile dict
+	return displaced
+
+# For every soft (non-CORNER) neighbor of trigger_indices: rebuilds its whole profile dict
 # from scratch via get_settled_profiles_for_cell() (so e.g. an edge between two placed
 # corners picks up both, and any not-yet-settled border is a clean EMPTY wildcard rather
 # than a stale leftover value from the old filler module), then narrows it (collapse()
@@ -284,9 +298,9 @@ func _soft_populate_ring(trigger_indices: Array[Vector3i]) -> Array[Vector3i]:
 	for index in trigger_indices:
 		for neighbor_key in grid[index].neighbors.keys():
 			var n_index = get_axial_index(grid[index].neighbors[neighbor_key].axial_position)
-			# Corners are hard (only ever set by an explicit player placement) - never
+			# Corners are hard (only ever written by an explicit player placement) - never
 			# auto-narrowed here, even when reached through an edge's neighbor list.
-			if grid[n_index].type != Layout.CELL_TYPE.CORNER and not grid[n_index].is_player_placed:
+			if grid[n_index].type != Layout.CELL_TYPE.CORNER:
 				cells_to_fill[n_index] = true
 
 	var touched : Array[Vector3i] = []
@@ -320,8 +334,8 @@ func _soft_populate_ring(trigger_indices: Array[Vector3i]) -> Array[Vector3i]:
 func collapse(cell_index : Vector3i) -> bool:
 	var cell : Cell = grid[cell_index]
 
-	# Skip if already player-placed (immutable)
-	if cell.is_player_placed:
+	# Corners are hard: only ever written by a placement, never narrowed by the solver.
+	if cell.type == Layout.CELL_TYPE.CORNER:
 		return false
 
 	# Skip if this cell has already "died" (become an empty space / contradiction)
@@ -363,93 +377,35 @@ func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	module_instance.rotation_degrees.y = -poss.module_rotation
 	
 	cell.instanced_module = module_instance
+	cell.module_reference = poss.module_reference
 
-func propagate(cell_index : Vector3i) -> void:
-	var cell : Cell = grid[cell_index]
-	#spawn_debug_sphere(axial_to_cartesian(cell.axial_position))
-	for neighbor_key : String in cell.neighbors.keys():
-		var neighbor_index : Vector3i = get_axial_index(cell.neighbors[neighbor_key].axial_position)
-		var neighbor : Cell = grid[neighbor_index]
-		if not propagation_stack.has(neighbor_index):
-			propagation_stack.append(neighbor_index)
-			neighbor.profiles[neighbor_key] = cell.profiles[neighbor_key]
-			if not collapse(neighbor_index):
-				continue
-			else:
-				# await get_tree().create_timer(0.2).timeout
-				propagate(neighbor_index)
-	
+# True if this module can seat on this cell at this rotation. A cell already holding a
+# module is NOT a rejection - placements always target corners, and dropping a new corner
+# onto an existing one is how water replaces land. The surrounding edges and faces are the
+# ones that have to reconcile the new corner with its neighbours, and they do that by
+# re-collapsing in _soft_populate_ring(); a corner itself is only rejected when the module
+# can't seat on this cell type/rotation at all.
 func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> bool:
-	if grid[cell_index].is_player_placed:
-		print("cell occupied")
-		return false
 	var possibility : Possibility = get_fitting_possibility(cell_index, module, rotation)
 	if possibility != null:
 		return true
 	else:
 		return false
 		
+# Resolves module_id + rotation to this cell's precomputed Possibility. Searches
+# initial_possibilities, not the narrowed possibilities list: whether a module can seat on a
+# cell is a static property of the cell (type + base rotation), independent of whatever the
+# cell currently happens to show. does_module_fit() runs in placement_manager's pass 1,
+# before batch_place_modules() resets the cell, so searching the narrowed list would only
+# ever return the module already sitting there - which is what blocked water from replacing
+# an existing tile.
 func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : int) -> Possibility:
 	var cell : Cell = grid[cell_index]
 	
-	for possibility : Possibility in cell.possibilities:
+	for possibility : Possibility in cell.initial_possibilities:
 		if possibility.module_reference.module_id == module.module_id and possibility.module_rotation == posmod(rotation, 360):
-			
-			var fits = true
-			for border_key in possibility.profiles.keys():
-				if border_key.contains("7777"): 
-					continue # Ignore map edges
-				var neighbor = cell.neighbors.get(border_key)
-				# Only validate against player-placed neighbors; ignore soft modules.
-				# neighbor stores its own clockwise reading -> compare against its mirror.
-				if neighbor != null and neighbor.is_player_placed:
-					if possibility.profiles[border_key] != Layout.reverse(neighbor.profiles[border_key]):
-						fits = false
-						break
-			
-			if fits:
-				return possibility
+			return possibility
 	return null
-
-func clear_all_soft_modules() -> void:
-	for index in grid.keys():
-		var cell = grid[index]
-		
-		# If the cell is not hard-locked by a player
-		if not cell.is_player_placed:
-			if cell.instanced_module != null:
-				cell.instanced_module.queue_free()
-				cell.instanced_module = null
-			cell.profiles = get_hard_profiles_for_cell(index)
-	
-func place_module(cell_index : Vector3i, module : Module, rotation : int) -> void:
-	var cell : Cell = grid[cell_index]
-	var possibility : Possibility = get_fitting_possibility(cell_index, module, rotation)
-	if possibility == null:
-		print("module doesn't fit here")
-		return
-	cell.possibilities = [possibility]
-	cell.profiles = possibility.profiles
-	cell.module_reference = module
-	propagation_stack = []
-	print("cid: ", cell_index, " ppvalues: ", possibility.profiles.values(), " cpvalues: ", cell.profiles.values())
-	propagate(cell_index)
-	
-# collapses a cell down to a single possibility. 
-func force_collapse(cell_index : Vector3i, module : Module, rotation : int) -> bool:
-	var cell : Cell = grid[cell_index]
-	for possibility : Possibility in cell.possibilities:
-		if (possibility.module_reference.module_id == module.module_id #TODO actually set module ids in scene
-		and possibility.module_rotation == posmod(rotation, 360)
-		and do_profiles_match(possibility.profiles, cell.profiles)):
-			cell.possibilities = [possibility]
-			cell.profiles = possibility.profiles
-			cell.module_reference = module
-			propagation_stack = []
-			print("cid: ", cell_index, " ppvalues: ", possibility.profiles.values(), " cpvalues: ", cell.profiles.values())
-			propagate(cell_index)
-			return true
-	return false
 
 # ------------------- helper functions -------------------
 
@@ -459,16 +415,16 @@ func get_hard_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layo
 
 	for border_key in cell.profiles.keys():
 		var neighbor = cell.neighbors.get(border_key)
-		if neighbor != null and neighbor.is_player_placed:
+		if neighbor != null and neighbor.type == Layout.CELL_TYPE.CORNER:
 			hard_profiles[border_key] = neighbor.profiles[border_key]
 		else:
 			hard_profiles[border_key] = Layout.PROFILE_TYPE.EMPTY
 
 	return hard_profiles
 
-# Same idea as get_hard_profiles_for_cell(), but also trusts a soft (non-player-placed)
-# neighbor once it has a real committed module showing - not just hard corners. A neighbor
-# counts as committed if: it's player-placed, it has narrowed to exactly one possibility via
+# Same idea as get_hard_profiles_for_cell(), but also trusts a soft (EDGE) neighbor once it
+# has a real committed module showing - not just hard corners. A neighbor
+# counts as committed if: it's a corner, it has narrowed to exactly one possibility via
 # collapse()/an arbitrary pick, OR it's still showing its untouched default filler (grass on
 # the ground layer, AIR above it - see initialize_grass_layer()/initialize_air_layers()).
 # That last case matters most: it's what makes a newly-placed corner's soft neighbors
@@ -488,7 +444,7 @@ func get_settled_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, L
 	for border_key in cell.profiles.keys():
 		var neighbor = cell.neighbors.get(border_key)
 		var neighbor_committed = neighbor != null and neighbor.type != Layout.CELL_TYPE.FACE and (
-			neighbor.is_player_placed
+			neighbor.type == Layout.CELL_TYPE.CORNER
 			or neighbor.possibilities.size() == 1
 			or neighbor.instanced_module != null
 		)
@@ -526,10 +482,17 @@ func do_profiles_match(p1 : Dictionary[String, Layout.PROFILE_TYPE], p2 : Dictio
 		# p1 = candidate's own clockwise reading; p2 = value sourced from the neighbour
 		# (its own reading), so compare against its mirror. reverse() is identity for
 		# single-biome/EMPTY values, keeping old behaviour intact.
-		if (p1[border_key] != Layout.reverse(p2[border_key])
-		and not (p1[border_key] == Layout.PROFILE_TYPE.EMPTY
-		or p2[border_key] == Layout.PROFILE_TYPE.EMPTY)):
-			return false
+		var mine : Layout.PROFILE_TYPE = p1[border_key]
+		var theirs : Layout.PROFILE_TYPE = p2[border_key]
+		if mine == Layout.PROFILE_TYPE.EMPTY or theirs == Layout.PROFILE_TYPE.EMPTY:
+			continue # unconstrained border - anything may meet it
+		if mine == Layout.reverse(theirs):
+			continue
+		# A wildcard border accepts any of its members: that's how a raised tile's
+		# cliff rim (SURFACE on its inward side) meets whatever biome sits on it.
+		if Layout.matches_wildcard(mine, Layout.reverse(theirs)):
+			continue
+		return false
 	return true
 	
 func cartesian_to_axial(cartesian_position : Vector3) -> Vector3:
@@ -589,14 +552,16 @@ func _nearest_ground_cell(point : Vector3, cell_type : Layout.CELL_TYPE) -> Cell
 				closest_cell = cell
 	return closest_cell
 
-# True if a cell counts as "occupied" for stacking/placement targeting. Layer 0 is the
-# permanent grass floor - always solid, regardless of is_player_placed. Layers above only
-# count as occupied once a player has actually built something there: the default AIR
-# filler seeded by initialize_air_layers() has a non-null instanced_module too (an empty,
-# geometry-less placeholder just carrying an AIR profile for WFC matching), so
-# instanced_module alone isn't a reliable occupancy signal - only is_player_placed is.
+# True if a cell counts as "occupied" for stacking/placement targeting - derived from the
+# module the cell currently shows, so it stays correct however that module got there
+# (seeded, solved, placed, or replaced). Every cell always shows something: the ground layer
+# is seeded with grass (solid) and the layers above with the geometry-less AIR placeholder
+# (open space - see initialize_air_layers()), which is why instanced_module != null is not
+# an occupancy signal but "the module isn't AIR" is.
 func _cell_occupies_surface(cell : Cell) -> bool:
-	return cell.is_player_placed or cell.axial_position.y == 0
+	if cell.module_reference == null:
+		return false
+	return cell.module_reference.module_id != AIR_MODULE_ID[cell.type]
 
 # Walks the column above ground_cell (same x/z, ascending y) and returns the first cell
 # that isn't occupied yet (see _cell_occupies_surface).
@@ -614,7 +579,8 @@ func _lowest_free_cell_in_column(ground_cell : Cell) -> Cell:
 
 # Walks the column from the ground up and returns the highest occupied cell (see
 # _cell_occupies_surface), stopping at the first unoccupied layer - i.e. the surface a
-# player is actually looking at/hovering over. Never null: layer 0 is always occupied.
+# player is actually looking at/hovering over. Never null: the ground layer is seeded with
+# grass, so layer 0 always counts as occupied.
 func _topmost_occupied_cell_in_column(ground_cell : Cell) -> Cell:
 	var result : Cell = null
 	for layer in range(Layout.GRID_HEIGHT):

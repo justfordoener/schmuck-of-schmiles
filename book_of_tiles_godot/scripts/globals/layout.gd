@@ -2,13 +2,13 @@
 extends Node
 
 enum CELL_TYPE {CORNER, EDGE, FACE}
-# EMPTY stays 0: it's the "no profile assigned yet" sentinel used directly by
-# border.gd and grid.gd matching logic (distinct from AIR, which is a real
-# WFC value meaning "open to air"). The remaining 13 values are the current
-# blockout v005 profile vocabulary. A two-biome edge is directional: the two
-# halves are listed in clockwise order, read from *outside* the module looking
-# at that edge, so a neighbour reads the same physical edge reversed
-# (FOREST_AIR <-> AIR_FOREST). See reverse() below and Grid.do_profiles_match.
+# This enum is APPEND-ONLY: module .tscn
+# files store these as raw ints, so inserting a value renumbers every module.
+# SURFACE (14) is not a biome - it's a wildcard, see WILDCARD_MEMBERS below.
+#
+# A two-biome edge is directional: the two halves are listed in clockwise
+# order, read from *outside* the module looking at that edge, so a neighbour
+# reads the same physical edge reversed (FOREST_AIR <-> AIR_FOREST). See reverse() below and Grid.do_profiles_match.
 enum PROFILE_TYPE {
 	EMPTY,
 	AIR, WATER, GRASS, CLIFF, FOREST,
@@ -16,6 +16,7 @@ enum PROFILE_TYPE {
 	FOREST_CLIFF, CLIFF_FOREST,
 	CLIFF_AIR, AIR_CLIFF,
 	WATER_GRASS, GRASS_WATER,
+	SURFACE,
 }
 
 # Mirror of each two-biome edge (swap the halves). EMPTY and the single-biome
@@ -34,6 +35,18 @@ const PROFILE_REVERSE := {
 # Returns the mirrored profile for reading a shared edge from the opposite side.
 func reverse(p : PROFILE_TYPE) -> PROFILE_TYPE:
 	return PROFILE_REVERSE.get(p, p)
+
+# Profiles that stand for a set of values instead of one biome.
+const WILDCARD_MEMBERS := {
+	PROFILE_TYPE.SURFACE: [PROFILE_TYPE.GRASS, PROFILE_TYPE.WATER],
+}
+
+# True if either side is a wildcard whose member set contains the other side.
+# Symmetric: the caller has already mirrored one side via reverse().
+func matches_wildcard(a : PROFILE_TYPE, b : PROFILE_TYPE) -> bool:
+	if WILDCARD_MEMBERS.has(a) and WILDCARD_MEMBERS[a].has(b):
+		return true
+	return WILDCARD_MEMBERS.has(b) and WILDCARD_MEMBERS[b].has(a)
 
 var CELL_SIZE   : float = 1 / sqrt(3) # length of a side of a hexagon
 var CELL_HEIGHT : float = 0.5 # vertical spacing between stacked layers

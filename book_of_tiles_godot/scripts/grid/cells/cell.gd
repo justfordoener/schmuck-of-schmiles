@@ -15,6 +15,5 @@ var possibilities : Array[Possibility]
 var initial_possibilities : Array[Possibility]
 var module_reference: Module
 var instanced_module : Node3D = null
-var is_player_placed : bool = false
 func _init(axial : Vector3) -> void:
 	axial_position = axial
