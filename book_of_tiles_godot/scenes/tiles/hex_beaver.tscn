@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dhrg2bn3rjrib"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_xkilu"]
-[ext_resource type="PackedScene" path="res://scenes/modules/blockout/hex_21.tscn" id="2_hdvrb"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_water_water_water_water_water_water.tscn" id="2_hdvrb"]
 [ext_resource type="PackedScene" uid="uid://dm8bkk85lrh1b" path="res://scenes/tiles/parts/beaver_house.tscn" id="3_hdvrb"]
 
 [node name="Beaver" type="Node3D"]

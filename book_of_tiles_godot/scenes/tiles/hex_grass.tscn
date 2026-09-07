@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cydn1vxxn3vb6"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_71ttm"]
-[ext_resource type="PackedScene" path="res://scenes/modules/blockout/hex_20.tscn" id="2_71ttm"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_grass_grass_grass_grass_grass_grass.tscn" id="2_71ttm"]
 
 [node name="Grass" type="Node3D"]
 script = ExtResource("1_71ttm")

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfddscjj21uaj"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://d11veg4f73em4" path="res://assets/3D/models/blockouts/blockout/face_cliff-air_forest-cliff_air-forest.glb" id="2_87wik"]
+
+[node name="face_cliff-air_forest-cliff_air-forest" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 2
+module_id = 25
+profiles = Dictionary[int, int]({
+90: 10,
+210: 8,
+330: 7
+})
+
+[node name="face_cliff-air_forest-cliff_air-forest" parent="." instance=ExtResource("2_87wik")]

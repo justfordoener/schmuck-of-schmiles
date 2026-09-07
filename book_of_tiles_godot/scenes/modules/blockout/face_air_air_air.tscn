@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+
+[node name="face_air_air_air" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 2
+module_id = 22
+profiles = Dictionary[int, int]({
+90: 1,
+210: 1,
+330: 1
+})

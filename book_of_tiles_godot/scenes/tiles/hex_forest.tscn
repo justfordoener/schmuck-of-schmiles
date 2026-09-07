@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dra3cqauyiwve"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_jneox"]
-[ext_resource type="PackedScene" path="res://scenes/modules/blockout/hex_19.tscn" id="2_jneox"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_forest_forest_forest_forest_forest_forest.tscn" id="2_jneox"]
 
 [node name="Forest" type="Node3D"]
 script = ExtResource("1_jneox")

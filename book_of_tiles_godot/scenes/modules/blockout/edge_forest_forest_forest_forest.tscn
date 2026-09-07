@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/3D/models/blockouts/blockout/edge_forest_forest_forest_forest.glb" id="2_glb"]
+
+[node name="edge_forest_forest_forest_forest" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 1
+module_id = 13
+profiles = Dictionary[int, int]({
+0: 5,
+90: 5,
+180: 5,
+270: 5
+})
+
+[node name="edge_forest_forest_forest_forest" parent="." instance=ExtResource("2_glb")]

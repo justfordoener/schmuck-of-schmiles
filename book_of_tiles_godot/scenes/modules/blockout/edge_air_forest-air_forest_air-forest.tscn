@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://r1mvnii4jxfg"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://l7ufye88jn3f" path="res://assets/3D/models/blockouts/blockout/edge_air_forest-air_forest_air-forest.glb" id="2_glb"]
+
+[node name="edge_air_forest-air_forest_air-forest" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 1
+module_id = 16
+profiles = Dictionary[int, int]({
+0: 1,
+90: 6,
+180: 5,
+270: 7
+})
+
+[node name="edge_air_forest-air_forest_air-forest" parent="." instance=ExtResource("2_glb")]

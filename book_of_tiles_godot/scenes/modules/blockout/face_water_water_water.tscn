@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqd1mer76ei8f"]
+
+[ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://wa60vglpcen8" path="res://assets/3D/models/blockouts/blockout/face_water_water_water.glb" id="2_glb"]
+
+[node name="face_water_water_water" type="Node3D"]
+script = ExtResource("1_script")
+module_type = 2
+module_id = 1
+profiles = Dictionary[int, int]({
+90: 2,
+210: 2,
+330: 2
+})
+
+[node name="face_water_water_water" parent="." instance=ExtResource("2_glb")]

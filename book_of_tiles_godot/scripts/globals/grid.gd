@@ -15,9 +15,9 @@ var link_counter : int = 0
 
 # Uniform-grassland module used to seed the base layer, keyed by cell type.
 const GRASS_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
-	Layout.CELL_TYPE.CORNER: 20, # hex_20
-	Layout.CELL_TYPE.EDGE: 12,   # quad_12
-	Layout.CELL_TYPE.FACE: 3,    # tri_3
+	Layout.CELL_TYPE.CORNER: 20, # corner_grass_grass_grass_grass_grass_grass
+	Layout.CELL_TYPE.EDGE: 12,   # edge_grass_grass_grass_grass
+	Layout.CELL_TYPE.FACE: 3,    # face_grass_grass_grass
 }
 
 # No-geometry, all-AIR-profile module used to seed the two layers above ground, keyed by
@@ -25,9 +25,9 @@ const GRASS_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
 # wildcard, letting composite edges like FOREST_AIR/CLIFF_AIR match correctly against
 # unbuilt space. See _cell_occupies_surface(): these placeholders never block stacking.
 const AIR_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
-	Layout.CELL_TYPE.CORNER: 24, # hex_24
-	Layout.CELL_TYPE.EDGE: 23,   # quad_23
-	Layout.CELL_TYPE.FACE: 22,   # tri_22
+	Layout.CELL_TYPE.CORNER: 24, # corner_air_air_air_air_air_air
+	Layout.CELL_TYPE.EDGE: 23,   # edge_air_air_air_air
+	Layout.CELL_TYPE.FACE: 22,   # face_air_air_air
 }
 
 func _ready() -> void:
@@ -190,7 +190,7 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 			cell.possibilities.append(possible_module)
 		cell.initial_possibilities = cell.possibilities.duplicate()
 
-# Seeds every ground-layer cell (axial y == 0) with its uniform-grassland module (see
+# Seeds every ground-layer cell (axial y == 0) with its uniform-grass module (see
 # GRASS_MODULE_ID), using the already-rotated possibilities computed in
 # _init_cell_possibilities so each module seats with the correct mesh orientation for its
 # cell. Layers above the ground are seeded separately by initialize_air_layers().

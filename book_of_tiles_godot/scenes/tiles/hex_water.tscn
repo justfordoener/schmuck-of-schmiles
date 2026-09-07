@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://w1jsgiirome3"]
 
 [ext_resource type="Script" uid="uid://djvrmd1qwi5v5" path="res://scripts/grid/tile.gd" id="1_31j6x"]
-[ext_resource type="PackedScene" path="res://scenes/modules/blockout/hex_21.tscn" id="2_31j6x"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_water_water_water_water_water_water.tscn" id="2_31j6x"]
 
 [node name="Water" type="Node3D"]
 script = ExtResource("1_31j6x")
