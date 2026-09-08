@@ -12,6 +12,9 @@ var previous_position : Vector3 = Vector3.ZERO
 var saved_rotation : float
 var mouse_press_time : float
 var mouse_max_action_time : float # time how long you need to hold the left button down without placing the tile
+# True once a left-press has been seen over the grid while this preview was already up.
+# Only such a press may be completed into a placement - see _process().
+var press_started_on_grid : bool = false
 
 func undo_last_placement() -> void:
 	var tile : Node3D = tiles_placed_today.pop_back()
@@ -20,6 +23,7 @@ func undo_last_placement() -> void:
 
 func place_tile(tile : PackedScene) -> void:
 	ControllerSupport.placing_mode = true
+	press_started_on_grid = false
 	_create_preview_instance(tile)
 
 func _ready() -> void:
@@ -82,13 +86,22 @@ func _process(_delta):
 			if Input.is_action_just_pressed("mouse_wheel_up"):
 				preview_instance.rotate_y(deg_to_rad(-base_rotation))
 				saved_rotation = deg_to_rad(-base_rotation)
-		if Input.is_action_just_pressed("mouse_left"):
+		# A click places a tile only if BOTH halves of it landed on the grid with this
+		# preview already up. The tile card is a TextureButton, which emits `pressed` on
+		# mouse *release*, so the release that selects a card arrives in the same frame the
+		# preview is created - and its press happened before there was anything to place.
+		# Requiring a matching press is what rejects it: the duration test alone couldn't,
+		# because mouse_press_time was still holding the press from the previous placement,
+		# which reads as a short click whenever the player picks their next card quickly.
+		if Input.is_action_just_pressed("mouse_left") and not _is_mouse_over_ui_rect(mouse_pos):
 			mouse_press_time = Time.get_ticks_msec() / 1000.0
-			
+			press_started_on_grid = true
+
 		if Input.is_action_just_released("mouse_left"):
 			var hold_duration = Time.get_ticks_msec() / 1000.0 - mouse_press_time
-			if hold_duration < mouse_max_action_time:
+			if press_started_on_grid and hold_duration < mouse_max_action_time:
 				_spawn_instance(preview_instance.global_position, preview_instance.rotation.y)
+			press_started_on_grid = false
 
 func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> void:
 	var instance = current_tile.instantiate()
