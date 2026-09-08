@@ -38,7 +38,7 @@ func reverse(p : PROFILE_TYPE) -> PROFILE_TYPE:
 
 # Profiles that stand for a set of values instead of one biome.
 const WILDCARD_MEMBERS := {
-	PROFILE_TYPE.SURFACE: [PROFILE_TYPE.GRASS, PROFILE_TYPE.WATER],
+	PROFILE_TYPE.SURFACE: [PROFILE_TYPE.GRASS, PROFILE_TYPE.WATER, PROFILE_TYPE.GRASS_WATER, PROFILE_TYPE.WATER_GRASS],
 }
 
 # True if either side is a wildcard whose member set contains the other side.

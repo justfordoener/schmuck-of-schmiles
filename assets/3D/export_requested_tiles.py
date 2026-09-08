@@ -111,17 +111,18 @@ VALID_TOKENS = {
 # what the border *means*: the rim is a solid stone (or forest) slab whose top face says
 # nothing about the air on one side and the tile surface on the other. Two consequences
 # the derivation gets wrong, both authored in the .tscn and reproduced here:
-#   - the inward border of a rim is the surface of the tile it wraps (grass / SURFACE),
+#   - the inward border of a rim is the surface of the tile it wraps (the SURFACE
+#     wildcard, since one rim serves grass and water alike),
 #     not the stone the mesh is made of;
 #   - the outward border of a rim faces empty space (air), not stone.
 # Without these, edge_forest_forest_forest_forest and the forest rim derive to the *same*
 # name -- the number used to be the only thing separating them.
 AUTHORED_PROFILES = {
-    "Quad.012": ["grass", "forest-cliff", "forest", "cliff-forest"],   # forest/cliff rim
+    "Quad.012": ["surface", "forest-cliff", "forest", "cliff-forest"], # forest/cliff rim
     "Quad.014": ["air", "forest-air", "forest", "air-forest"],         # forest/air rim
     "Quad.018": ["surface", "air-cliff", "air", "cliff-air"],          # shared cliff rim
-    "Tri.003":  ["grass", "forest-cliff", "cliff-forest"],             # forest/cliff rim
-    "Tri.021":  ["grass", "air-cliff", "cliff-air"],                   # shared cliff rim
+    "Tri.003":  ["surface", "forest-cliff", "cliff-forest"],           # forest/cliff rim
+    "Tri.021":  ["surface", "air-cliff", "cliff-air"],                 # shared cliff rim
 }
 
 

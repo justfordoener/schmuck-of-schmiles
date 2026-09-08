@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bq7mvv3ntulpp"
-path="res://.godot/imported/face_grass_air-cliff_cliff-air.glb-c2a354cf81da1a2b223ff11d40195beb.scn"
+path="res://.godot/imported/face_surface_air-cliff_cliff-air.glb-0367abf252347dccb183ecde79a0d202.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/blockouts/blockout/face_grass_air-cliff_cliff-air.glb"
-dest_files=["res://.godot/imported/face_grass_air-cliff_cliff-air.glb-c2a354cf81da1a2b223ff11d40195beb.scn"]
+source_file="res://assets/3D/models/blockouts/blockout/face_surface_air-cliff_cliff-air.glb"
+dest_files=["res://.godot/imported/face_surface_air-cliff_cliff-air.glb-0367abf252347dccb183ecde79a0d202.scn"]
 
 [params]
 

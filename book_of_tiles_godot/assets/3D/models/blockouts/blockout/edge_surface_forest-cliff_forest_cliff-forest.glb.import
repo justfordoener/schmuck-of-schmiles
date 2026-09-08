@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dr3tcdhucruvv"
-path="res://.godot/imported/face_grass_forest-cliff_cliff-forest.glb-a406f74926e16ab45285a0ea28528bb2.scn"
+uid="uid://chc6fseikwbu4"
+path="res://.godot/imported/edge_surface_forest-cliff_forest_cliff-forest.glb-8c896e9b1753b64b45173d1f62e4564a.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/blockouts/blockout/face_grass_forest-cliff_cliff-forest.glb"
-dest_files=["res://.godot/imported/face_grass_forest-cliff_cliff-forest.glb-a406f74926e16ab45285a0ea28528bb2.scn"]
+source_file="res://assets/3D/models/blockouts/blockout/edge_surface_forest-cliff_forest_cliff-forest.glb"
+dest_files=["res://.godot/imported/edge_surface_forest-cliff_forest_cliff-forest.glb-8c896e9b1753b64b45173d1f62e4564a.scn"]
 
 [params]
 

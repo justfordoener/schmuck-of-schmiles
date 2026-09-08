@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://c2wtbjudm81fq"]
+[gd_scene load_steps=3 format=3 uid="uid://bqqbwhenyskwm"]
 
 [ext_resource type="Script" uid="uid://iky32skxk7r8" path="res://scripts/grid/modules/module.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://rus3rba2iui7" path="res://assets/3D/models/blockouts/blockout/edge_surface_air-cliff_air_cliff-air.glb" id="2_glb"]
