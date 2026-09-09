@@ -28,6 +28,7 @@ Signals="*res://scripts/globals/signals.gd"
 FileManager="*res://scripts/globals/FileManager.gd"
 ControllerSupport="*res://scripts/player_controller/controller_support.gd"
 GameState="*res://scripts/globals/gameState.gd"
+Recipes="*res://scripts/globals/recipes.gd"
 
 [display]
 

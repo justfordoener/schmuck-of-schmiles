@@ -1,0 +1,60 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/landmarks/landmark.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/grid/landmarks/landmark_slot.gd" id="2_slot"]
+
+[sub_resource type="Resource" id="Slot_center"]
+script = ExtResource("2_slot")
+offset = Vector3i(0, 0, 0)
+tile_kind = 1
+
+[sub_resource type="Resource" id="Slot_0"]
+script = ExtResource("2_slot")
+offset = Vector3i(1, 0, 0)
+tile_kind = 2
+
+[sub_resource type="Resource" id="Slot_1"]
+script = ExtResource("2_slot")
+offset = Vector3i(0, 0, 1)
+tile_kind = 2
+
+[sub_resource type="Resource" id="Slot_2"]
+script = ExtResource("2_slot")
+offset = Vector3i(-1, 0, 1)
+tile_kind = 2
+
+[sub_resource type="Resource" id="Slot_3"]
+script = ExtResource("2_slot")
+offset = Vector3i(-1, 0, 0)
+tile_kind = 2
+
+[sub_resource type="Resource" id="Slot_4"]
+script = ExtResource("2_slot")
+offset = Vector3i(0, 0, -1)
+tile_kind = 2
+
+[sub_resource type="Resource" id="Slot_5"]
+script = ExtResource("2_slot")
+offset = Vector3i(1, 0, -1)
+tile_kind = 2
+
+[sub_resource type="StandardMaterial3D" id="Mat_placeholder"]
+albedo_color = Color(0.34, 0.72, 0.28, 1)
+
+[sub_resource type="CylinderMesh" id="Mesh_placeholder"]
+material = SubResource("Mat_placeholder")
+top_radius = 2.6
+bottom_radius = 2.6
+height = 0.5
+radial_segments = 6
+rings = 1
+
+[node name="great_clearing" type="Node3D"]
+script = ExtResource("1_script")
+landmark_id = &"great_clearing"
+slots = Array[ExtResource("2_slot")]([SubResource("Slot_center"), SubResource("Slot_0"), SubResource("Slot_1"), SubResource("Slot_2"), SubResource("Slot_3"), SubResource("Slot_4"), SubResource("Slot_5")])
+allow_rotation = true
+
+[node name="PlaceholderMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("Mesh_placeholder")

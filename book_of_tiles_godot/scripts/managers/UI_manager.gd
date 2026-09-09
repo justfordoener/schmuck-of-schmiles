@@ -20,6 +20,9 @@ var active_pack : int = TileCard.packs.animal
 var active_theme : int = TileCard.themes.forest
 
 func _ready():
+	# Placing a tile can form a landmark, which locks undo (see _check_visibility), so the
+	# button has to be re-evaluated after every placement and not just on hand changes.
+	Signals.on_instance_spawned.connect(_check_visibility)
 	_load_tile_cards()
 	start_new_day()
 	_check_visibility()
@@ -99,7 +102,9 @@ func _check_visibility():
 		turn_over.show()
 	else:
 		turn_over.hide()
-	if hand.size() == 5:
+	# Merging tiles into a landmark is a hard commit - the tiles it consumed are gone and
+	# there is no rollback path - so undo stays off for the rest of the day.
+	if hand.size() == 5 or Grid.landmark_formed_today:
 		undo.hide()
 	else:
 		undo.show()
@@ -146,6 +151,7 @@ func _pick_weighted(available : Array[PackedScene]) -> PackedScene:
 
 func start_new_day() -> void:
 	GameState.change_state(GameState.State.TILE_PACK_CHOOSING)
+	Grid.landmark_formed_today = false
 	var offered_packs := _get_available_packs()
 	
 	if _day_started:

@@ -12,6 +12,12 @@ var edge_mesh : ArrayMesh
 var modules : Array[PackedScene]
 var module_directory : String = "res://scenes/modules/blockout/"
 var link_counter : int = 0
+# Landmarks currently standing on the board (see merge_landmark). Held so one owner frees
+# them; the cells they cover point back at them through Cell.landmark.
+var landmarks : Array[Landmark] = []
+# True once any landmark has formed. Merging is a hard commit - there is no rollback path
+# for the tiles it consumed - so UI_manager hides undo until the next day.
+var landmark_formed_today : bool = false
 
 # Uniform-grassland module used to seed the base layer, keyed by cell type.
 const GRASS_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
@@ -199,7 +205,7 @@ func initialize_grass_layer() -> void:
 		var cell : Cell = grid[cell_index]
 		if cell.axial_position.y != 0:
 			continue
-		_seed_filler_module(cell_index, GRASS_MODULE_ID[cell.type], "initialize_grass_layer")
+		_seed_filler_module(cell_index, GRASS_MODULE_ID[cell.type], Layout.TILE_KIND.GRASS, "initialize_grass_layer")
 
 # Seeds every cell on the layers above ground (axial y > 0) with its no-geometry, all-AIR
 # module (see AIR_MODULE_ID), so unbuilt upper-layer cells carry a real AIR profile instead
@@ -211,9 +217,12 @@ func initialize_air_layers() -> void:
 		var cell : Cell = grid[cell_index]
 		if cell.axial_position.y == 0:
 			continue
-		_seed_filler_module(cell_index, AIR_MODULE_ID[cell.type], "initialize_air_layers")
+		_seed_filler_module(cell_index, AIR_MODULE_ID[cell.type], Layout.TILE_KIND.NONE, "initialize_air_layers")
 
-func _seed_filler_module(cell_index : Vector3i, module_id : int, caller_name : String) -> void:
+# tile_kind is what recipes match against (see Recipes.find_match): seeded ground reads as
+# real grass, the empty layers above read NONE. That's why matching never needs a separate
+# "was this placed by a player?" flag - every corner always carries a meaningful kind.
+func _seed_filler_module(cell_index : Vector3i, module_id : int, tile_kind : Layout.TILE_KIND, caller_name : String) -> void:
 	var cell : Cell = grid[cell_index]
 	var possibility : Possibility = null
 	for poss : Possibility in cell.possibilities:
@@ -224,6 +233,7 @@ func _seed_filler_module(cell_index : Vector3i, module_id : int, caller_name : S
 		printerr(caller_name, ": no module (id ", module_id, ") found for cell ", cell_index, " of type ", cell.type)
 		return
 	cell.profiles = possibility.profiles.duplicate()
+	cell.tile_kind = tile_kind
 	spawn_module(possibility, cell_index)
 
 func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> void:
@@ -273,17 +283,50 @@ func batch_place_modules(placements: Array) -> Array[Node3D]:
 			# same path that frees a solver-spawned filler, instead of leaving the old
 			# geometry sitting inside the new module.
 			cell.instanced_module = p["instance"]
+			cell.tile_kind = p["instance"].tile_kind
 			placed_indices.append(cell_index)
 
-	# Update the two rings around this batch's placements: the cells directly touching a
-	# hard cell (e.g. the 6 edges around a placed corner), then the cells touching those
-	# (e.g. the 6 faces beyond them). Ring 2 only starts once ring 1 has fully settled, so a
-	# face touched by two ring-1 edges always sees both of their constraints before it picks
-	# anything - no dependency on which edge happened to resolve first.
-	var ring1 := _soft_populate_ring(placed_indices)
-	_soft_populate_ring(ring1)
+	# Recipe detection sits between the placement and the propagation wave on purpose: a merge
+	# consumes tiles and wipes every cell inside its footprint, so solving the edges and faces
+	# around those tiles first would only be work to throw away. Anchored on the corner just
+	# placed, since a pattern that didn't match before must contain it.
+	var recipe_match : Dictionary = {}
+	for cell_index in placed_indices:
+		if grid[cell_index].type != Layout.CELL_TYPE.CORNER:
+			continue
+		recipe_match = Recipes.find_match(cell_index)
+		if not recipe_match.is_empty():
+			break
+
+	if recipe_match.is_empty():
+		_propagate_around(placed_indices, {})
+	else:
+		var footprint := derive_landmark_footprint(recipe_match["corners"])
+		var footprint_set : Dictionary = {}
+		for cell_index in footprint:
+			footprint_set[cell_index] = true
+		displaced.append_array(merge_landmark(recipe_match, footprint))
+		# Re-solve outward from the landmark's rim instead of from the placed tile: the
+		# footprint's own cells are hard now and must be left alone (hence the exclusion set),
+		# but everything just outside it has to re-fit against the boundary it now presents.
+		_propagate_around(footprint, footprint_set)
 
 	return displaced
+
+# Updates the two rings around a set of hard cells: the edges directly touching one, then the
+# faces touching those. Ring 2 only starts once ring 1 has fully settled, so a face touched by
+# two ring-1 edges always sees both of their constraints before it picks anything - no
+# dependency on which edge happened to resolve first.
+#
+# The type filters matter once hard_indices contains more than corners: a landmark footprint
+# includes edges, whose neighbours are faces, so without them a face could land in ring 1 and
+# pick before the edges beside it settle. For a plain placement they change nothing - the
+# neighbours of a corner are all edges already.
+func _propagate_around(hard_indices : Array[Vector3i], exclude : Dictionary) -> void:
+	var ring1 := _soft_populate_ring(hard_indices, exclude, Layout.CELL_TYPE.EDGE)
+	var ring2_triggers : Array[Vector3i] = hard_indices.duplicate()
+	ring2_triggers.append_array(ring1)
+	_soft_populate_ring(ring2_triggers, exclude, Layout.CELL_TYPE.FACE)
 
 # For every soft (non-CORNER) neighbor of trigger_indices: rebuilds its whole profile dict
 # from scratch via get_settled_profiles_for_cell() (so e.g. an edge between two placed
@@ -293,15 +336,26 @@ func batch_place_modules(placements: Array) -> Array[Node3D]:
 # possibility still remains, arbitrarily settles on one of the valid ones so the cell always
 # ends up with a concrete, on-screen module. Returns the touched indices, to feed the next
 # ring (its neighbors will then see this ring's just-committed profiles).
-func _soft_populate_ring(trigger_indices: Array[Vector3i]) -> Array[Vector3i]:
+# `exclude` holds cell indices that must never be refilled however they are reached - a
+# landmark's own footprint. `type_filter` restricts the ring to one cell type; -1 (the
+# default) takes every soft cell, which is what a plain placement wants.
+func _soft_populate_ring(trigger_indices: Array[Vector3i], exclude : Dictionary = {}, type_filter : int = -1) -> Array[Vector3i]:
 	var cells_to_fill := {}
 	for index in trigger_indices:
 		for neighbor_key in grid[index].neighbors.keys():
 			var n_index = get_axial_index(grid[index].neighbors[neighbor_key].axial_position)
+			var n_cell : Cell = grid[n_index]
 			# Corners are hard (only ever written by an explicit player placement) - never
-			# auto-narrowed here, even when reached through an edge's neighbor list.
-			if grid[n_index].type != Layout.CELL_TYPE.CORNER:
-				cells_to_fill[n_index] = true
+			# auto-narrowed here, even when reached through an edge's neighbor list. Landmark
+			# cells are hard for the same reason: they show a merged object, not a module the
+			# solver owns.
+			if n_cell.type == Layout.CELL_TYPE.CORNER or n_cell.landmark != null:
+				continue
+			if exclude.has(n_index):
+				continue
+			if type_filter != -1 and n_cell.type != type_filter:
+				continue
+			cells_to_fill[n_index] = true
 
 	var touched : Array[Vector3i] = []
 	for n_index : Vector3i in cells_to_fill.keys():
@@ -338,6 +392,11 @@ func collapse(cell_index : Vector3i) -> bool:
 	if cell.type == Layout.CELL_TYPE.CORNER:
 		return false
 
+	# So is a cell that has been merged into a landmark - it shows one big object instead of a
+	# module, and keeps the boundary profiles it inherited from the tiles that object replaced.
+	if cell.landmark != null:
+		return false
+
 	# Skip if this cell has already "died" (become an empty space / contradiction)
 	if cell.possibilities.size() == 0:
 		return false
@@ -363,6 +422,133 @@ func collapse(cell_index : Vector3i) -> bool:
 
 	return changed
 	
+# ------------------------------ landmarks -------------------------------
+
+# Every cell a landmark swallows, worked out from the corners the recipe matched rather than
+# authored per recipe:
+#   - an EDGE belongs to it when both corners it sits between were matched
+#   - a FACE belongs to it when all three edges around it belong to it
+# For The Great Clearing that is 7 corners + 12 edges + 6 faces. Cells on the rim are left
+# out by the neighbour counts: an edge with a corner outside the pattern (or off the map)
+# fails the first test, and the faces beyond it fail the second.
+func derive_landmark_footprint(corners : Array[Vector3i]) -> Array[Vector3i]:
+	var corner_set : Dictionary = {}
+	for corner_index in corners:
+		corner_set[corner_index] = true
+
+	var edge_set : Dictionary = {}
+	for corner_index in corners:
+		for neighbor : Cell in grid[corner_index].neighbors.values():
+			if neighbor.type != Layout.CELL_TYPE.EDGE:
+				continue
+			var edge_index := get_axial_index(neighbor.axial_position)
+			if not edge_set.has(edge_index) and _neighbors_all_within(neighbor, Layout.CELL_TYPE.CORNER, corner_set, 2):
+				edge_set[edge_index] = true
+
+	var face_set : Dictionary = {}
+	for edge_index : Vector3i in edge_set.keys():
+		for neighbor : Cell in grid[edge_index].neighbors.values():
+			if neighbor.type != Layout.CELL_TYPE.FACE:
+				continue
+			var face_index := get_axial_index(neighbor.axial_position)
+			if not face_set.has(face_index) and _neighbors_all_within(neighbor, Layout.CELL_TYPE.EDGE, edge_set, 3):
+				face_set[face_index] = true
+
+	var footprint : Array[Vector3i] = corners.duplicate()
+	for edge_index : Vector3i in edge_set.keys():
+		footprint.append(edge_index)
+	for face_index : Vector3i in face_set.keys():
+		footprint.append(face_index)
+	return footprint
+
+# True if every neighbor of `cell` of the given type is in `allowed`, and there are exactly
+# `expected_count` of them. The count is what rejects cells on the map border, where a
+# missing neighbor would otherwise let a one-sided cell pass as fully enclosed.
+func _neighbors_all_within(cell : Cell, neighbor_type : Layout.CELL_TYPE, allowed : Dictionary, expected_count : int) -> bool:
+	var count : int = 0
+	for neighbor : Cell in cell.neighbors.values():
+		if neighbor.type != neighbor_type:
+			continue
+		if not allowed.has(get_axial_index(neighbor.axial_position)):
+			return false
+		count += 1
+	return count == expected_count
+
+# Replaces everything inside `footprint` with the single landmark object the recipe produces.
+# Returns the visuals it displaced, already queue_free()d, for the same reason
+# batch_place_modules() does: the caller drops the consumed tiles from its undo history and
+# can't detect them itself, because queue_free() only takes effect at end of frame.
+#
+# The landmark's rim is inherited rather than authored: every footprint cell keeps the
+# `profiles` it holds on each border pointing out of the footprint, which is what the tiles it
+# replaced declared there - forest all the way around a Great Clearing. A landmark that wants
+# a different rim (a river running out of it) will need an override table here; nothing does
+# yet.
+#
+# Two of the three cell types are already correct to inherit from. Corners are hard, written
+# by placements. Faces contribute nothing: a face only joins the footprint when all three of
+# its edges did, so it has no outward border at all. Edges are the exception - see the
+# re-settle pass below.
+func merge_landmark(recipe_match : Dictionary, footprint : Array[Vector3i]) -> Array[Node3D]:
+	var displaced : Array[Node3D] = []
+	var landmark : Landmark = recipe_match["scene"].instantiate()
+	add_child(landmark)
+
+	# Centred on the matched corners, so the object covers them symmetrically however the
+	# pattern was rotated into place.
+	var centroid : Vector3 = Vector3.ZERO
+	for corner_index : Vector3i in recipe_match["corners"]:
+		centroid += grid[corner_index].axial_position
+	centroid /= recipe_match["corners"].size()
+	landmark.global_position = axial_to_cartesian(centroid)
+	# Negated to match spawn_module(): pattern rotation is clockwise in grid space.
+	landmark.rotation_degrees.y = -recipe_match["rotation"]
+
+	# The footprint's own edges are stale by construction. Each last settled against a
+	# configuration that did not include the tile which just completed the recipe, because
+	# detection deliberately runs before the propagation wave - so an edge between two of the
+	# recipe's corners can still be declaring a rim against open air where there is now a
+	# neighbouring tile. Those outward borders become the landmark's rim, so settle them
+	# against the finished corner set before freezing, or the landmark presents a boundary
+	# describing tiles that are no longer there and the faces just outside it contradict.
+	for cell_index : Vector3i in footprint:
+		if grid[cell_index].type == Layout.CELL_TYPE.EDGE:
+			grid[cell_index].profiles = _resolved_profiles_for(cell_index)
+
+	for cell_index : Vector3i in footprint:
+		var cell : Cell = grid[cell_index]
+		if cell.instanced_module != null:
+			displaced.append(cell.instanced_module)
+			cell.instanced_module.queue_free()
+			cell.instanced_module = null
+		cell.module_reference = null
+		cell.tile_kind = Layout.TILE_KIND.NONE
+		cell.possibilities.clear()
+		cell.landmark = landmark
+
+	landmarks.append(landmark)
+	landmark_formed_today = true
+	print("merged landmark: ", landmark.landmark_id, " over ", footprint.size(), " cells")
+	return displaced
+
+# The profiles a cell would commit to if it were collapsed now, without spawning anything -
+# used by merge_landmark(), where the module would only be created to be freed a moment later.
+# Mirrors the narrowing half of collapse(), including its arbitrary pick when several
+# possibilities survive.
+func _resolved_profiles_for(cell_index : Vector3i) -> Dictionary[String, Layout.PROFILE_TYPE]:
+	var cell : Cell = grid[cell_index]
+	var target := get_settled_profiles_for_cell(cell_index)
+	for poss : Possibility in cell.initial_possibilities:
+		if do_profiles_match(poss.profiles, target):
+			return poss.profiles.duplicate()
+	# Nothing fits - keep whatever is there rather than inventing a border, same as the
+	# contradiction path in collapse() leaves the existing module alone.
+	printerr("merge_landmark: no module fits footprint edge ", cell_index,
+		" against ", target, "; keeping its current profiles")
+	return cell.profiles
+
+# ------------------------------------------------------------------------
+
 func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	var cell = grid[cell_index]
 	
@@ -401,7 +587,13 @@ func does_module_fit(cell_index : Vector3i, module : Module, rotation : int) -> 
 # an existing tile.
 func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : int) -> Possibility:
 	var cell : Cell = grid[cell_index]
-	
+
+	# A cell swallowed by a landmark is spent: nothing can be seated in it any more, so a
+	# placement aimed at it fails does_module_fit() and the column stacks above it instead
+	# (see _cell_occupies_surface).
+	if cell.landmark != null:
+		return null
+
 	for possibility : Possibility in cell.initial_possibilities:
 		if possibility.module_reference.module_id == module.module_id and possibility.module_rotation == posmod(rotation, 360):
 			return possibility
@@ -445,6 +637,7 @@ func get_settled_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, L
 		var neighbor = cell.neighbors.get(border_key)
 		var neighbor_committed = neighbor != null and neighbor.type != Layout.CELL_TYPE.FACE and (
 			neighbor.type == Layout.CELL_TYPE.CORNER
+			or neighbor.landmark != null
 			or neighbor.possibilities.size() == 1
 			or neighbor.instanced_module != null
 		)
@@ -559,6 +752,9 @@ func _nearest_ground_cell(point : Vector3, cell_type : Layout.CELL_TYPE) -> Cell
 # (open space - see initialize_air_layers()), which is why instanced_module != null is not
 # an occupancy signal but "the module isn't AIR" is.
 func _cell_occupies_surface(cell : Cell) -> bool:
+	# A merged landmark is solid ground: stack on top of it, never into it.
+	if cell.landmark != null:
+		return true
 	if cell.module_reference == null:
 		return false
 	return cell.module_reference.module_id != AIR_MODULE_ID[cell.type]

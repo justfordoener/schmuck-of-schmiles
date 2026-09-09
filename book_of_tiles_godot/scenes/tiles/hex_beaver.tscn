@@ -7,6 +7,7 @@
 [node name="Beaver" type="Node3D"]
 script = ExtResource("1_xkilu")
 is_water = true
+tile_kind = 4
 
 [node name="Hex21" parent="." instance=ExtResource("2_hdvrb")]
 

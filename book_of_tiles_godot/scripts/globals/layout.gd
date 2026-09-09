@@ -2,6 +2,20 @@
 extends Node
 
 enum CELL_TYPE {CORNER, EDGE, FACE}
+
+# What kind of tile occupies a CORNER cell - the vocabulary recipes are written in
+# (see Recipes.find_match). Every corner always carries one: cells seeded by
+# Grid.initialize_grass_layer() read GRASS, the empty layers above read NONE, and a
+# placement copies the value off the tile scene (see tile.gd).
+#
+# Needed because module_id can't tell these apart: hex_water and hex_beaver both instance
+# corner_water_..._water (id 21), and only the beaver-house child node distinguishes them.
+#
+# APPEND-ONLY, same as PROFILE_TYPE below: tile .tscn files store these as raw ints.
+enum TILE_KIND {
+	NONE,
+	GRASS, FOREST, WATER, BEAVER,
+}
 # This enum is APPEND-ONLY: module .tscn
 # files store these as raw ints, so inserting a value renumbers every module.
 # SURFACE (14) is not a biome - it's a wildcard, see WILDCARD_MEMBERS below.
