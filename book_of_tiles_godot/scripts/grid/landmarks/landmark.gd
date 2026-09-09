@@ -18,3 +18,13 @@ class_name Landmark extends Node3D
 # Whether the pattern may match rotated by any multiple of 60 degrees. Turn off only for a
 # landmark that must appear in one fixed orientation.
 @export var allow_rotation : bool = true
+
+# Whether the pattern may also match mirrored. Needed by any recipe that is chiral - one whose
+# mirror image is not one of its own rotations - because a player can build it either way
+# round. Beaver Downhill Village is the case in point: its river can sit on either side of the
+# two beaver houses, and no rotation carries one arrangement onto the other.
+#
+# A mirrored match spawns this scene with scale.x = -1, so the mesh has to survive being
+# flipped. If it must not be (lettering, a deliberately handed silhouette), leave this off and
+# author the second handedness as its own landmark scene.
+@export var allow_mirror : bool = false

@@ -424,20 +424,52 @@ func collapse(cell_index : Vector3i) -> bool:
 	
 # ------------------------------ landmarks -------------------------------
 
-# Every cell a landmark swallows, worked out from the corners the recipe matched rather than
-# authored per recipe:
-#   - an EDGE belongs to it when both corners it sits between were matched
-#   - a FACE belongs to it when all three edges around it belong to it
-# For The Great Clearing that is 7 corners + 12 edges + 6 faces. Cells on the rim are left
-# out by the neighbour counts: an edge with a corner outside the pattern (or off the map)
-# fails the first test, and the faces beyond it fail the second.
+# Every cell a landmark swallows - a volume, not a slice. The matched corners give a set of
+# columns and a range of layers, and the landmark takes everything in between:
+#
+#   - project the matched corners onto columns, and note the layers they span
+#   - on each layer of that span, take those columns' corner cells, then the edges enclosed by
+#     them, then the faces enclosed by those edges (see _footprint_slice)
+#
+# Splitting it that way is what makes it height-independent. The enclosure rules are purely
+# horizontal, and so is the grid: _find_edge_neighbors/_find_face_neighbors never link across
+# layers, so each slice is self-contained and the same rules hold at any height.
+#
+# The vertical span is what a recipe spanning two heights needs. The Great Clearing is a grass
+# corner on one layer ringed by forest on the next, so its span is two layers: the landmark
+# takes the ring's forest and the ground beneath it, and the hollow's grass and the air above
+# it - the whole bowl, so nothing can be built inside the volume it occupies. A flat recipe
+# spans a single layer, which reduces this to just the horizontal rules.
 func derive_landmark_footprint(corners : Array[Vector3i]) -> Array[Vector3i]:
+	var columns : Array[Vector3] = []
+	var min_layer : int = roundi(grid[corners[0]].axial_position.y)
+	var max_layer : int = min_layer
+	for corner_index : Vector3i in corners:
+		var axial : Vector3 = grid[corner_index].axial_position
+		columns.append(Vector3(axial.x, 0, axial.z))
+		min_layer = mini(min_layer, roundi(axial.y))
+		max_layer = maxi(max_layer, roundi(axial.y))
+
+	var footprint : Array[Vector3i] = []
+	for layer : int in range(min_layer, max_layer + 1):
+		for cell_index : Vector3i in _footprint_slice(columns, layer):
+			footprint.append(cell_index)
+	return footprint
+
+# The footprint's cells on one layer: the corner cells of `columns` that exist there, plus
+# every edge whose two corners are both among them, plus every face whose three edges are all
+# among those. Cells on the landmark's rim are left out by the neighbour counts - an edge with
+# a corner outside the pattern (or off the map) fails the first test, and the faces beyond it
+# fail the second.
+func _footprint_slice(columns : Array[Vector3], layer : int) -> Array[Vector3i]:
 	var corner_set : Dictionary = {}
-	for corner_index in corners:
-		corner_set[corner_index] = true
+	for column : Vector3 in columns:
+		var corner_index := get_axial_index(Vector3(column.x, layer, column.z))
+		if grid.has(corner_index):
+			corner_set[corner_index] = true
 
 	var edge_set : Dictionary = {}
-	for corner_index in corners:
+	for corner_index : Vector3i in corner_set.keys():
 		for neighbor : Cell in grid[corner_index].neighbors.values():
 			if neighbor.type != Layout.CELL_TYPE.EDGE:
 				continue
@@ -454,12 +486,14 @@ func derive_landmark_footprint(corners : Array[Vector3i]) -> Array[Vector3i]:
 			if not face_set.has(face_index) and _neighbors_all_within(neighbor, Layout.CELL_TYPE.EDGE, edge_set, 3):
 				face_set[face_index] = true
 
-	var footprint : Array[Vector3i] = corners.duplicate()
+	var slice : Array[Vector3i] = []
+	for corner_index : Vector3i in corner_set.keys():
+		slice.append(corner_index)
 	for edge_index : Vector3i in edge_set.keys():
-		footprint.append(edge_index)
+		slice.append(edge_index)
 	for face_index : Vector3i in face_set.keys():
-		footprint.append(face_index)
-	return footprint
+		slice.append(face_index)
+	return slice
 
 # True if every neighbor of `cell` of the given type is in `allowed`, and there are exactly
 # `expected_count` of them. The count is what rejects cells on the map border, where a
@@ -494,15 +528,25 @@ func merge_landmark(recipe_match : Dictionary, footprint : Array[Vector3i]) -> A
 	var landmark : Landmark = recipe_match["scene"].instantiate()
 	add_child(landmark)
 
-	# Centred on the matched corners, so the object covers them symmetrically however the
-	# pattern was rotated into place.
+	# Horizontally the centre of the matched corners, so the object covers them symmetrically
+	# however the pattern was rotated into place. Vertically the lowest layer they span, so a
+	# landmark mesh is authored upwards from its base the way a module's is. For a recipe that
+	# sits on one layer the two are the same thing.
 	var centroid : Vector3 = Vector3.ZERO
+	var base_layer : int = roundi(grid[recipe_match["corners"][0]].axial_position.y)
 	for corner_index : Vector3i in recipe_match["corners"]:
-		centroid += grid[corner_index].axial_position
+		var axial : Vector3 = grid[corner_index].axial_position
+		centroid += Vector3(axial.x, 0, axial.z)
+		base_layer = mini(base_layer, roundi(axial.y))
 	centroid /= recipe_match["corners"].size()
+	centroid.y = base_layer
 	landmark.global_position = axial_to_cartesian(centroid)
-	# Negated to match spawn_module(): pattern rotation is clockwise in grid space.
+	# Negated to match spawn_module(): pattern rotation is clockwise in grid space. A mirrored
+	# match becomes scale.x = -1, which is exactly the reflection Recipes._mirror_offset() uses;
+	# the resulting basis is rotation * mirror, the same order the match was resolved in.
 	landmark.rotation_degrees.y = -recipe_match["rotation"]
+	if recipe_match.get("mirrored", false):
+		landmark.scale.x = -1.0
 
 	# The footprint's own edges are stale by construction. Each last settled against a
 	# configuration that did not include the tile which just completed the recipe, because

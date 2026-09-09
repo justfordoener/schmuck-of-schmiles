@@ -28,7 +28,7 @@ func _exit_tree() -> void:
 # slots x 6 rotations per recipe, not a sweep of the grid.
 #
 # Returns {} when nothing matched, otherwise:
-#   {"scene": PackedScene, "corners": Array[Vector3i], "rotation": int (degrees)}
+#   {"scene": PackedScene, "corners": Array[Vector3i], "rotation": int (degrees), "mirrored": bool}
 # with "corners" in slot order, so corners[0] is whatever the recipe lists first.
 func find_match(anchor_index : Vector3i) -> Dictionary:
 	if not Grid.grid.has(anchor_index):
@@ -39,19 +39,24 @@ func find_match(anchor_index : Vector3i) -> Dictionary:
 	for recipe_index : int in range(recipes.size()):
 		var landmark : Landmark = recipes[recipe_index]
 		var rotation_steps : int = 6 if landmark.allow_rotation else 1
+		var mirror_options : Array = [false, true] if landmark.allow_mirror else [false]
 		var found := {}
 
 		for anchor_slot : int in range(landmark.slots.size()):
-			for step : int in range(rotation_steps):
-				var corners := _resolve_slots(landmark, anchor_slot, step, anchor_index)
-				if corners.is_empty():
-					continue
-				found = {
-					"scene": landmarks[recipe_index],
-					"corners": corners,
-					"rotation": step * 60,
-				}
-				break
+			for mirrored : bool in mirror_options:
+				for step : int in range(rotation_steps):
+					var corners := _resolve_slots(landmark, anchor_slot, step, mirrored, anchor_index)
+					if corners.is_empty():
+						continue
+					found = {
+						"scene": landmarks[recipe_index],
+						"corners": corners,
+						"rotation": step * 60,
+						"mirrored": mirrored,
+					}
+					break
+				if not found.is_empty():
+					break
 			if not found.is_empty():
 				break
 
@@ -60,17 +65,23 @@ func find_match(anchor_index : Vector3i) -> Dictionary:
 
 	return {}
 
-# Places every slot on the grid with `anchor_slot` sitting on `anchor_index`, rotated by
-# `step` * 60 degrees, and checks each one. Returns the resolved corner indices in slot
-# order, or [] if any slot doesn't fit.
-func _resolve_slots(landmark : Landmark, anchor_slot : int, step : int, anchor_index : Vector3i) -> Array[Vector3i]:
+# Places every slot on the grid with `anchor_slot` sitting on `anchor_index`, mirrored if asked
+# and then rotated by `step` * 60 degrees, and checks each one. Returns the resolved corner
+# indices in slot order, or [] if any slot doesn't fit.
+#
+# Mirror before rotate, so the world transform merge_landmark() builds is rotation * mirror -
+# which is what a Node3D basis already is when you set rotation and a negative scale.
+func _resolve_slots(landmark : Landmark, anchor_slot : int, step : int, mirrored : bool, anchor_index : Vector3i) -> Array[Vector3i]:
 	var empty : Array[Vector3i] = []
 	var corners : Array[Vector3i] = []
 	var origin : Vector3i = landmark.slots[anchor_slot].offset
 	var anchor_axial : Vector3 = Grid.grid[anchor_index].axial_position
 
 	for slot : LandmarkSlot in landmark.slots:
-		var offset : Vector3i = _rotate_offset(slot.offset - origin, step)
+		var offset : Vector3i = slot.offset - origin
+		if mirrored:
+			offset = _mirror_offset(offset)
+		offset = _rotate_offset(offset, step)
 		# Corner columns sit two axial units apart (see Grid.axial_ring(center, 1, 2)), so a
 		# one-corner step in x/z is two axial units; y is already one unit per layer.
 		var cell_index : Vector3i = Grid.get_axial_index(anchor_axial + Vector3(
@@ -92,6 +103,13 @@ func _resolve_slots(landmark : Landmark, anchor_slot : int, step : int, anchor_i
 # Rotates a corner-space offset by `step` * 60 degrees clockwise. Layout.AXIAL_DIRECTION is
 # a standard axial basis (q = x, r = z, with the implied s = -q - r), where one 60 degree
 # turn is (q, r, s) -> (-r, -s, -q). Six steps is the identity.
+# Mirrors a corner-space offset. Of the six reflections of a hex lattice this is the one that
+# is exactly `x -> -x` in world space (swap q and s, leaving r alone), which is why
+# merge_landmark() can realise it as scale.x = -1. The other five are this one composed with a
+# rotation, and the rotation loop already covers those.
+func _mirror_offset(offset : Vector3i) -> Vector3i:
+	return Vector3i(-offset.x - offset.z, offset.y, offset.z)
+
 func _rotate_offset(offset : Vector3i, step : int) -> Vector3i:
 	var q : int = offset.x
 	var r : int = offset.z

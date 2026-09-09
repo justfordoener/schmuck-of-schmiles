@@ -10,32 +10,32 @@ tile_kind = 1
 
 [sub_resource type="Resource" id="Slot_0"]
 script = ExtResource("2_slot")
-offset = Vector3i(1, 0, 0)
+offset = Vector3i(1, 1, 0)
 tile_kind = 2
 
 [sub_resource type="Resource" id="Slot_1"]
 script = ExtResource("2_slot")
-offset = Vector3i(0, 0, 1)
+offset = Vector3i(0, 1, 1)
 tile_kind = 2
 
 [sub_resource type="Resource" id="Slot_2"]
 script = ExtResource("2_slot")
-offset = Vector3i(-1, 0, 1)
+offset = Vector3i(-1, 1, 1)
 tile_kind = 2
 
 [sub_resource type="Resource" id="Slot_3"]
 script = ExtResource("2_slot")
-offset = Vector3i(-1, 0, 0)
+offset = Vector3i(-1, 1, 0)
 tile_kind = 2
 
 [sub_resource type="Resource" id="Slot_4"]
 script = ExtResource("2_slot")
-offset = Vector3i(0, 0, -1)
+offset = Vector3i(0, 1, -1)
 tile_kind = 2
 
 [sub_resource type="Resource" id="Slot_5"]
 script = ExtResource("2_slot")
-offset = Vector3i(1, 0, -1)
+offset = Vector3i(1, 1, -1)
 tile_kind = 2
 
 [sub_resource type="StandardMaterial3D" id="Mat_placeholder"]
@@ -45,7 +45,7 @@ albedo_color = Color(0.34, 0.72, 0.28, 1)
 material = SubResource("Mat_placeholder")
 top_radius = 2.6
 bottom_radius = 2.6
-height = 0.5
+height = 1.0
 radial_segments = 6
 rings = 1
 
@@ -56,5 +56,5 @@ slots = Array[ExtResource("2_slot")]([SubResource("Slot_center"), SubResource("S
 allow_rotation = true
 
 [node name="PlaceholderMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("Mesh_placeholder")

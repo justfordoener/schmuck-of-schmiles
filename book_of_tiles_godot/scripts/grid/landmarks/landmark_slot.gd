@@ -6,12 +6,9 @@ class_name LandmarkSlot extends Resource
 
 # Position relative to the pattern's own origin, in CORNER steps - the six neighbours of a
 # corner are Layout.AXIAL_DIRECTION[0..5], i.e. (1,0,0), (0,0,1), (-1,0,1), (-1,0,0),
-# (0,0,-1), (1,0,-1). y is a layer offset.
-#
-# Only flat patterns (every slot y == 0) are supported: corners on different layers have no
-# cells between them to merge (Grid links neighbours horizontally only), so a landmark
-# spanning a height change has nothing to sit on. The field exists so the data format
-# doesn't have to change once that's solved.
+# (0,0,-1), (1,0,-1). y is a layer offset, and slots may sit on different layers: The Great
+# Clearing is a grass corner ringed by forest one layer up. The landmark then covers the whole
+# volume the pattern spans - see Grid.derive_landmark_footprint().
 @export var offset : Vector3i = Vector3i.ZERO
 
 # The tile that must occupy that corner.
