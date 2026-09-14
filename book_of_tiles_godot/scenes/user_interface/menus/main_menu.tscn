@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://i8qyitdsh5pv"]
+[gd_scene load_steps=5 format=3 uid="uid://i8qyitdsh5pv"]
 
 [ext_resource type="Script" uid="uid://1gok5algkmqy" path="res://scripts/UI/main_menu.gd" id="1_dhggu"]
+[ext_resource type="Texture2D" uid="uid://bq7vkr5dgesxg" path="res://assets/2D/textures/keyart_bunter_1920x1080.png" id="2_6je1p"]
 [ext_resource type="PackedScene" uid="uid://v56eajf1t8eh" path="res://scenes/user_interface/menus/settings_UI.tscn" id="2_a05eb"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="4_6je1p"]
 
@@ -12,10 +13,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dhggu")
-level_button = NodePath("Buttons/LevelButton")
-settings_button = NodePath("Buttons/SettingsButton")
-credits_button = NodePath("Buttons/CreditsButton")
-quit_button = NodePath("Buttons/QuitButton")
+level_button = NodePath("Buttons/HBoxContainer/LevelButton")
+settings_button = NodePath("Buttons/HBoxContainer/SettingsButton")
+credits_button = NodePath("Buttons/HBoxContainer/CreditsButton")
+quit_button = NodePath("Buttons/HBoxContainer/QuitButton")
 level_back_button = NodePath("LevelScreen/LevelSelection/BackToMenu")
 level_buttons = [NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level1"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level2"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level3"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level4")]
 settings_back_button = NodePath("SettingsCanvasLayer/SettingsMenu/CloseSettings")
@@ -33,6 +34,15 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05967903, 0.24230221, 0.11811402, 1)
 
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_6je1p")
+
 [node name="Buttons" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -41,16 +51,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LevelButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
+[node name="HBoxContainer" type="HBoxContainer" parent="Buttons"]
 layout_mode = 1
-offset_left = 541.0
-offset_top = 333.0
-offset_right = 581.0
-offset_bottom = 373.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -207.0
+offset_right = 20.0
+offset_bottom = -167.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 450
+
+[node name="LevelButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+layout_mode = 2
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/LevelButton"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/HBoxContainer/LevelButton"]
 custom_minimum_size = Vector2(150, 130)
 layout_mode = 1
 anchors_preset = 8
@@ -65,22 +86,20 @@ offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 50
 bbcode_enabled = true
 text = "Start"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SettingsButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
-layout_mode = 1
-offset_left = 780.0
-offset_top = 330.0
-offset_right = 820.0
-offset_bottom = 370.0
+[node name="SettingsButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+layout_mode = 2
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/SettingsButton"]
-custom_minimum_size = Vector2(150, 130)
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/HBoxContainer/SettingsButton"]
+custom_minimum_size = Vector2(300, 130)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -94,22 +113,20 @@ offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 50
 bbcode_enabled = true
 text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CreditsButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
-layout_mode = 1
-offset_left = 1063.0
-offset_top = 342.0
-offset_right = 1103.0
-offset_bottom = 382.0
+[node name="CreditsButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+layout_mode = 2
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/CreditsButton"]
-custom_minimum_size = Vector2(150, 130)
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/HBoxContainer/CreditsButton"]
+custom_minimum_size = Vector2(200, 130)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -123,21 +140,20 @@ offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 50
 bbcode_enabled = true
 text = "Credits"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuitButton" type="TextureButton" parent="Buttons" groups=["snappable_ui"]]
-layout_mode = 1
-offset_left = 1331.0
-offset_top = 346.0
-offset_right = 1371.0
-offset_bottom = 386.0
+[node name="QuitButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+layout_mode = 2
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/QuitButton"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Buttons/HBoxContainer/QuitButton"]
 custom_minimum_size = Vector2(150, 130)
 layout_mode = 1
 anchors_preset = 8
@@ -152,6 +168,8 @@ offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 50
 bbcode_enabled = true
 text = "Quit"
 horizontal_alignment = 1
@@ -160,7 +178,6 @@ vertical_alignment = 1
 [node name="LevelScreen" type="CanvasLayer" parent="."]
 
 [node name="LevelSelection" type="VBoxContainer" parent="LevelScreen"]
-visible = false
 custom_minimum_size = Vector2(1000, 600)
 anchors_preset = 8
 anchor_left = 0.5
