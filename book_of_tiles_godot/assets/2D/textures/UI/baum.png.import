@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://18yxc05umvpe"
-path="res://.godot/imported/baum.png-31d3f3e79a96451046f5d6997a9f0b19.ctex"
+path="res://.godot/imported/baum.png-884353a45d757a86722967948d9577a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/2D/textures/baum.png"
-dest_files=["res://.godot/imported/baum.png-31d3f3e79a96451046f5d6997a9f0b19.ctex"]
+source_file="res://assets/2D/textures/UI/baum.png"
+dest_files=["res://.godot/imported/baum.png-884353a45d757a86722967948d9577a6.ctex"]
 
 [params]
 
