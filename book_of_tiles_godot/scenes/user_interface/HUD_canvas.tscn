@@ -126,17 +126,16 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TilePackSelection" type="HBoxContainer" parent="TilePacks"]
-custom_minimum_size = Vector2(800, 660)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = -330.0
-offset_right = 400.0
-offset_bottom = 330.0
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -160,6 +159,9 @@ layout_mode = 2
 [node name="PackButton3" type="Button" parent="TilePacks/TilePackSelection" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Empty"
+
+[node name="TextureRect" type="TextureRect" parent="TilePacks/TilePackSelection"]
+layout_mode = 2
 
 [node name="PauseUI" parent="." instance=ExtResource("4_dmdn1")]
 

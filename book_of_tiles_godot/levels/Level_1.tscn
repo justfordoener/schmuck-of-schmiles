@@ -1,0 +1,46 @@
+[gd_scene load_steps=10 format=3 uid="uid://c80oiohis4dk6"]
+
+[ext_resource type="Script" uid="uid://cwimjfawhl5tk" path="res://scripts/managers/main_manager.gd" id="1_5uqhs"]
+[ext_resource type="PackedScene" uid="uid://cau0gvhxu5xq5" path="res://scenes/sounds/sfx/sfx_tile_placement_sound.tscn" id="2_vuqqf"]
+[ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="3_h128h"]
+[ext_resource type="PackedScene" uid="uid://cl022yfv6jrj" path="res://scenes/camera.tscn" id="4_4t3wk"]
+[ext_resource type="PackedScene" uid="uid://ii4y5g1on1ne" path="res://scenes/tile_placement.tscn" id="5_5k0vs"]
+[ext_resource type="PackedScene" uid="uid://c7hxqdrqm3ca2" path="res://scenes/user_interface/HUD_canvas.tscn" id="6_bjvrs"]
+[ext_resource type="PackedScene" uid="uid://p10npgedo60j" path="res://scenes/user_interface/menus/playtest_ui.tscn" id="7_w1s8b"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6o6k0"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6o6k0"]
+size = Vector3(100, 1, 100)
+
+[node name="ModuleSandbox" type="Node"]
+script = ExtResource("1_5uqhs")
+
+[node name="SfxTilePlacementSound" parent="." instance=ExtResource("2_vuqqf")]
+
+[node name="MusicIngame" parent="." instance=ExtResource("3_h128h")]
+process_mode = 3
+
+[node name="Light" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.6655952, 0.746313, 0, -0.746313, 0.6655952, 2.35254, 6.9790125, 5.7587614)
+
+[node name="CameraController" parent="." instance=ExtResource("4_4t3wk")]
+
+[node name="PlacementManager" parent="." instance=ExtResource("5_5k0vs")]
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_6o6k0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("BoxMesh_6o6k0")
+
+[node name="UIManager" parent="." instance=ExtResource("6_bjvrs")]
+tile_card_directory = "res://scenes/user_interface/tile cards"
+
+[node name="Playtest UI" parent="UIManager" instance=ExtResource("7_w1s8b")]
+visible = false

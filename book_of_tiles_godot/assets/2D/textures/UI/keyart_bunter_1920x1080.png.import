@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5natlgxnmk74"
-path="res://.godot/imported/keyart_bunter.png-ee71725a89dde0d1fb204bad524452ff.ctex"
+uid="uid://bq7vkr5dgesxg"
+path="res://.godot/imported/keyart_bunter_1920x1080.png-738f2dca0e3f746b6816bf9ca1e8cb22.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/2D/textures/keyart_bunter.png"
-dest_files=["res://.godot/imported/keyart_bunter.png-ee71725a89dde0d1fb204bad524452ff.ctex"]
+source_file="res://assets/2D/textures/UI/keyart_bunter_1920x1080.png"
+dest_files=["res://.godot/imported/keyart_bunter_1920x1080.png-738f2dca0e3f746b6816bf9ca1e8cb22.ctex"]
 
 [params]
 

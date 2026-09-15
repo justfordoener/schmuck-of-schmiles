@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://i8qyitdsh5pv"]
 
 [ext_resource type="Script" uid="uid://1gok5algkmqy" path="res://scripts/UI/main_menu.gd" id="1_dhggu"]
-[ext_resource type="Texture2D" uid="uid://bq7vkr5dgesxg" path="res://assets/2D/textures/keyart_bunter_1920x1080.png" id="2_6je1p"]
+[ext_resource type="Texture2D" uid="uid://bq7vkr5dgesxg" path="res://assets/2D/textures/UI/keyart_bunter_1920x1080.png" id="2_6je1p"]
 [ext_resource type="PackedScene" uid="uid://v56eajf1t8eh" path="res://scenes/user_interface/menus/settings_UI.tscn" id="2_a05eb"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="4_6je1p"]
 
@@ -178,6 +178,7 @@ vertical_alignment = 1
 [node name="LevelScreen" type="CanvasLayer" parent="."]
 
 [node name="LevelSelection" type="VBoxContainer" parent="LevelScreen"]
+visible = false
 custom_minimum_size = Vector2(1000, 600)
 anchors_preset = 8
 anchor_left = 0.5
