@@ -1,10 +1,10 @@
 extends Control
 
 @export_category("MainButtons")
-@export var level_button: TextureButton
-@export var settings_button: TextureButton
-@export var credits_button: TextureButton
-@export var quit_button: TextureButton
+@export var level_button: Button
+@export var settings_button: Button
+@export var credits_button: Button
+@export var quit_button: Button
 
 @export_category("LevelButtons")
 @export var level_back_button: Button
