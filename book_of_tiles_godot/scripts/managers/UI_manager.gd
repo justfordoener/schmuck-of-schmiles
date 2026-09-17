@@ -9,6 +9,9 @@ extends CanvasLayer
 @export var pack_button_1 : Button
 @export var pack_button_2 : Button
 @export var pack_button_3 : Button
+@export var icon_animal_pack : Texture2D
+@export var icon_infrastructure_pack : Texture2D
+@export var icon_landscape_pack : Texture2D
 var _day_started : bool = false
 
 @export var tile_card_directory : String
@@ -164,6 +167,10 @@ func start_new_day() -> void:
 	pack_button_2.text = TileCard.get_pack_name(offered_packs[1])
 	pack_button_3.text = TileCard.get_pack_name(offered_packs[2])
 	
+	pack_button_1.icon = _get_pack_icon(offered_packs[0])
+	pack_button_2.icon = _get_pack_icon(offered_packs[1])
+	pack_button_3.icon = _get_pack_icon(offered_packs[2])
+	
 	pack_button_1.pressed.connect(_on_pack_chosen.bind(offered_packs[0]), CONNECT_ONE_SHOT)
 	pack_button_2.pressed.connect(_on_pack_chosen.bind(offered_packs[1]), CONNECT_ONE_SHOT)
 	pack_button_3.pressed.connect(_on_pack_chosen.bind(offered_packs[2]), CONNECT_ONE_SHOT)
@@ -193,3 +200,13 @@ func _on_pack_chosen(pack : int) -> void:
 	active_pack = pack
 	pack_selection_overlay.hide()
 	refill_tiles()
+
+func _get_pack_icon(pack : int) -> Texture2D:
+	match pack:
+		TileCard.packs.animal:
+			return icon_animal_pack
+		TileCard.packs.infrastructure:
+			return icon_infrastructure_pack
+		TileCard.packs.landscape:
+			return icon_landscape_pack
+	return null
