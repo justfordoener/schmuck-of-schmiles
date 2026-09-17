@@ -19,6 +19,7 @@ settings = NodePath("SettingsCanvasLayer/SettingsMenu")
 pause = NodePath("PauseMenu/PauseMenu")
 
 [node name="PauseMenu" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="PauseMenu" type="VBoxContainer" parent="PauseMenu"]
 custom_minimum_size = Vector2(800, 660)
@@ -64,3 +65,4 @@ layout_mode = 2
 text = "Quit Game"
 
 [node name="SettingsCanvasLayer" parent="." instance=ExtResource("2_15fc5")]
+layer = 2
