@@ -8,7 +8,7 @@ extends Control
 
 @export_category("LevelButtons")
 @export var level_back_button: Button
-@export var level_buttons: Array[TextureButton]
+@export var level_buttons: Array[Button]
 var level_folder = "res://levels/"
 var level_scenes: Array[String] = []
 
