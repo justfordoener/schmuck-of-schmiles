@@ -10,8 +10,8 @@ enum State {
 
 signal state_changed(old_state: State, new_state: State)
 
-# change to MENU once we start in the main menu scene
-var current_state: State = State.TILE_PACK_CHOOSING
+# state at game start
+var current_state: State = State.MENU
 var previous_state: State = State.MENU
 
 

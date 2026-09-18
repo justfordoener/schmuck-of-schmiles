@@ -1,15 +1,15 @@
 extends Control
 
 @export_category("MainButtons")
-@export var level_button: TextureButton
-@export var settings_button: TextureButton
-@export var credits_button: TextureButton
-@export var quit_button: TextureButton
+@export var level_button: Button
+@export var settings_button: Button
+@export var credits_button: Button
+@export var quit_button: Button
 
 @export_category("LevelButtons")
 @export var level_back_button: Button
-@export var level_buttons: Array[TextureButton]
-var level_folder = "res://levels/"
+@export var level_buttons: Array[Button]
+@export var level_folder : String = "res://levels/"
 var level_scenes: Array[String] = []
 
 @export_category("SettingButtons")
@@ -49,22 +49,20 @@ func quit_game():
 func check_levels():
 	level_scenes.clear()
 
-	var directory := DirAccess.open(level_folder)
-	if directory == null:
-		print("Could not open level folder")
-		return
-
 	for button in level_buttons:
 		button.visible = false
 		if button.pressed.is_connected(load_level):
 			button.pressed.disconnect(load_level)
 
-	directory.list_dir_begin()
-	var file_name = directory.get_next()
-
-	while file_name != "":
-		if not directory.current_is_dir() and file_name.ends_with(".tscn"):
-
+	var files := ResourceLoader.list_directory(level_folder)
+	if files.is_empty():
+		print("Could not find any files in level folder")
+		return
+		
+	for file_name in files:
+		var ext := file_name.get_extension()
+		
+		if ext in ["tscn", "scn"]:
 			var level_number = get_level_number(file_name)
 
 			if level_number <= 0:
@@ -79,8 +77,6 @@ func check_levels():
 				button.visible = true
 				button.pressed.connect(load_level.bind(full_path))
 
-		file_name = directory.get_next()
-	directory.list_dir_end()
 
 
 func load_level(scene_path: String) -> void:

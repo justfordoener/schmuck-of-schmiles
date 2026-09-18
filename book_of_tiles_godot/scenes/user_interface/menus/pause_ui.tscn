@@ -19,6 +19,7 @@ settings = NodePath("SettingsCanvasLayer/SettingsMenu")
 pause = NodePath("PauseMenu/PauseMenu")
 
 [node name="PauseMenu" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="PauseMenu" type="VBoxContainer" parent="PauseMenu"]
 custom_minimum_size = Vector2(800, 660)
@@ -35,17 +36,17 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Settings" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
+[node name="BackToMenu" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
-text = "Settings"
+text = "Main Menu"
 
 [node name="Spacer" type="Control" parent="PauseMenu/PauseMenu"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="BackToMenu" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
+[node name="Settings" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
-text = "Back to Main Menu"
+text = "Settings"
 
 [node name="Spacer2" type="Control" parent="PauseMenu/PauseMenu"]
 custom_minimum_size = Vector2(0, 20)
@@ -53,14 +54,15 @@ layout_mode = 2
 
 [node name="CloseMenu" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
-text = "Close Menu"
+text = "Close"
 
 [node name="Spacer3" type="Control" parent="PauseMenu/PauseMenu"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 
 [node name="QuitGame" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
-text = "Quit"
+text = "Quit Game"
 
 [node name="SettingsCanvasLayer" parent="." instance=ExtResource("2_15fc5")]
+layer = 2

@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://c7hxqdrqm3ca2"]
+[gd_scene load_steps=8 format=3 uid="uid://c7hxqdrqm3ca2"]
 
 [ext_resource type="Script" uid="uid://c7w5iggacgnnk" path="res://scripts/managers/UI_manager.gd" id="1_3eudk"]
 [ext_resource type="Texture2D" uid="uid://b52pala8cxhg8" path="res://assets/2D/textures/playtest/undo.png" id="2_bpem0"]
 [ext_resource type="Texture2D" uid="uid://eohnhlx87ee7" path="res://assets/2D/textures/playtest/next_day.png" id="3_bpem0"]
+[ext_resource type="Texture2D" uid="uid://by7asbajvgokx" path="res://assets/2D/textures/UI/tile packs/infrastructurepack.png" id="3_earhj"]
+[ext_resource type="Texture2D" uid="uid://drbjobgtbgmeh" path="res://assets/2D/textures/UI/tile packs/animalpack.png" id="4_53ivy"]
 [ext_resource type="PackedScene" uid="uid://c2q2ys53elenm" path="res://scenes/user_interface/menus/pause_ui.tscn" id="4_dmdn1"]
+[ext_resource type="Texture2D" uid="uid://bgiqujvwhfs22" path="res://assets/2D/textures/UI/tile packs/landscapepack.png" id="4_lt5e0"]
 
 [node name="UI" type="CanvasLayer" node_paths=PackedStringArray("pack_selection_overlay", "pack_button_1", "pack_button_2", "pack_button_3")]
 script = ExtResource("1_3eudk")
@@ -11,6 +14,9 @@ pack_selection_overlay = NodePath("TilePacks")
 pack_button_1 = NodePath("TilePacks/TilePackSelection/PackButton1")
 pack_button_2 = NodePath("TilePacks/TilePackSelection/PackButton2")
 pack_button_3 = NodePath("TilePacks/TilePackSelection/PackButton3")
+icon_animal_pack = ExtResource("4_53ivy")
+icon_infrastructure_pack = ExtResource("3_earhj")
+icon_landscape_pack = ExtResource("4_lt5e0")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -126,24 +132,26 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TilePackSelection" type="HBoxContainer" parent="TilePacks"]
-custom_minimum_size = Vector2(800, 660)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = -330.0
-offset_right = 400.0
-offset_bottom = 330.0
+offset_left = -232.5
+offset_top = -250.0
+offset_right = 232.5
+offset_bottom = 143.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
 [node name="PackButton1" type="Button" parent="TilePacks/TilePackSelection" groups=["snappable_ui"]]
 layout_mode = 2
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 27
 text = "Empty"
+icon_alignment = 1
 
 [node name="Spacer" type="Control" parent="TilePacks/TilePackSelection"]
 custom_minimum_size = Vector2(0, 20)
@@ -151,7 +159,10 @@ layout_mode = 2
 
 [node name="PackButton2" type="Button" parent="TilePacks/TilePackSelection" groups=["snappable_ui"]]
 layout_mode = 2
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 27
 text = "Empty"
+icon_alignment = 1
 
 [node name="Spacer2" type="Control" parent="TilePacks/TilePackSelection"]
 custom_minimum_size = Vector2(0, 20)
@@ -159,7 +170,13 @@ layout_mode = 2
 
 [node name="PackButton3" type="Button" parent="TilePacks/TilePackSelection" groups=["snappable_ui"]]
 layout_mode = 2
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 27
 text = "Empty"
+icon_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="TilePacks/TilePackSelection"]
+layout_mode = 2
 
 [node name="PauseUI" parent="." instance=ExtResource("4_dmdn1")]
 
