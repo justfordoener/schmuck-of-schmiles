@@ -3,8 +3,16 @@ extends Node
 var balancing_data: Dictionary = {}
 var balancing_file_path = "res://Files/balance.json"
 
+const SAVE_FILE_PATH := "res://Files/temp.json"
+# Bumped whenever the record layout below changes, so a loader can refuse a file it predates.
+const SAVE_VERSION := 1
+
 func _ready():
 	load_balance()
+	# Every placement ends with this signal (see placement_manager._spawn_instance), which is
+	# also the point where the propagation wave and any landmark merge have finished - so the
+	# board is consistent and the snapshot is worth taking.
+	Signals.on_instance_spawned.connect(save_state)
 
 func _input(event):
 	if event.is_action_pressed("reload_files"):
@@ -21,3 +29,81 @@ func load_balance():
 func reload_files():
 	load_balance()
 	print("reloaded")
+
+#-------------------------------- save game ----------------------------
+
+# Writes the whole board to SAVE_FILE_PATH
+func save_state() -> void:
+	var landmark_records : Array = []
+	# Index into landmark_records, so a cell can point at its landmark without repeating it.
+	var landmark_slots : Dictionary = {}
+	for landmark : Landmark in Grid.landmarks:
+		landmark_slots[landmark] = landmark_records.size()
+		landmark_records.append({
+			"landmark_id": String(landmark.landmark_id),
+			"scene": landmark.scene_file_path,
+			"position": _vec3_to_array(landmark.global_position),
+			# clockwise rotation
+			"rotation": landmark.rotation_degrees.y,
+			# merge_landmark() spawns a mirrored match with scale.x = -1.
+			"mirrored": landmark.scale.x < 0.0,
+			"seq": 0,
+			"footprint": [],
+		})
+
+	var cell_records : Array = []
+	for cell_index : Vector3i in Grid.grid.keys():
+		var cell : Cell = Grid.grid[cell_index]
+		var landmark_slot : int = landmark_slots.get(cell.landmark, -1)
+		if landmark_slot != -1:
+			landmark_records[landmark_slot]["footprint"].append(_vec3i_to_array(cell_index))
+			landmark_records[landmark_slot]["seq"] = maxi(
+				landmark_records[landmark_slot]["seq"], cell.placement_seq)
+		var module_id : int = -1
+		if cell.module_reference != null:
+			module_id = cell.module_reference.module_id
+		cell_records.append({
+			"index": _vec3i_to_array(cell_index),
+			"type": int(cell.type),
+			"seq": cell.placement_seq,
+			"tile_kind": int(cell.tile_kind),
+			"module_id": module_id,
+			# Grid space, clockwise. Grid.spawn_module() negates it to get rotation_degrees.y.
+			"module_rotation": cell.module_rotation,
+			"tile_scene": cell.tile_scene_path,
+			"landmark": landmark_slot,
+			"profiles": _profiles_to_dictionary(cell.profiles),
+		})
+
+	var save_data : Dictionary = {
+		"version": SAVE_VERSION,
+		# The highest round number in the file - i.e. how many steps the timelapse has to play.
+		"placement_seq": Grid.placement_seq,
+		"landmarks": landmark_records,
+		"cells": cell_records,
+	}
+
+	var save_file := FileAccess.open(SAVE_FILE_PATH, FileAccess.WRITE)
+	if save_file == null:
+		printerr("save_state: could not open ", SAVE_FILE_PATH, " for writing (",
+			error_string(FileAccess.get_open_error()), ")")
+		return
+	# Indented so the file stays diffable and readable while the format is still settling.
+	save_file.store_string(JSON.stringify(save_data, "\t"))
+	save_file.close()
+
+# Keys are already plain strings (Grid._get_border_index) and values plain ints, but the dict
+# is typed - Dictionary[String, Layout.PROFILE_TYPE] - and JSON.stringify wants an untyped one.
+func _profiles_to_dictionary(profiles : Dictionary[String, Layout.PROFILE_TYPE]) -> Dictionary:
+	var result : Dictionary = {}
+	for border_key : String in profiles.keys():
+		result[border_key] = int(profiles[border_key])
+	return result
+
+# JSON has no vector type, so both go out as three numbers. A cell index is Vector3i because it
+# is the axial position times 100 (see Grid.get_axial_index) - keep it integral.
+func _vec3i_to_array(v : Vector3i) -> Array:
+	return [v.x, v.y, v.z]
+
+func _vec3_to_array(v : Vector3) -> Array:
+	return [v.x, v.y, v.z]

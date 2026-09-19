@@ -12,6 +12,10 @@ var edge_mesh : ArrayMesh
 var modules : Array[PackedScene]
 var module_directory : String = "res://scenes/modules/blockout/"
 var link_counter : int = 0
+# Bumped once per batch_place_modules() call and stamped onto every cell that placement writes
+# (the tile's own cells plus the solver fill that reconciles around them - see Cell.placement_seq).
+# 0 therefore means "seeded base layer", and the save file's timelapse replays in this order.
+var placement_seq : int = 0
 # Landmarks currently standing on the board (see merge_landmark). Held so one owner frees
 # them; the cells they cover point back at them through Cell.landmark.
 var landmarks : Array[Landmark] = []
@@ -253,6 +257,10 @@ func batch_place_modules(placements: Array) -> Array[Node3D]:
 	var placed_indices : Array[Vector3i] = []
 	var displaced : Array[Node3D] = []
 
+	# Bumped before anything is written so the tile's own cells and every cell the propagation
+	# wave below re-solves share one number: in the load-time timelapse they fall as one step.
+	placement_seq += 1
+
 	for p in placements:
 		var cell_index = p["index"]
 		var cell : Cell = grid[cell_index]
@@ -284,6 +292,12 @@ func batch_place_modules(placements: Array) -> Array[Node3D]:
 			# geometry sitting inside the new module.
 			cell.instanced_module = p["instance"]
 			cell.tile_kind = p["instance"].tile_kind
+			# Recorded for the save file: the module and its grid-space rotation put the
+			# geometry back, and the tile's scene path is what distinguishes tiles that share a
+			# module - hex_water and hex_beaver are both corner_water_..._water (id 21).
+			cell.module_rotation = possibility.module_rotation
+			cell.tile_scene_path = p["instance"].scene_file_path
+			cell.placement_seq = placement_seq
 			placed_indices.append(cell_index)
 
 	# Recipe detection sits between the placement and the propagation wave on purpose: a merge
@@ -569,6 +583,13 @@ func merge_landmark(recipe_match : Dictionary, footprint : Array[Vector3i]) -> A
 		cell.tile_kind = Layout.TILE_KIND.NONE
 		cell.possibilities.clear()
 		cell.landmark = landmark
+		# The cell shows no module of its own any more, so drop what the save file would
+		# otherwise use to respawn one; the landmark object is saved separately, and these
+		# cells are found again by pointing back at it. The profiles stay - they are the rim
+		# the landmark presents to its neighbours, and the one thing here that isn't derivable.
+		cell.module_rotation = 0
+		cell.tile_scene_path = ""
+		cell.placement_seq = placement_seq
 
 	landmarks.append(landmark)
 	landmark_formed_today = true
@@ -608,6 +629,12 @@ func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	
 	cell.instanced_module = module_instance
 	cell.module_reference = poss.module_reference
+	# Everything the save file needs to put this module back: which module, how it is turned,
+	# and when it appeared. A solver-spawned module never belongs to a player tile, so any
+	# scene path left over from a placement that used to own this cell is cleared here.
+	cell.module_rotation = poss.module_rotation
+	cell.tile_scene_path = ""
+	cell.placement_seq = placement_seq
 
 # True if this module can seat on this cell at this rotation. A cell already holding a
 # module is NOT a rejection - placements always target corners, and dropping a new corner
