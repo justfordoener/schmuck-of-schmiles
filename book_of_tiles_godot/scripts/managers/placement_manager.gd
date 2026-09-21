@@ -1,5 +1,9 @@
 extends Node3D
 
+const BEAVER_SCENE : PackedScene = preload("res://scenes/beaver.tscn")
+# How often a placed beaver lodge comes with a beaver living on it.
+const BEAVER_SPAWN_CHANCE : float = 1.0
+
 @onready var main_manager : MainManager = $".."
 @onready var camera_controller : CameraController = $"../CameraController"
 
@@ -143,13 +147,36 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	# filler modules were never in the list, so erasing them is a no-op.
 	for tile : Node3D in displaced:
 		tiles_placed_today.erase(tile)
-	
+
+	# Rolled here and not in hex_beaver.tscn because _create_preview_instance() puts the
+	# preview in the tree too, so a _ready() roll would populate the translucent ghost as
+	# well - with an opaque beaver, since the ghost material is only applied to the preview
+	# root's own MeshInstance3D children - and would disagree with what the placement does.
+	# `displaced` is also what tells us the tile survived: a placement that completes the
+	# beaver village recipe is eaten by the landmark merge inside batch_place_modules().
+	if not displaced.has(instance):
+		_try_spawn_beaver(instance)
+
 	preview_instance.queue_free()
 	Signals.on_instance_spawned.emit()
 	
 	ControllerSupport.placing_mode = false
 	GameState.change_state(GameState.State.TILE_CHOOSING)
 	
+# Parents the beaver to the tile's corner module rather than to the tile root, so its patrol
+# loop is centred on the hexagon whose rim it walks, whatever else the tile carries. Being a
+# child of the tile is what gets it freed for free by undo, by a water tile dropped on top of
+# it, and by a landmark merge - all three go through the tile node.
+func _try_spawn_beaver(instance : Node3D) -> void:
+	if instance.tile_kind != Layout.TILE_KIND.BEAVER:
+		return
+	if randf() >= BEAVER_SPAWN_CHANCE:
+		return
+	for child : Node in instance.get_children():
+		if child is Module and child.module_type == Layout.CELL_TYPE.CORNER:
+			child.add_child(BEAVER_SCENE.instantiate())
+			return
+
 func _is_mouse_over_ui_rect(mouse_pos : Vector2) -> bool:
 	var hovered = get_viewport().gui_get_hovered_control()
 	return hovered != null and hovered.get_global_rect().has_point(mouse_pos)

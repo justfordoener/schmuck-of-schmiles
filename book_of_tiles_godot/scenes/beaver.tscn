@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpso01sy1k83t"]
+
+[ext_resource type="Script" uid="uid://cy7yj6r3q0yl5" path="res://scripts/grid/beaver_walker.gd" id="1_walker"]
+[ext_resource type="PackedScene" uid="uid://cl3m3wrkgjl6l" path="res://assets/3D/animations/biberNLAAnimationfinal.glb" id="2_model"]
+
+[node name="Beaver" type="Node3D"]
+script = ExtResource("1_walker")
+
+[node name="biberNLAAnimationfinal" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(0.06, 0, 0, 0, 0.06, 0, 0, 0, 0.06, 0, 0, 0)
