@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c7hxqdrqm3ca2"]
 
 [ext_resource type="Script" uid="uid://c7w5iggacgnnk" path="res://scripts/managers/UI_manager.gd" id="1_3eudk"]
-[ext_resource type="Texture2D" uid="uid://b52pala8cxhg8" path="res://assets/2D/textures/playtest/undo.png" id="2_bpem0"]
+[ext_resource type="Texture2D" uid="uid://300pbgx4vn75" path="res://assets/2D/textures/playtest/blank.png" id="2_bpem0"]
 [ext_resource type="Texture2D" uid="uid://eohnhlx87ee7" path="res://assets/2D/textures/playtest/next_day.png" id="3_bpem0"]
 [ext_resource type="Texture2D" uid="uid://by7asbajvgokx" path="res://assets/2D/textures/UI/tile packs/infrastructurepack.png" id="3_earhj"]
 [ext_resource type="Texture2D" uid="uid://drbjobgtbgmeh" path="res://assets/2D/textures/UI/tile packs/animalpack.png" id="4_53ivy"]
@@ -60,18 +60,17 @@ offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureButton" type="TextureButton" parent="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox" groups=["snappable_ui"]]
+[node name="TextureButton" type="TextureRect" parent="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
-texture_normal = ExtResource("2_bpem0")
+texture = ExtResource("2_bpem0")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox"]
 custom_minimum_size = Vector2(150, 25)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 2
-text = "Undo"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -180,5 +179,4 @@ layout_mode = 2
 
 [node name="PauseUI" parent="." instance=ExtResource("4_dmdn1")]
 
-[connection signal="pressed" from="Control/MarginContainer/HBoxContainer/Undo/UndoButtonVBox/TextureButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="Control/MarginContainer/HBoxContainer/TurnOver/TurnOverButtonVBox/TextureButton" to="." method="_on_turnover_button_pressed"]
