@@ -65,7 +65,18 @@ func _initialize_grid_layers() -> void:
 			corner_cell.base_rotation = 0 # corners are rotationally symmetric -> always 0
 			grid[get_axial_index(pos)] = corner_cell
 			_add_edges_and_faces(pos)
-	
+
+
+func reset_to_new_game() -> void:
+	for child in get_children():
+		child.free()
+	landmarks.clear()
+	landmark_formed_today = false
+	placement_seq = 0
+	link_counter = 0
+	_ready()
+
+
 func _link_neighbors() -> void:
 	for index in grid.keys():
 		var cell = grid[index]
@@ -964,6 +975,7 @@ func _get_axial_value(axial_index : Vector3i) -> Vector3:
 	return axial_index / 100.0
 
 func _load_modules_from_dir(path: String) -> void:
+	modules.clear()
 	var dir = DirAccess.open(path)
 	if dir:
 		dir.list_dir_begin()

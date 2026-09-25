@@ -18,6 +18,7 @@ func _ready():
 	# also the point where the propagation wave and any landmark merge have finished - so the
 	# board is consistent and the snapshot is worth taking.
 	Signals.on_instance_spawned.connect(save_state)
+	load_file_path = AUTOSAVE_FILE_PATH
 
 func _input(event):
 	if event.is_action_pressed("reload_files"):
@@ -115,12 +116,22 @@ func _vec3_to_array(v : Vector3) -> Array:
 
 #-------------------------------- load game ----------------------------
 
-func load_state() -> void:
+func save_to_slot(target_path : String) -> void:
 	if not FileAccess.file_exists(SAVE_FILE_PATH):
-		print("Save file not found")
+		print("save_to_slot: no temp save file to copy from")
+		return
+	var err := DirAccess.copy_absolute(SAVE_FILE_PATH, target_path)
+	print("Saved to slot ", target_path)
+	if err != OK:
+		printerr("save_to_slot: could not copy ", SAVE_FILE_PATH, " to ", target_path,
+			" (", error_string(err), ")")
+
+func load_state(path : String) -> void:
+	if not FileAccess.file_exists(path):
+		print("Save file not found ", path)
 		return
 	
-	var save_file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)
+	var save_file := FileAccess.open(path, FileAccess.READ)
 	var save_data = JSON.parse_string(save_file.get_as_text())
 	save_file.close()
 	
@@ -128,6 +139,7 @@ func load_state() -> void:
 		printerr("load_state: missing or incompatible save file (expected version ", SAVE_VERSION, ")")
 		return
 	
+	load_file_path = path
 	Grid.placement_seq = int(save_data["placement_seq"])
 	
 	# Landmarks first
@@ -223,7 +235,7 @@ func _load_single_cell(cell_index : Vector3i, record : Dictionary, landmarks : A
 		cell.landmark = landmarks[landmark_slot]
 		cell.possibilities.clear()
 		cell.module_reference = null
-		cell.tile_kind = Layout.TILE_KIND_NONE
+		cell.tile_kind = Layout.TILE_KIND.NONE
 		cell.module_rotation = 0
 		cell.tile_scene_path = ""
 		cell.placement_seq = int(record["seq"])

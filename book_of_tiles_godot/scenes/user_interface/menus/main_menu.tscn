@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://v56eajf1t8eh" path="res://scenes/user_interface/menus/settings_UI.tscn" id="2_a05eb"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="4_6je1p"]
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("level_button", "settings_button", "credits_button", "quit_button", "level_back_button", "level_buttons", "settings_back_button", "credits_back_button", "level_selection", "settings", "credits")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("level_button", "settings_button", "credits_button", "quit_button", "level_back_button", "level_buttons", "continue_button", "savegame_1_button", "savegame_2_button", "savegame_3_button", "settings_back_button", "credits_back_button", "level_selection", "settings", "credits")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,6 +19,10 @@ credits_button = NodePath("Buttons/HBoxContainer/CreditsButton")
 quit_button = NodePath("Buttons/HBoxContainer/QuitButton")
 level_back_button = NodePath("LevelScreen/LevelSelection/BackToMenu")
 level_buttons = [NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level1"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level2"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level3"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level4")]
+continue_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer/Continue")
+savegame_1_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer/Savegame1")
+savegame_2_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2/Savegame2")
+savegame_3_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2/Savegame3")
 settings_back_button = NodePath("SettingsCanvasLayer/SettingsMenu/CloseSettings")
 credits_back_button = NodePath("CreditsCanvasLayer/CreditsMenu/CloseCredits")
 level_selection = NodePath("LevelScreen/LevelSelection")
@@ -170,6 +174,53 @@ layout_mode = 2
 [node name="Page2" type="Panel" parent="LevelScreen/LevelSelection/HBoxContainer"]
 custom_minimum_size = Vector2(575, 500)
 layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Continue" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Continue"
+
+[node name="Savegame1" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 1"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Savegame2" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 2"
+
+[node name="Savegame3" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 3"
 
 [node name="Spacer" type="Control" parent="LevelScreen/LevelSelection"]
 custom_minimum_size = Vector2(0, 20)
