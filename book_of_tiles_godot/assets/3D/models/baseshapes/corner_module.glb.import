@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cwn4keoe5ch1r"
-path="res://.godot/imported/corner_module.glb-8e1718856793a923cb79c4fbae1e4c38.scn"
+path="res://.godot/imported/corner_module.glb-4790ba5f40be1ec444406cb8fa4a1239.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/shapes/corner_module.glb"
-dest_files=["res://.godot/imported/corner_module.glb-8e1718856793a923cb79c4fbae1e4c38.scn"]
+source_file="res://assets/3D/models/baseshapes/corner_module.glb"
+dest_files=["res://.godot/imported/corner_module.glb-4790ba5f40be1ec444406cb8fa4a1239.scn"]
 
 [params]
 

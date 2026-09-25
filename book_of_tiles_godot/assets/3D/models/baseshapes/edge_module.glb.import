@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dkafcwsveih1r"
-path="res://.godot/imported/edge_module.glb-0a1bbd89b0f0398bd69e3886e51b7f95.scn"
+path="res://.godot/imported/edge_module.glb-f2277c9da0a931938a560dfc7731b824.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/shapes/edge_module.glb"
-dest_files=["res://.godot/imported/edge_module.glb-0a1bbd89b0f0398bd69e3886e51b7f95.scn"]
+source_file="res://assets/3D/models/baseshapes/edge_module.glb"
+dest_files=["res://.godot/imported/edge_module.glb-f2277c9da0a931938a560dfc7731b824.scn"]
 
 [params]
 
