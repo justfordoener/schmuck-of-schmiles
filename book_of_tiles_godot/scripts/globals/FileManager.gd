@@ -6,6 +6,11 @@ var balancing_file_path = "res://Files/balance.json"
 const SAVE_FILE_PATH := "res://Files/temp.json"
 # Bumped whenever the record layout below changes, so a loader can refuse a file it predates.
 const SAVE_VERSION := 1
+var load_file_path : String
+const AUTOSAVE_FILE_PATH := "res://Files/autosave.json"
+const SAVEGAME_1_PATH := "res://Files/savegame1.json"
+const SAVEGAME_2_PATH := "res://Files/savegame2.json"
+const SAVEGAME_3_PATH := "res://Files/savegame3.json"
 
 func _ready():
 	load_balance()
@@ -141,8 +146,8 @@ func load_state() -> void:
 		
 	var tile_groups : Dictionary = {}
 	for record in save_data["cells"]:
-		if record["title_scene"] != "":
-			var key : String = str(int(record["seq"])) + "|" + record["title_scene"]
+		if record["tile_scene"] != "":
+			var key : String = str(int(record["seq"])) + "|" + record["tile_scene"]
 			if not tile_groups.has(key):
 				tile_groups[key] = []
 			tile_groups[key].append(record)
@@ -165,9 +170,8 @@ func _load_tile_group(records : Array, handled : Dictionary) -> void:
 	
 	var children : Array[Module] = []
 	for child in tile_instance.get_children():
-		if child in tile_instance.get_children():
-			if child is Module:
-				children.append(child)
+		if child is Module:
+			children.append(child)
 	
 	for record in records:
 		var cell_index : Vector3i = _array_to_vec3i(record["index"])
@@ -193,19 +197,19 @@ func _load_tile_group(records : Array, handled : Dictionary) -> void:
 		if cell.instanced_module != null:
 			cell.instanced_module.queue_free()
 			
-			matched_child.global_position = Grid.axial_to_cartesian(cell.axial_position)
-			matched_child.rotation_degrees.y = -module_rotation
-			
-			cell.possibilities = [possibility]
-			cell.profiles = _dictionary_to_profiles(record["profiles"])
-			cell.module_reference = matched_child
-			cell.instanced_module = tile_instance
-			cell.tile_kind = int(record["tile_kind"]) as Layout.TILE_KIND
-			cell.module_rotation = module_rotation
-			cell.tile_scene_path = tile_scene_path
-			cell.placement_seq = int(record["seq"])
-			
-			handled[cell_index] = true
+		matched_child.global_position = Grid.axial_to_cartesian(cell.axial_position)
+		matched_child.rotation_degrees.y = -module_rotation
+		
+		cell.possibilities = [possibility]
+		cell.profiles = _dictionary_to_profiles(record["profiles"])
+		cell.module_reference = matched_child
+		cell.instanced_module = tile_instance
+		cell.tile_kind = int(record["tile_kind"]) as Layout.TILE_KIND
+		cell.module_rotation = module_rotation
+		cell.tile_scene_path = tile_scene_path
+		cell.placement_seq = int(record["seq"])
+		
+		handled[cell_index] = true
 
 
 func _load_single_cell(cell_index : Vector3i, record : Dictionary, landmarks : Array[Landmark]) -> void:
@@ -214,19 +218,19 @@ func _load_single_cell(cell_index : Vector3i, record : Dictionary, landmarks : A
 	
 	if landmark_slot != -1:
 		if cell.instanced_module != null:
-			cell.instanced_moudle.queue_free()
+			cell.instanced_module.queue_free()
 			cell.instanced_module = null
 		cell.landmark = landmarks[landmark_slot]
 		cell.possibilities.clear()
 		cell.module_reference = null
-		cell.title_kind = Layout.TILE_KIND_NONE
+		cell.tile_kind = Layout.TILE_KIND_NONE
 		cell.module_rotation = 0
 		cell.tile_scene_path = ""
 		cell.placement_seq = int(record["seq"])
 		cell.profiles = _dictionary_to_profiles(record["profiles"])
 		return
 	
-	var module_id : int = int(record["module"])
+	var module_id : int = int(record["module_id"])
 	if module_id == -1: # Should theoretically never happen
 		return
 	
