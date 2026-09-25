@@ -670,6 +670,17 @@ func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : 
 			return possibility
 	return null
 
+func get_possibility_by_id(cell_index: Vector3i, module_id: int, rotation: int) -> Possibility:
+# Same lookup as get_fitting_possibility(), but "keyed" on the raw module_id + rotation instead
+# of a live Module instance - what load_state() has after reading the save file, since the
+# Module node doesn't exist yet at that point.
+
+	var cell : Cell = grid[cell_index]
+	for possibility : Possibility in cell.initial_possibilities:
+		if possibility.module_reference.module_id == module_id and possibility.module_rotation == rotation:
+			return possibility
+	return null
+
 # ------------------- helper functions -------------------
 
 func get_hard_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layout.PROFILE_TYPE]:

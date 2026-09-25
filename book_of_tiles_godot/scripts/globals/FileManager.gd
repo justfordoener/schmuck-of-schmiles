@@ -107,3 +107,149 @@ func _vec3i_to_array(v : Vector3i) -> Array:
 
 func _vec3_to_array(v : Vector3) -> Array:
 	return [v.x, v.y, v.z]
+
+#-------------------------------- load game ----------------------------
+
+func load_state() -> void:
+	if not FileAccess.file_exists(SAVE_FILE_PATH):
+		print("Save file not found")
+		return
+	
+	var save_file := FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)
+	var save_data = JSON.parse_string(save_file.get_as_text())
+	save_file.close()
+	
+	if save_data == null or int(save_data.get("version", -1)) != SAVE_VERSION:
+		printerr("load_state: missing or incompatible save file (expected version ", SAVE_VERSION, ")")
+		return
+	
+	Grid.placement_seq = int(save_data["placement_seq"])
+	
+	# Landmarks first
+	var landmarks : Array[Landmark] = []
+	for record in save_data["landmarks"]:
+		var landmark : Landmark = load(record["scene"]).instantiate()
+		Grid.add_child(landmark)
+		
+		landmark.landmark_id = StringName(record["landmark_id"])
+		landmark.global_position = _array_to_vec3(record["position"])
+		landmark.rotation_degrees.y = record["rotation"]
+		if record["mirrored"]:
+			landmark.scale.x = -1.0
+		landmarks.append(landmark)
+		Grid.landmarks.append(landmark)
+		
+	var tile_groups : Dictionary = {}
+	for record in save_data["cells"]:
+		if record["title_scene"] != "":
+			var key : String = str(int(record["seq"])) + "|" + record["title_scene"]
+			if not tile_groups.has(key):
+				tile_groups[key] = []
+			tile_groups[key].append(record)
+			
+	var handled : Dictionary = {}
+	for key in tile_groups.keys():
+		_load_tile_group(tile_groups[key], handled)
+		
+	for record in save_data["cells"]:
+		var cell_index : Vector3i = _array_to_vec3i(record["index"])
+		if handled.has(cell_index):
+			continue
+		_load_single_cell(cell_index, record, landmarks)
+
+
+func _load_tile_group(records : Array, handled : Dictionary) -> void:
+	var tile_scene_path : String = records[0]["tile_scene"]
+	var tile_instance : Node3D = load(tile_scene_path).instantiate()
+	get_tree().current_scene.add_child(tile_instance)
+	
+	var children : Array[Module] = []
+	for child in tile_instance.get_children():
+		if child in tile_instance.get_children():
+			if child is Module:
+				children.append(child)
+	
+	for record in records:
+		var cell_index : Vector3i = _array_to_vec3i(record["index"])
+		var module_id : int = int(record["module_id"])
+		var module_rotation : int = int(record["module_rotation"])
+		
+		var matched_child : Module = null
+		for child : Module in children:
+			if child.module_id == module_id:
+				matched_child = child
+				children.erase(child)
+				break
+		if matched_child == null:
+			printerr("_load_tile_group: kein nubenutztes Kind mit module_id ", module_id, " in ", tile_scene_path, " für Zelle ", cell_index)
+			continue
+		
+		var possibility := Grid.get_possibility_by_id(cell_index, module_id, module_rotation)
+		if possibility == null:
+			printerr("_load_tile_group: keine Possibility für module_id ", module_id, " bei Rotation ", module_rotation, " auf Zelle ", cell_index) 
+			continue
+		
+		var cell : Cell = Grid.grid[cell_index]
+		if cell.instanced_module != null:
+			cell.instanced_module.queue_free()
+			
+			matched_child.global_position = Grid.axial_to_cartesian(cell.axial_position)
+			matched_child.rotation_degrees.y = -module_rotation
+			
+			cell.possibilities = [possibility]
+			cell.profiles = _dictionary_to_profiles(record["profiles"])
+			cell.module_reference = matched_child
+			cell.instanced_module = tile_instance
+			cell.tile_kind = int(record["tile_kind"]) as Layout.TILE_KIND
+			cell.module_rotation = module_rotation
+			cell.tile_scene_path = tile_scene_path
+			cell.placement_seq = int(record["seq"])
+			
+			handled[cell_index] = true
+
+
+func _load_single_cell(cell_index : Vector3i, record : Dictionary, landmarks : Array[Landmark]) -> void:
+	var cell : Cell = Grid.grid[cell_index]
+	var landmark_slot : int = int(record["landmark"])
+	
+	if landmark_slot != -1:
+		if cell.instanced_module != null:
+			cell.instanced_moudle.queue_free()
+			cell.instanced_module = null
+		cell.landmark = landmarks[landmark_slot]
+		cell.possibilities.clear()
+		cell.module_reference = null
+		cell.title_kind = Layout.TILE_KIND_NONE
+		cell.module_rotation = 0
+		cell.tile_scene_path = ""
+		cell.placement_seq = int(record["seq"])
+		cell.profiles = _dictionary_to_profiles(record["profiles"])
+		return
+	
+	var module_id : int = int(record["module"])
+	if module_id == -1: # Should theoretically never happen
+		return
+	
+	var module_rotation : int = int(record["module_rotation"])
+	var possibility := Grid.get_possibility_by_id(cell_index, module_id, module_rotation)
+	if possibility == null:
+		printerr("_load_single_cell: Keine Possibility für module_id ", module_id, " bei Rotation ", module_rotation, " auf Zelle ", cell_index)
+		return
+
+	cell.possibilities = [possibility]
+	cell.profiles = _dictionary_to_profiles(record["profiles"])
+	cell.tile_kind = int(record["tile_kind"]) as Layout.TILE_KIND
+	Grid.spawn_module(possibility, cell_index)
+	cell.placement_seq = int(record["seq"])
+
+func _array_to_vec3i(arr : Array) -> Vector3i:
+	return Vector3i(int(arr[0]), int(arr[1]), int(arr[2]))
+ 
+func _array_to_vec3(arr : Array) -> Vector3:
+	return Vector3(arr[0], arr[1], arr[2])
+ 
+func _dictionary_to_profiles(data : Dictionary) -> Dictionary[String, Layout.PROFILE_TYPE]:
+	var result : Dictionary[String, Layout.PROFILE_TYPE] = {}
+	for border_key : String in data.keys():
+		result[border_key] = int(data[border_key]) as Layout.PROFILE_TYPE
+	return result
