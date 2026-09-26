@@ -682,9 +682,8 @@ func get_fitting_possibility(cell_index : Vector3i, module : Module, rotation : 
 	return null
 
 func get_possibility_by_id(cell_index: Vector3i, module_id: int, rotation: int) -> Possibility:
-# Same lookup as get_fitting_possibility(), but "keyed" on the raw module_id + rotation instead
-# of a live Module instance - what load_state() has after reading the save file, since the
-# Module node doesn't exist yet at that point.
+# Same lookup as get_fitting_possibility(), but by looking at raw module_id + rotation instead
+# - what a save file has, instead of a live Module instance.
 
 	var cell : Cell = grid[cell_index]
 	for possibility : Possibility in cell.initial_possibilities:

@@ -23,9 +23,9 @@ func _ready() -> void:
 	back_to_menu_button.pressed.connect(main_menu)
 	close_button.pressed.connect(toggle_menu.bind(pause))
 	quit_button.pressed.connect(quit_game)
-	save_to_slot_1.pressed.connect(FileManager.save_to_slot.bind(FileManager.SAVEGAME_1_PATH))
-	save_to_slot_2.pressed.connect(FileManager.save_to_slot.bind(FileManager.SAVEGAME_2_PATH))
-	save_to_slot_3.pressed.connect(FileManager.save_to_slot.bind(FileManager.SAVEGAME_3_PATH))
+	save_to_slot_1.pressed.connect(save_game.bind(FileManager.SAVEGAME_1_PATH))
+	save_to_slot_2.pressed.connect(save_game.bind(FileManager.SAVEGAME_2_PATH))
+	save_to_slot_3.pressed.connect(save_game.bind(FileManager.SAVEGAME_3_PATH))
 	save_menu_button.pressed.connect(toggle_menu.bind(save_menu))
 	close_save_menu.pressed.connect(toggle_menu.bind(save_menu))
 	pause.visible = false
@@ -42,13 +42,15 @@ func toggle_menu(menu: Control) -> void:
 	else:
 		pause.visible = !menu.visible
 
+func save_game(path:String) -> void:
+	FileManager.save_to_slot(path)
+	toggle_menu(save_menu)
+
 func main_menu() -> void:
 	toggle_menu(pause)
 	FileManager.save_to_slot(FileManager.AUTOSAVE_FILE_PATH)
 	Grid.reset_to_new_game()
 	GameState.change_state(GameState.State.MENU)
-	#get_tree().change_scene_to_file("res://scenes/user_interface/menus/main_menu.tscn")
-	# after the Main Menu scene is the new main_scene in the project, swap to:
 	get_tree().change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))
 
 func quit_game():

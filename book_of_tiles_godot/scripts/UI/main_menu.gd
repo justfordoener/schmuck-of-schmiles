@@ -1,10 +1,11 @@
 extends Control
 
 @export_category("MainButtons")
-@export var level_button: Button
-@export var settings_button: Button
-@export var credits_button: Button
-@export var quit_button: Button
+@export var level_button: TextureButton
+@export var settings_button: TextureButton
+@export var credits_button: TextureButton
+@export var quit_button: TextureButton
+@export var main_buttons: Control
 
 @export_category("LevelButtons")
 @export var level_back_button: Button
@@ -48,6 +49,7 @@ func _ready() -> void:
 
 func toggle_menu(menu: Control) -> void:
 	menu.visible = ! menu.visible
+	main_buttons.visible = ! menu.visible
 	if menu == level_selection:
 		check_levels()
 

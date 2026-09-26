@@ -117,6 +117,7 @@ func _vec3_to_array(v : Vector3) -> Array:
 
 #-------------------------------- load game ----------------------------
 
+# Overrides a specific savefile with whatever is in temp.json
 func save_to_slot(target_path : String) -> void:
 	if not FileAccess.file_exists(SAVE_FILE_PATH):
 		print("save_to_slot: no temp save file to copy from")
@@ -127,6 +128,7 @@ func save_to_slot(target_path : String) -> void:
 		printerr("save_to_slot: could not copy ", SAVE_FILE_PATH, " to ", target_path,
 			" (", error_string(err), ")")
 
+# loads the save data and decides ones per cell weather to use _load_tile_group or _load_single_tile
 func load_state(path : String) -> void:
 	if not FileAccess.file_exists(path):
 		print("Save file not found ", path)
@@ -176,6 +178,7 @@ func load_state(path : String) -> void:
 		_load_single_cell(cell_index, record, landmarks)
 
 
+# Fore cells placed by the player
 func _load_tile_group(records : Array, handled : Dictionary) -> void:
 	var tile_scene_path : String = records[0]["tile_scene"]
 	var tile_instance : Node3D = load(tile_scene_path).instantiate()
@@ -231,7 +234,7 @@ func _load_tile_group(records : Array, handled : Dictionary) -> void:
 				child.add_child(BEAVER_SCENE.instantiate())
 				break
 
-
+# Specific things like landmarks and cells placed by the wfc
 func _load_single_cell(cell_index : Vector3i, record : Dictionary, landmarks : Array[Landmark]) -> void:
 	var cell : Cell = Grid.grid[cell_index]
 	var landmark_slot : int = int(record["landmark"])
