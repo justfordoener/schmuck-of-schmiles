@@ -111,9 +111,39 @@ func _process(_delta):
 			press_started_on_grid = false
 
 func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> void:
-	var instance = current_tile.instantiate()
+	if not _build_tile(current_tile, instance_position, instance_rotation, true):
+		ControllerSupport.placing_mode = false
+		GameState.change_state(GameState.State.TILE_CHOOSING)
+		return
+
+	preview_instance.queue_free()
+	Signals.on_instance_spawned.emit()
+	
+	ControllerSupport.placing_mode = false
+	GameState.change_state(GameState.State.TILE_CHOOSING)
+
+# Places a tile without the preview/click flow - used to pre-play a level's opening moves (see
+# MainManager). It goes through the same targeting as the mouse (Grid.snap_to_cell), so a tile
+# stacks or replaces exactly as it would for a player. Not added to the undo history: these
+# are part of the starting map, not something the player can take back.
+func place_tile_at(tile : PackedScene, world_position : Vector3, instance_rotation : float = 0.0) -> bool:
+	var probe : Node3D = tile.instantiate()
+	var target_cell := Grid.snap_to_cell(world_position, probe.layer_type, probe.is_water)
+	probe.free()
+	if target_cell == null:
+		push_warning("place_tile_at: nothing can be placed at ", world_position)
+		return false
+	var instance_position := Grid.axial_to_cartesian(target_cell.axial_position)
+	return _build_tile(tile, instance_position, instance_rotation + deg_to_rad(target_cell.base_rotation), false)
+
+# Instances the tile into the scene and fits all its modules into the grid. Returns false if
+# any module didn't fit, in which case nothing was placed. `undoable` puts the tile into the
+# undo history.
+func _build_tile(tile : PackedScene, instance_position: Vector3, instance_rotation : float, undoable : bool) -> bool:
+	var instance = tile.instantiate()
 	get_tree().current_scene.add_child(instance)
-	tiles_placed_today.append(instance)
+	if undoable:
+		tiles_placed_today.append(instance)
 	instance.global_position = instance_position
 	instance.rotation.y = instance_rotation
 	
@@ -129,10 +159,9 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 			print("failed child: ", child.module_type, child_index, child_rotation, " ", child_position)
 			# Clean up if even a single module of the tile fails
 			instance.queue_free()
-			tiles_placed_today.pop_back() 
-			ControllerSupport.placing_mode = false
-			GameState.change_state(GameState.State.TILE_CHOOSING)
-			return
+			if undoable:
+				tiles_placed_today.pop_back()
+			return false
 			
 		module_placements.append({
 			"index": child_index,
@@ -148,8 +177,8 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	# that was an earlier tile - water dropped onto land - drop it from the undo history so
 	# undo doesn't spend a press on a node that's about to be deleted. Displaced solver-spawned
 	# filler modules were never in the list, so erasing them is a no-op.
-	for tile : Node3D in displaced:
-		tiles_placed_today.erase(tile)
+	for displaced_tile : Node3D in displaced:
+		tiles_placed_today.erase(displaced_tile)
 
 	# Rolled here and not in hex_beaver.tscn because _create_preview_instance() puts the
 	# preview in the tree too, so a _ready() roll would populate the translucent ghost as
@@ -159,13 +188,8 @@ func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> v
 	# beaver village recipe is eaten by the landmark merge inside batch_place_modules().
 	if not displaced.has(instance):
 		_try_spawn_beaver(instance)
-
-	preview_instance.queue_free()
-	Signals.on_instance_spawned.emit()
-	
-	ControllerSupport.placing_mode = false
-	GameState.change_state(GameState.State.TILE_CHOOSING)
-	
+	return true
+		
 # Parents the beaver to the tile's corner module rather than to the tile root, so its patrol
 # loop is centred on the hexagon whose rim it walks, whatever else the tile carries. Being a
 # child of the tile is what gets it freed for free by undo, by a water tile dropped on top of
