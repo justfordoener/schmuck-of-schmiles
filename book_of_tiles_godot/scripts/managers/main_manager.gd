@@ -32,6 +32,9 @@ var initial_placements : Array[Dictionary] = [
 	{"tile": BEAVER_TILE, "axial": Vector3(10, 0, -2)},
 ]
 
+# Pause between two initial placements, so they drop in one after another like opening moves.
+const INITIAL_PLACEMENT_PAUSE : float = 0.15
+
 @onready var ui_manager = $UIManager
 @onready var placement_manager = $PlacementManager
 @onready var camera_controller = $CameraController
@@ -42,9 +45,17 @@ func _ready() -> void:
 	_play_initial_placements.call_deferred()
 
 func _play_initial_placements() -> void:
-	for placement in initial_placements:
+	for i in initial_placements.size():
+		var placement : Dictionary = initial_placements[i]
+		if i > 0:
+			await get_tree().create_timer(INITIAL_PLACEMENT_PAUSE, false).timeout
 		if not placement_manager.place_tile_at(placement["tile"], Grid.axial_to_cartesian(placement["axial"])):
 			push_warning("initial placement failed: ", placement["tile"].resource_path, " at ", placement["axial"])
+	# Offer the first tile pack only once the last placement has landed.
+	var remaining : float = placement_manager.drop_end_time - Time.get_ticks_msec() / 1000.0
+	if remaining > 0.0:
+		await get_tree().create_timer(remaining, false).timeout
+	ui_manager.start_new_day()
 
 func tile_selected(tile : PackedScene):
 	placement_manager.place_tile(tile)

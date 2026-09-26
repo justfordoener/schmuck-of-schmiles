@@ -18,6 +18,9 @@ var landmarks : Array[Landmark] = []
 # True once any landmark has formed. Merging is a hard commit - there is no rollback path
 # for the tiles it consumed - so UI_manager hides undo until the next day.
 var landmark_formed_today : bool = false
+# Every module spawn_module() put on screen since the last batch_place_modules() began - the
+# solver's side of a placement, which PlacementManager reads back to animate it dropping in.
+var spawned_modules : Array[Node3D] = []
 
 # Uniform-grassland module used to seed the base layer, keyed by cell type.
 const GRASS_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
@@ -272,6 +275,7 @@ func spawn_debug_module(module : Module, cartvec : Vector3, rotdeg : int) -> voi
 func batch_place_modules(placements: Array) -> Array[Node3D]:
 	var placed_indices : Array[Vector3i] = []
 	var displaced : Array[Node3D] = []
+	spawned_modules.clear()
 
 	for p in placements:
 		var cell_index = p["index"]
@@ -678,6 +682,7 @@ func spawn_module(poss : Possibility, cell_index : Vector3i) -> void:
 	
 	cell.instanced_module = module_instance
 	cell.module_reference = poss.module_reference
+	spawned_modules.append(module_instance)
 
 # True if this module can seat on this cell at this rotation. A cell already holding a
 # module is NOT a rejection - placements always target corners, and dropping a new corner

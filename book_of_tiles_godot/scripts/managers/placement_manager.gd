@@ -4,6 +4,18 @@ const BEAVER_SCENE : PackedScene = preload("res://scenes/beaver.tscn")
 # How often a placed beaver lodge comes with a beaver living on it.
 const BEAVER_SPAWN_CHANCE : float = 1.0
 
+# Placement animation: the placed tile and every module the solver re-spawned around it start
+# DROP_HEIGHT above their cell and fall into place one after another, clockwise around the
+# tile, fading in as they go.
+const DROP_HEIGHT : float = 20.0
+const DROP_DURATION : float = 0.35
+# Delay between one module starting its drop and the next.
+const DROP_STAGGER : float = 0.03
+const FADE_DURATION : float = 0.2
+
+# Time (Time.get_ticks_msec() / 1000.0) at which the latest drop animation has fully landed.
+var drop_end_time : float = 0.0
+
 @onready var main_manager : MainManager = $".."
 @onready var camera_controller : CameraController = $"../CameraController"
 
@@ -111,7 +123,7 @@ func _process(_delta):
 			press_started_on_grid = false
 
 func _spawn_instance(instance_position: Vector3, instance_rotation : float) -> void:
-	if not _build_tile(current_tile, instance_position, instance_rotation, true):
+	if not _build_tile(current_tile, instance_position, instance_rotation, true, true):
 		ControllerSupport.placing_mode = false
 		GameState.change_state(GameState.State.TILE_CHOOSING)
 		return
@@ -134,12 +146,12 @@ func place_tile_at(tile : PackedScene, world_position : Vector3, instance_rotati
 		push_warning("place_tile_at: nothing can be placed at ", world_position)
 		return false
 	var instance_position := Grid.axial_to_cartesian(target_cell.axial_position)
-	return _build_tile(tile, instance_position, instance_rotation + deg_to_rad(target_cell.base_rotation), false)
+	return _build_tile(tile, instance_position, instance_rotation + deg_to_rad(target_cell.base_rotation), false, true)
 
 # Instances the tile into the scene and fits all its modules into the grid. Returns false if
 # any module didn't fit, in which case nothing was placed. `undoable` puts the tile into the
-# undo history.
-func _build_tile(tile : PackedScene, instance_position: Vector3, instance_rotation : float, undoable : bool) -> bool:
+# undo history, `animated` plays the drop-in animation (see _animate_drop).
+func _build_tile(tile : PackedScene, instance_position: Vector3, instance_rotation : float, undoable : bool, animated : bool) -> bool:
 	var instance = tile.instantiate()
 	get_tree().current_scene.add_child(instance)
 	if undoable:
@@ -188,7 +200,57 @@ func _build_tile(tile : PackedScene, instance_position: Vector3, instance_rotati
 	# beaver village recipe is eaten by the landmark merge inside batch_place_modules().
 	if not displaced.has(instance):
 		_try_spawn_beaver(instance)
+	if animated:
+		_animate_drop(instance, instance_position)
 	return true
+
+# Drops the placed tile first, then the modules the solver re-spawned around it (read back from
+# Grid.spawned_modules), sorted clockwise by their direction from the tile. A tile swallowed by
+# a landmark merge is already queued for deletion and is skipped, as is anything the same
+# placement spawned and then replaced again.
+func _animate_drop(instance : Node3D, center : Vector3) -> void:
+	var order : Array[Node3D] = []
+	if not instance.is_queued_for_deletion():
+		order.append(instance)
+	var ring : Array[Node3D] = []
+	for module in Grid.spawned_modules:
+		# AIR filler has no geometry - dropping it would only leave gaps in the sweep.
+		if is_instance_valid(module) and not module.is_queued_for_deletion() and not _geometry_of(module).is_empty():
+			ring.append(module)
+	ring.sort_custom(func(a : Node3D, b : Node3D) -> bool:
+		return _clockwise_angle(a.global_position - center) < _clockwise_angle(b.global_position - center))
+	order.append_array(ring)
+	for i in order.size():
+		_drop_in(order[i], i * DROP_STAGGER)
+	var end_time : float = Time.get_ticks_msec() / 1000.0 + (order.size() - 1) * DROP_STAGGER \
+		+ maxf(DROP_DURATION, FADE_DURATION)
+	drop_end_time = maxf(drop_end_time, end_time)
+
+# Angle of `offset` seen from above, 0 at screen-up (-Z, with the camera unrotated) and growing
+# clockwise through screen-right (+X).
+func _clockwise_angle(offset : Vector3) -> float:
+	return fposmod(atan2(offset.x, -offset.z), TAU)
+
+# Lifts the node and hides it right away, so it stays out of sight while it waits its turn. The
+# tween is created on the node itself, so it dies with it if the tile is undone or replaced
+# mid-drop.
+func _drop_in(node : Node3D, delay : float) -> void:
+	var target : Vector3 = node.position
+	node.position = target + Vector3.UP * DROP_HEIGHT
+	var geometry := _geometry_of(node)
+	for mesh : GeometryInstance3D in geometry:
+		mesh.transparency = 1.0
+	var tween := node.create_tween().set_parallel()
+	tween.tween_property(node, "position", target, DROP_DURATION).set_delay(delay) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	for mesh : GeometryInstance3D in geometry:
+		tween.tween_property(mesh, "transparency", 0.0, FADE_DURATION).set_delay(delay)
+
+func _geometry_of(node : Node) -> Array[GeometryInstance3D]:
+	var geometry : Array[GeometryInstance3D] = []
+	for child : Node in node.find_children("*", "GeometryInstance3D", true, false):
+		geometry.append(child as GeometryInstance3D)
+	return geometry
 		
 # Parents the beaver to the tile's corner module rather than to the tile root, so its patrol
 # loop is centred on the hexagon whose rim it walks, whatever else the tile carries. Being a

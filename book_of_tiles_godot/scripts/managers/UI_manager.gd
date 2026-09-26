@@ -24,8 +24,9 @@ var active_theme : int = TileCard.themes.forest
 func _ready():
 	Signals.on_instance_spawned.connect(_check_visibility)
 	_load_tile_cards()
-	start_new_day()
-	_check_visibility()
+	# The first day is started by MainManager once the level's initial placements have
+	# dropped in; until then the hand is empty and the turn-over button stays hidden.
+	turn_over.hide()
 
 func _load_tile_cards():
 	if tile_card_directory == "":
