@@ -14,7 +14,6 @@ var initial_placements : Array[Dictionary] = [
 	{"tile": FOREST_TILE, "axial": Vector3(-6, 0, -2)},
 	{"tile": FOREST_TILE, "axial": Vector3(-2, 0, -4)},
 	{"tile": FOREST_TILE, "axial": Vector3(-2, 0, -2)},
-	{"tile": GRASS_TILE, "axial": Vector3(-4, 0, -2)},
 	# raised grass
 	{"tile": GRASS_TILE, "axial": Vector3(-10, 0, 8)},
 	{"tile": GRASS_TILE, "axial": Vector3(-8, 0, 8)},
