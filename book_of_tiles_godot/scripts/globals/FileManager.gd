@@ -11,6 +11,7 @@ const AUTOSAVE_FILE_PATH := "res://Files/autosave.json"
 const SAVEGAME_1_PATH := "res://Files/savegame1.json"
 const SAVEGAME_2_PATH := "res://Files/savegame2.json"
 const SAVEGAME_3_PATH := "res://Files/savegame3.json"
+const BEAVER_SCENE : PackedScene = preload("res://scenes/beaver.tscn")
 
 func _ready():
 	load_balance()
@@ -222,6 +223,13 @@ func _load_tile_group(records : Array, handled : Dictionary) -> void:
 		cell.placement_seq = int(record["seq"])
 		
 		handled[cell_index] = true
+	
+	# spawn beaver child for beaver houses
+	if int(records[0]["tile_kind"]) == Layout.TILE_KIND.BEAVER:
+		for child : Node in tile_instance.get_children():
+			if child is Module and child.module_type == Layout.CELL_TYPE.CORNER:
+				child.add_child(BEAVER_SCENE.instantiate())
+				break
 
 
 func _load_single_cell(cell_index : Vector3i, record : Dictionary, landmarks : Array[Landmark]) -> void:

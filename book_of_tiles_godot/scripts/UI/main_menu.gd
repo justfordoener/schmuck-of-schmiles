@@ -96,8 +96,12 @@ func load_level(scene_path: String) -> void:
 
 func load_save(load_file_path: String) -> void:
 	GameState.change_state(GameState.State.TILE_PACK_CHOOSING)
+	var tree := get_tree()
+	var new_scene : Node = load(main_level_scene).instantiate()
+	tree.root.add_child(new_scene)
+	tree.current_scene = new_scene
+	queue_free() 
 	FileManager.load_state(load_file_path)
-	get_tree().change_scene_to_file(main_level_scene)
 	print("Load Level", load_file_path)
 
 
