@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cl3m3wrkgjl6l"
-path="res://.godot/imported/biberNLAAnimationfinal.glb-b6b71f19622cfcce1d6179c4749b0f3b.scn"
+path="res://.godot/imported/biberNLAAnimationfinal.glb-e2284fa77af6d5c4b4c88b20b3915882.scn"
 
 [deps]
 
-source_file="res://assets/3D/animations/biberNLAAnimationfinal.glb"
-dest_files=["res://.godot/imported/biberNLAAnimationfinal.glb-b6b71f19622cfcce1d6179c4749b0f3b.scn"]
+source_file="res://assets/3D/models/animals/biberNLAAnimationfinal.glb"
+dest_files=["res://.godot/imported/biberNLAAnimationfinal.glb-e2284fa77af6d5c4b4c88b20b3915882.scn"]
 
 [params]
 

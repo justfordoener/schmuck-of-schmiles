@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://buostmvpwa2ff"
-path="res://.godot/imported/beaver-house-foodstock_structure.glb-c84ecc65c1072deaeeeff5e6623ceddd.scn"
+path="res://.godot/imported/beaver-house-foodstock_structure.glb-2c890914605bb456c0df933379e43b67.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/structures/beaver-house-foodstock_structure.glb"
-dest_files=["res://.godot/imported/beaver-house-foodstock_structure.glb-c84ecc65c1072deaeeeff5e6623ceddd.scn"]
+source_file="res://assets/3D/models/buildings/beaver-house-foodstock_structure.glb"
+dest_files=["res://.godot/imported/beaver-house-foodstock_structure.glb-2c890914605bb456c0df933379e43b67.scn"]
 
 [params]
 

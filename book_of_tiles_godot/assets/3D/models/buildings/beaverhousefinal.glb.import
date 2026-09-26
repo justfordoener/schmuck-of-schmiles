@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://djt6cap1wq4bb"
-path="res://.godot/imported/face_module.glb-66db5abc257b4239112982fe396f53bd.scn"
+uid="uid://c0jo5oahhj7mq"
+path="res://.godot/imported/beaverhousefinal.glb-ffa7ef6c35e1a4617109b7730346106f.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/baseshapes/face_module.glb"
-dest_files=["res://.godot/imported/face_module.glb-66db5abc257b4239112982fe396f53bd.scn"]
+source_file="res://assets/3D/models/buildings/beaverhousefinal.glb"
+dest_files=["res://.godot/imported/beaverhousefinal.glb-ffa7ef6c35e1a4617109b7730346106f.scn"]
 
 [params]
 
@@ -38,5 +38,5 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-gltf/naming_version=1
+gltf/naming_version=2
 gltf/embedded_image_handling=1

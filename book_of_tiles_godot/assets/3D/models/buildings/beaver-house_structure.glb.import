@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://baidq4mli7f0l"
-path="res://.godot/imported/beaver-house_structure.glb-12d3c235d62036155b4aeb7df972af89.scn"
+path="res://.godot/imported/beaver-house_structure.glb-9eab9efedec569a156c2a3454b7a9043.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/structures/beaver-house_structure.glb"
-dest_files=["res://.godot/imported/beaver-house_structure.glb-12d3c235d62036155b4aeb7df972af89.scn"]
+source_file="res://assets/3D/models/buildings/beaver-house_structure.glb"
+dest_files=["res://.godot/imported/beaver-house_structure.glb-9eab9efedec569a156c2a3454b7a9043.scn"]
 
 [params]
 

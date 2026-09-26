@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://djt6cap1wq4bb"
-path="res://.godot/imported/face_module.glb-66db5abc257b4239112982fe396f53bd.scn"
+uid="uid://b3amdiq0k2ln3"
+path="res://.godot/imported/stonegroup.glb-699ab437bc3aacf8ce75dbda2d6a273c.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/baseshapes/face_module.glb"
-dest_files=["res://.godot/imported/face_module.glb-66db5abc257b4239112982fe396f53bd.scn"]
+source_file="res://assets/3D/models/tiles/landscapeTiles/stonegroup.glb"
+dest_files=["res://.godot/imported/stonegroup.glb-699ab437bc3aacf8ce75dbda2d6a273c.scn"]
 
 [params]
 
@@ -38,5 +38,5 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-gltf/naming_version=1
+gltf/naming_version=2
 gltf/embedded_image_handling=1
