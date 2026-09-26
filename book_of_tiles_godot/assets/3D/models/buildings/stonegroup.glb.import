@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://28td74iuuvya"
-path="res://.godot/imported/thegreatclearingcolor.glb-db22c5b92f32b44489575876965fe881.scn"
+uid="uid://cdirir6c7sbxb"
+path="res://.godot/imported/stonegroup.glb-6e926736f266107c5663ae10f33138eb.scn"
 
 [deps]
 
-source_file="res://assets/3D/models/buildings/thegreatclearingcolor.glb"
-dest_files=["res://.godot/imported/thegreatclearingcolor.glb-db22c5b92f32b44489575876965fe881.scn"]
+source_file="res://assets/3D/models/structures/stonegroup.glb"
+dest_files=["res://.godot/imported/stonegroup.glb-6e926736f266107c5663ae10f33138eb.scn"]
 
 [params]
 
@@ -38,5 +38,5 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-gltf/naming_version=0
+gltf/naming_version=2
 gltf/embedded_image_handling=1
