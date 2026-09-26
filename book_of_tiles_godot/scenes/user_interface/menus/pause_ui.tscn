@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c4tn2kpgyfus5" path="res://scripts/UI/pause_menu.gd" id="1_1ge0e"]
 [ext_resource type="PackedScene" uid="uid://v56eajf1t8eh" path="res://scenes/user_interface/menus/settings_UI.tscn" id="2_15fc5"]
 
-[node name="PauseUI" type="Control" node_paths=PackedStringArray("settings_button", "close_settings_button", "back_to_menu_button", "close_button", "quit_button", "settings", "pause")]
+[node name="PauseUI" type="Control" node_paths=PackedStringArray("settings_button", "close_settings_button", "back_to_menu_button", "close_button", "quit_button", "settings", "pause", "save_menu", "save_menu_button", "close_save_menu", "save_to_slot_1", "save_to_slot_2", "save_to_slot_3")]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 0
@@ -17,6 +17,12 @@ close_button = NodePath("PauseMenu/PauseMenu/CloseMenu")
 quit_button = NodePath("PauseMenu/PauseMenu/QuitGame")
 settings = NodePath("SettingsCanvasLayer/SettingsMenu")
 pause = NodePath("PauseMenu/PauseMenu")
+save_menu = NodePath("CanvasLayer/Savemenu")
+save_menu_button = NodePath("PauseMenu/PauseMenu/SaveGame")
+close_save_menu = NodePath("CanvasLayer/Savemenu/VBoxContainer/CloseSaveMenu")
+save_to_slot_1 = NodePath("CanvasLayer/Savemenu/VBoxContainer/HBoxContainer/Savegame1")
+save_to_slot_2 = NodePath("CanvasLayer/Savemenu/VBoxContainer/HBoxContainer/Savegame2")
+save_to_slot_3 = NodePath("CanvasLayer/Savemenu/VBoxContainer/HBoxContainer2/Savegame3")
 
 [node name="PauseMenu" type="CanvasLayer" parent="."]
 layer = 2
@@ -44,6 +50,14 @@ text = "Main Menu"
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
+[node name="SaveGame" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
+layout_mode = 2
+text = "Save Game"
+
+[node name="Spacer4" type="Control" parent="PauseMenu/PauseMenu"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
 [node name="Settings" type="Button" parent="PauseMenu/PauseMenu" groups=["snappable_ui"]]
 layout_mode = 2
 text = "Settings"
@@ -66,3 +80,65 @@ text = "Quit Game"
 
 [node name="SettingsCanvasLayer" parent="." instance=ExtResource("2_15fc5")]
 layer = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Savemenu" type="Panel" parent="CanvasLayer"]
+visible = false
+custom_minimum_size = Vector2(575, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -287.5
+offset_top = -250.0
+offset_right = 287.5
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Savemenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Savemenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Savegame1" type="Button" parent="CanvasLayer/Savemenu/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 1"
+
+[node name="Savegame2" type="Button" parent="CanvasLayer/Savemenu/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 2"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Savemenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Savegame3" type="Button" parent="CanvasLayer/Savemenu/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 3"
+
+[node name="CloseSaveMenu" type="Button" parent="CanvasLayer/Savemenu/VBoxContainer" groups=["snappable_ui"]]
+layout_mode = 2
+text = "Close"

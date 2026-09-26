@@ -1,16 +1,24 @@
 extends Control
 
 @export_category("MainButtons")
-@export var level_button: Button
-@export var settings_button: Button
-@export var credits_button: Button
-@export var quit_button: Button
+@export var level_button: TextureButton
+@export var settings_button: TextureButton
+@export var credits_button: TextureButton
+@export var quit_button: TextureButton
+@export var main_buttons: Control
 
 @export_category("LevelButtons")
 @export var level_back_button: Button
 @export var level_buttons: Array[Button]
 @export var level_folder : String = "res://levels/"
 var level_scenes: Array[String] = []
+
+@export_category("LoadGame")
+@export var continue_button: Button
+@export var savegame_1_button: Button
+@export var savegame_2_button: Button
+@export var savegame_3_button: Button
+@export var main_level_scene: String = "res://levels/Level_1.tscn"
 
 @export_category("SettingButtons")
 @export var settings_back_button: Button
@@ -33,10 +41,15 @@ func _ready() -> void:
 	credits_button.pressed.connect(toggle_menu.bind(credits))
 	credits_back_button.pressed.connect(toggle_menu.bind(credits))
 	quit_button.pressed.connect(quit_game)
+	continue_button.pressed.connect(load_save.bind(FileManager.AUTOSAVE_FILE_PATH))
+	savegame_1_button.pressed.connect(load_save.bind(FileManager.SAVEGAME_1_PATH))
+	savegame_2_button.pressed.connect(load_save.bind(FileManager.SAVEGAME_2_PATH))
+	savegame_3_button.pressed.connect(load_save.bind(FileManager.SAVEGAME_3_PATH))
 
 
 func toggle_menu(menu: Control) -> void:
 	menu.visible = ! menu.visible
+	main_buttons.visible = ! menu.visible
 	if menu == level_selection:
 		check_levels()
 
@@ -82,6 +95,16 @@ func check_levels():
 func load_level(scene_path: String) -> void:
 	GameState.change_state(GameState.State.TILE_PACK_CHOOSING)
 	get_tree().change_scene_to_file(scene_path)
+
+func load_save(load_file_path: String) -> void:
+	GameState.change_state(GameState.State.TILE_PACK_CHOOSING)
+	var tree := get_tree()
+	var new_scene : Node = load(main_level_scene).instantiate()
+	tree.root.add_child(new_scene)
+	tree.current_scene = new_scene
+	queue_free() 
+	FileManager.load_state(load_file_path)
+	print("Load Level", load_file_path)
 
 
 func get_level_number(file_name: String) -> int:

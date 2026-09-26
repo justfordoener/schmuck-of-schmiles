@@ -1,11 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://i8qyitdsh5pv"]
+[gd_scene load_steps=17 format=3 uid="uid://i8qyitdsh5pv"]
 
 [ext_resource type="Script" uid="uid://1gok5algkmqy" path="res://scripts/UI/main_menu.gd" id="1_dhggu"]
 [ext_resource type="Texture2D" uid="uid://bq7vkr5dgesxg" path="res://assets/2D/textures/UI/keyart_bunter_1920x1080.png" id="2_6je1p"]
 [ext_resource type="PackedScene" uid="uid://v56eajf1t8eh" path="res://scenes/user_interface/menus/settings_UI.tscn" id="2_a05eb"]
+[ext_resource type="Texture2D" uid="uid://d3swinihvso2u" path="res://assets/2D/textures/UI/Start/Start Button normal.png" id="3_36bms"]
 [ext_resource type="PackedScene" uid="uid://eynshs4stk38" path="res://scenes/sounds/music/music_ingame.tscn" id="4_6je1p"]
+[ext_resource type="Texture2D" uid="uid://bxko8tofrgv85" path="res://assets/2D/textures/UI/Start/Start Button pressed.png" id="4_dv011"]
+[ext_resource type="Texture2D" uid="uid://11gdf13s4plo" path="res://assets/2D/textures/UI/Start/Start Button hovered.png" id="5_ge6nc"]
+[ext_resource type="Texture2D" uid="uid://dyamf10ukywog" path="res://assets/2D/textures/UI/Settings/Settings Button normal.png" id="6_r6467"]
+[ext_resource type="Texture2D" uid="uid://laukjy4lk2u" path="res://assets/2D/textures/UI/Settings/Settings Button pressed.png" id="7_jlsaf"]
+[ext_resource type="Texture2D" uid="uid://ckb3ysg4ksdux" path="res://assets/2D/textures/UI/Settings/Settings Button hovered.png" id="8_ae1p4"]
+[ext_resource type="Texture2D" uid="uid://dcuoco1quwe1q" path="res://assets/2D/textures/UI/Credits/Credits Button normal.png" id="9_16p24"]
+[ext_resource type="Texture2D" uid="uid://jg51burctpyu" path="res://assets/2D/textures/UI/Credits/Button pressed.png" id="10_vhf4w"]
+[ext_resource type="Texture2D" uid="uid://d1b3e5ihyt05m" path="res://assets/2D/textures/UI/Credits/Button hovered.png" id="11_h6dug"]
+[ext_resource type="Texture2D" uid="uid://cl527y6npte7c" path="res://assets/2D/textures/UI/Quit/Quit Button normal.png" id="12_joveh"]
+[ext_resource type="Texture2D" uid="uid://dpgo7ndwfnphh" path="res://assets/2D/textures/UI/Quit/Quit Button pressed.png" id="13_37a3x"]
+[ext_resource type="Texture2D" uid="uid://dy1s2f1oks8h5" path="res://assets/2D/textures/UI/Quit/Quit Button hovered.png" id="14_ftory"]
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("level_button", "settings_button", "credits_button", "quit_button", "level_back_button", "level_buttons", "settings_back_button", "credits_back_button", "level_selection", "settings", "credits")]
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("level_button", "settings_button", "credits_button", "quit_button", "main_buttons", "level_back_button", "level_buttons", "continue_button", "savegame_1_button", "savegame_2_button", "savegame_3_button", "settings_back_button", "credits_back_button", "level_selection", "settings", "credits")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,8 +29,13 @@ level_button = NodePath("Buttons/HBoxContainer/LevelButton")
 settings_button = NodePath("Buttons/HBoxContainer/SettingsButton")
 credits_button = NodePath("Buttons/HBoxContainer/CreditsButton")
 quit_button = NodePath("Buttons/HBoxContainer/QuitButton")
+main_buttons = NodePath("Buttons")
 level_back_button = NodePath("LevelScreen/LevelSelection/BackToMenu")
 level_buttons = [NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level1"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer/Level2"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level3"), NodePath("LevelScreen/LevelSelection/HBoxContainer/Page1/VBoxContainer/HBoxContainer2/Level4")]
+continue_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer/Continue")
+savegame_1_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer/Savegame1")
+savegame_2_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2/Savegame2")
+savegame_3_button = NodePath("LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2/Savegame3")
 settings_back_button = NodePath("SettingsCanvasLayer/SettingsMenu/CloseSettings")
 credits_back_button = NodePath("CreditsCanvasLayer/CreditsMenu/CloseCredits")
 level_selection = NodePath("LevelScreen/LevelSelection")
@@ -64,31 +81,31 @@ offset_right = 20.0
 offset_bottom = -167.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 200
+theme_override_constants/separation = 100
 
-[node name="LevelButton" type="Button" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+[node name="LevelButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
 layout_mode = 2
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 50
-text = "Start"
+texture_normal = ExtResource("3_36bms")
+texture_pressed = ExtResource("4_dv011")
+texture_hover = ExtResource("5_ge6nc")
 
-[node name="SettingsButton" type="Button" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+[node name="SettingsButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
 layout_mode = 2
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 50
-text = "Settings"
+texture_normal = ExtResource("6_r6467")
+texture_pressed = ExtResource("7_jlsaf")
+texture_hover = ExtResource("8_ae1p4")
 
-[node name="CreditsButton" type="Button" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+[node name="CreditsButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
 layout_mode = 2
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 50
-text = "Credits"
+texture_normal = ExtResource("9_16p24")
+texture_pressed = ExtResource("10_vhf4w")
+texture_hover = ExtResource("11_h6dug")
 
-[node name="QuitButton" type="Button" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
+[node name="QuitButton" type="TextureButton" parent="Buttons/HBoxContainer" groups=["snappable_ui"]]
 layout_mode = 2
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 50
-text = "Quit"
+texture_normal = ExtResource("12_joveh")
+texture_pressed = ExtResource("13_37a3x")
+texture_hover = ExtResource("14_ftory")
 
 [node name="LevelScreen" type="CanvasLayer" parent="."]
 
@@ -100,10 +117,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -675.0
-offset_top = -329.5
-offset_right = 498.0
-offset_bottom = 270.5
+offset_left = -586.5
+offset_top = -300.0
+offset_right = 586.5
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -170,6 +187,53 @@ layout_mode = 2
 [node name="Page2" type="Panel" parent="LevelScreen/LevelSelection/HBoxContainer"]
 custom_minimum_size = Vector2(575, 500)
 layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Continue" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Continue"
+
+[node name="Savegame1" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 1"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Savegame2" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 2"
+
+[node name="Savegame3" type="Button" parent="LevelScreen/LevelSelection/HBoxContainer/Page2/VBoxContainer/HBoxContainer2" groups=["snappable_ui"]]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+text = "Savegame 3"
 
 [node name="Spacer" type="Control" parent="LevelScreen/LevelSelection"]
 custom_minimum_size = Vector2(0, 20)
