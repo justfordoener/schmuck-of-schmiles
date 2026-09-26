@@ -852,8 +852,29 @@ func snap_to_cell(point : Vector3, cell_type : Layout.CELL_TYPE, target_topmost 
 	if ground_cell == null:
 		return null
 	if target_topmost:
-		return _topmost_occupied_cell_in_column(ground_cell)
-	return _lowest_free_cell_in_column(ground_cell)
+		# Water replaces the surface instead of stacking on it, but the same things are
+		# protected: a landmark, forest or beaver house on top blocks the column.
+		var top_cell := _topmost_occupied_cell_in_column(ground_cell)
+		if top_cell != null and not _cell_supports_building(top_cell):
+			return null
+		return top_cell
+	var free_cell := _lowest_free_cell_in_column(ground_cell)
+	if free_cell == null:
+		return null
+	# Stacking needs something that can carry a tile. The layer 0 cell never has anything
+	# below it - it's only free where the seeded grass is gone - so it's never blocked here.
+	var below_axial : Vector3 = free_cell.axial_position - Vector3(0, 1, 0)
+	var below_index := get_axial_index(below_axial)
+	if grid.has(below_index) and not _cell_supports_building(grid[below_index]):
+		return null
+	return free_cell
+
+# True if a new tile may be stacked on top of this cell, or (for water) replace it. Landmarks,
+# forests and beaver houses are final: nothing is built on or over them.
+func _cell_supports_building(cell : Cell) -> bool:
+	if cell.landmark != null:
+		return false
+	return cell.tile_kind != Layout.TILE_KIND.FOREST and cell.tile_kind != Layout.TILE_KIND.BEAVER
 
 # Nearest cell of the given type on the ground layer (y == 0), by XZ-plane distance only
 # (ignores point.y so hovering above the ground plane still resolves to the right column).

@@ -67,7 +67,10 @@ func _process(_delta):
 	var hit = plane.intersects_ray(ray_origin, ray_dir)
 	if hit != null:
 		var target_cell = Grid.snap_to_cell(hit, preview_instance.layer_type, preview_instance.is_water)
+		# No cell means nothing can be placed here (column full, or its top can't be built
+		# on - see Grid.snap_to_cell), so hide the ghost rather than leave it at the last spot.
 		if target_cell == null:
+			preview_instance.visible = false
 			return
 		var snap_position = Grid.axial_to_cartesian(target_cell.axial_position)
 		var base_rotation = Grid.get_rotation_value(preview_instance.layer_type)
