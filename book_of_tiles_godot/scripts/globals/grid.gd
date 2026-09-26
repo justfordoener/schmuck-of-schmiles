@@ -36,6 +36,18 @@ const AIR_MODULE_ID : Dictionary[Layout.CELL_TYPE, int] = {
 	Layout.CELL_TYPE.FACE: 22,   # face_air_air_air
 }
 
+# Stands in for "there is no cell here" - returned by get_neighbor_from_rot() for a border
+# direction that points off the edge of the map. No real cell can carry it: every axial index
+# is a grid coordinate scaled by 100 (see get_axial_index).
+const MAP_BORDER_INDEX : Vector3i = Vector3i(7777, 7777, 7777)
+
+# What a cell on the rim of the map reads on a border pointing off it. The world ends at the
+# map's edge, so the only thing out there is open sky - which makes a rim cell resolve to a
+# module that transitions from whatever it holds into AIR (a cliff edge on the ground slab, a
+# forest-to-air edge under a placed tree) instead of running its own biome off into nothing.
+# Treated as a hard, permanent constraint: see get_hard_profiles_for_cell().
+const MAP_BORDER_PROFILE : Layout.PROFILE_TYPE = Layout.PROFILE_TYPE.AIR
+
 func _ready() -> void:
 	grid = {}
 	_initialize_grid_layers()
@@ -49,6 +61,7 @@ func _ready() -> void:
 		#print("cell: ", grid[cell_index].axial_position, " of type ", grid[cell_index].type, " has ", grid[cell_index].possibilities.size(), " possibilites")
 	initialize_grass_layer()
 	initialize_air_layers()
+	_settle_map_border()
 
 func _initialize_grid_layers() -> void:
 	corner_mesh = ArrayMesh.new()
@@ -187,12 +200,19 @@ func _init_cell_possibilities(cell_index : Vector3i) -> void:
 			for border_deg in module.profiles.keys():
 				var total_direction : int = posmod(total_rotation + border_deg, 360)
 				var neighbor_index : Vector3i = get_neighbor_from_rot(cell_index, total_direction)
+				if neighbor_index == MAP_BORDER_INDEX:
+					# This border points off the edge of the map. Keyed by direction rather than
+					# by a neighbour that isn't there, so a cell with two such borders keeps them
+					# apart, and the module's own declaration is kept instead of being thrown
+					# away - it's what MAP_BORDER_PROFILE gets matched against, which is what
+					# makes the rim pick a transition into air. Registered on the cell too, so
+					# every profile dict built from cell.profiles.keys() carries the border.
+					var map_border_key : String = _get_map_border_key(cell_index, total_direction)
+					possible_module.profiles[map_border_key] = module.profiles[border_deg]
+					cell.profiles[map_border_key] = MAP_BORDER_PROFILE
+					continue
 				var border_index = _get_border_index(cell_index, neighbor_index)
-				if neighbor_index == Vector3i(7777,7777,7777):
-					possible_module.profiles[border_index] = Layout.PROFILE_TYPE.EMPTY
-					continue # border deg is pointing toward the edge of the map
-				else:
-					possible_module.profiles[border_index] = module.profiles[border_deg]
+				possible_module.profiles[border_index] = module.profiles[border_deg]
 			cell.possibilities.append(possible_module)
 		cell.initial_possibilities = cell.possibilities.duplicate()
 
@@ -359,25 +379,75 @@ func _soft_populate_ring(trigger_indices: Array[Vector3i], exclude : Dictionary 
 
 	var touched : Array[Vector3i] = []
 	for n_index : Vector3i in cells_to_fill.keys():
-		var n_cell : Cell = grid[n_index]
-		n_cell.profiles = get_settled_profiles_for_cell(n_index)
-		collapse(n_index) # deterministic narrow first, in case this alone resolves it
-
-		if n_cell.possibilities.size() == 0:
-			# Contradiction - logged by collapse(), filler left in place. Not appended to
-			# touched: it has no real committed profile, so the next ring shouldn't treat it
-			# as a source of constraints (that border just stays unconstrained downstream).
-			continue
-
-		if n_cell.possibilities.size() > 1:
-			var random_choice : Possibility = n_cell.possibilities[randi() % n_cell.possibilities.size()]
-			n_cell.possibilities = [random_choice]
-			n_cell.profiles = random_choice.profiles.duplicate()
-			spawn_module(random_choice, n_index)
-		# else: collapse() already synced profiles + spawned when it settled to exactly 1.
-
-		touched.append(n_index)
+		if _settle_cell(n_index):
+			touched.append(n_index)
 	return touched
+
+# Re-fits one soft cell against everything currently committed around it and commits the
+# result on screen. Returns false if the cell contradicted - it then has no real committed
+# profile, so a caller feeding the next ring must not treat it as a source of constraints
+# (that border just stays unconstrained downstream).
+func _settle_cell(cell_index : Vector3i) -> bool:
+	var cell : Cell = grid[cell_index]
+	cell.profiles = get_settled_profiles_for_cell(cell_index)
+	collapse(cell_index) # deterministic narrow first, in case this alone resolves it
+
+	if cell.possibilities.size() == 0:
+		return false # contradiction - logged by collapse(), filler left in place
+
+	if cell.possibilities.size() > 1:
+		var random_choice : Possibility = cell.possibilities[randi() % cell.possibilities.size()]
+		cell.possibilities = [random_choice]
+		cell.profiles = random_choice.profiles.duplicate()
+		spawn_module(random_choice, cell_index)
+	# else: collapse() already synced profiles + spawned when it settled to exactly 1.
+
+	return true
+
+# Fits the cells along the rim of the map against the open sky outside it, once, at startup.
+#
+# Needed because the seeding passes above don't know about the map's edge: they hand every
+# ground-layer cell the uniform grass module, which declares GRASS on a border that now has to
+# read AIR (see MAP_BORDER_PROFILE). Re-fitting turns that rim into the cliff-into-air modules
+# that actually terminate the ground slab - one module fits each ground rim cell, so what boots
+# is fixed, not a roll. The layers above seed all-AIR modules, which already satisfy the
+# constraint, so up there this pass settles straight back onto the filler: several possibilities
+# survive, but they are all the same geometry-less AIR module at different rotations, so
+# _settle_cell()'s arbitrary pick between them has nothing to choose.
+#
+# Edges first, then faces, for the same reason _propagate_around() works in rings: a face has to
+# see every edge beside it already settled before it picks. The face set is deliberately wider
+# than the edge set - a face with all three of its edges on the map still has to change when two
+# of them turned into cliff edges, so every face touching a rim edge is included, not just the
+# faces that have a border off the map themselves.
+func _settle_map_border() -> void:
+	var rim_edges : Array[Vector3i] = []
+	var rim_faces : Dictionary = {}
+	for cell_index : Vector3i in grid.keys():
+		if not _has_map_border(grid[cell_index]):
+			continue
+		match grid[cell_index].type:
+			Layout.CELL_TYPE.EDGE:
+				rim_edges.append(cell_index)
+			Layout.CELL_TYPE.FACE:
+				rim_faces[cell_index] = true
+
+	for cell_index : Vector3i in rim_edges:
+		_settle_cell(cell_index)
+		for neighbor : Cell in grid[cell_index].neighbors.values():
+			if neighbor.type == Layout.CELL_TYPE.FACE:
+				rim_faces[get_axial_index(neighbor.axial_position)] = true
+
+	for cell_index : Vector3i in rim_faces.keys():
+		_settle_cell(cell_index)
+
+# True if any of this cell's borders points off the edge of the map. Those borders are the ones
+# _establish_link() never created a neighbor for - see _get_map_border_key().
+func _has_map_border(cell : Cell) -> bool:
+	for border_key : String in cell.profiles.keys():
+		if not cell.neighbors.has(border_key):
+			return true
+	return false
 
 # Narrows cell_index's possibilities against its currently accumulated profiles. Always
 # re-derives from initial_possibilities (not the previously-narrowed possibilities list) so
@@ -651,7 +721,11 @@ func get_hard_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, Layo
 
 	for border_key in cell.profiles.keys():
 		var neighbor = cell.neighbors.get(border_key)
-		if neighbor != null and neighbor.type == Layout.CELL_TYPE.CORNER:
+		# No neighbor at all means the border points off the map (see _get_map_border_key) -
+		# as hard as a corner, and never changes: there is nothing out there but sky.
+		if neighbor == null:
+			hard_profiles[border_key] = MAP_BORDER_PROFILE
+		elif neighbor.type == Layout.CELL_TYPE.CORNER:
 			hard_profiles[border_key] = neighbor.profiles[border_key]
 		else:
 			hard_profiles[border_key] = Layout.PROFILE_TYPE.EMPTY
@@ -679,7 +753,11 @@ func get_settled_profiles_for_cell(cell_index: Vector3i) -> Dictionary[String, L
 
 	for border_key in cell.profiles.keys():
 		var neighbor = cell.neighbors.get(border_key)
-		var neighbor_committed = neighbor != null and neighbor.type != Layout.CELL_TYPE.FACE and (
+		# Off the edge of the map (see get_hard_profiles_for_cell) - always committed, always AIR.
+		if neighbor == null:
+			settled_profiles[border_key] = MAP_BORDER_PROFILE
+			continue
+		var neighbor_committed = neighbor.type != Layout.CELL_TYPE.FACE and (
 			neighbor.type == Layout.CELL_TYPE.CORNER
 			or neighbor.landmark != null
 			or neighbor.possibilities.size() == 1
@@ -701,12 +779,20 @@ func get_neighbor_from_rot(cell_index : Vector3i, rot_degree : int) -> Vector3i:
 		if dir_to_neighbor.dot(dir_to_neighbor_temp) > 0.9:
 			neighbor_index = get_axial_index(neighbor.axial_position)
 			return neighbor_index
-	return Vector3i(7777, 7777, 7777) # TODO externalize as map border vector
+	return MAP_BORDER_INDEX
 	
 func _get_border_index(a_index: Vector3i, b_index: Vector3i) -> String:
 	var s1 = str(a_index)
 	var s2 = str(b_index)
 	return s1 + "_" + s2 if s1 < s2 else s2 + "_" + s1
+
+# Border key for a direction that leaves the map. Keyed by the absolute direction, not by the
+# missing neighbour, so a cell with more than one such border keeps them separate. Every
+# possibility of a cell covers the same set of absolute directions (a module's border set is
+# invariant under its own rotation step - 60 deg for corners, 180 for edges, 120 for faces), so
+# these keys are stable across the cell's possibilities, exactly like a real neighbour's key.
+func _get_map_border_key(cell_index : Vector3i, direction : int) -> String:
+	return str(cell_index) + "_border_" + str(direction)
 	
 func round_rotation(value : float) -> int:
 	return roundi(value / 30.0) * 30
@@ -714,8 +800,6 @@ func round_rotation(value : float) -> int:
 func do_profiles_match(p1 : Dictionary[String, Layout.PROFILE_TYPE], p2 : Dictionary[String, Layout.PROFILE_TYPE]) -> bool:
 	#print("match profiles", p1.values(), p2.values())
 	for border_key : String in p1.keys():
-		if border_key.contains("7777"):
-			continue
 		# p1 = candidate's own clockwise reading; p2 = value sourced from the neighbour
 		# (its own reading), so compare against its mirror. reverse() is identity for
 		# single-biome/EMPTY values, keeping old behaviour intact.
