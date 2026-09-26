@@ -1,11 +1,16 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=16 format=3 uid="uid://carl1bxc675uv"]
 
-[ext_resource type="Script" path="res://scripts/grid/landmarks/landmark.gd" id="1_script"]
-[ext_resource type="Script" path="res://scripts/grid/landmarks/landmark_slot.gd" id="2_slot"]
+[ext_resource type="Script" uid="uid://drjkewcej4uhc" path="res://scripts/grid/landmarks/landmark.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://ewrweqptdk3q" path="res://scripts/grid/landmarks/landmark_slot.gd" id="2_slot"]
+[ext_resource type="PackedScene" uid="uid://28td74iuuvya" path="res://assets/3D/models/buildings/thegreatclearingcolor.glb" id="3_mesh"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_grass_grass_grass_grass_grass_grass.tscn" id="4_corner"]
+[ext_resource type="PackedScene" uid="uid://cqahk0rq0xve4" path="res://scenes/modules/blockout/edge_grass_grass_grass_grass.tscn" id="5_edge"]
+[ext_resource type="PackedScene" uid="uid://cufy0rls0rpfo" path="res://scenes/modules/blockout/face_grass_grass_grass.tscn" id="6_face"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_forest_forest_forest_forest_forest_forest.tscn" id="7_forest_corner"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/edge_forest_forest_forest_forest.tscn" id="8_forest_edge"]
 
 [sub_resource type="Resource" id="Slot_center"]
 script = ExtResource("2_slot")
-offset = Vector3i(0, 0, 0)
 tile_kind = 1
 
 [sub_resource type="Resource" id="Slot_0"]
@@ -38,23 +43,125 @@ script = ExtResource("2_slot")
 offset = Vector3i(1, 1, -1)
 tile_kind = 2
 
-[sub_resource type="StandardMaterial3D" id="Mat_placeholder"]
-albedo_color = Color(0.34, 0.72, 0.28, 1)
-
-[sub_resource type="CylinderMesh" id="Mesh_placeholder"]
-material = SubResource("Mat_placeholder")
-top_radius = 2.6
-bottom_radius = 2.6
-height = 1.0
-radial_segments = 6
-rings = 1
-
 [node name="great_clearing" type="Node3D"]
 script = ExtResource("1_script")
 landmark_id = &"great_clearing"
 slots = Array[ExtResource("2_slot")]([SubResource("Slot_center"), SubResource("Slot_0"), SubResource("Slot_1"), SubResource("Slot_2"), SubResource("Slot_3"), SubResource("Slot_4"), SubResource("Slot_5")])
-allow_rotation = true
 
-[node name="PlaceholderMesh" type="MeshInstance3D" parent="."]
+[node name="thegreatclearingcolor" parent="." instance=ExtResource("3_mesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+
+[node name="GrassLayer" type="Node3D" parent="."]
+
+[node name="corner_center" parent="GrassLayer" instance=ExtResource("4_corner")]
+
+[node name="corner_0" parent="GrassLayer" instance=ExtResource("4_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
+[node name="corner_1" parent="GrassLayer" instance=ExtResource("4_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1.7320508)
+
+[node name="corner_2" parent="GrassLayer" instance=ExtResource("4_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1.7320508)
+
+[node name="corner_3" parent="GrassLayer" instance=ExtResource("4_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="corner_4" parent="GrassLayer" instance=ExtResource("4_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.7320508)
+
+[node name="corner_5" parent="GrassLayer" instance=ExtResource("4_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1.7320508)
+
+[node name="edge_0" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="edge_1" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(-0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5, 0.5, 0, 0.8660254)
+
+[node name="edge_2" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, -0.5, 0, 0.8660254)
+
+[node name="edge_3" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="edge_4" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(-0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5, -0.5, 0, -0.8660254)
+
+[node name="edge_5" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, 0.5, 0, -0.8660254)
+
+[node name="face_0" parent="GrassLayer" instance=ExtResource("6_face")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, 1, 0, 0.5773503)
+
+[node name="face_1" parent="GrassLayer" instance=ExtResource("6_face")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.1547005)
+
+[node name="face_2" parent="GrassLayer" instance=ExtResource("6_face")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, -1, 0, 0.5773503)
+
+[node name="face_3" parent="GrassLayer" instance=ExtResource("6_face")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -0.5773503)
+
+[node name="face_4" parent="GrassLayer" instance=ExtResource("6_face")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, 0, 0, -1.1547005)
+
+[node name="face_5" parent="GrassLayer" instance=ExtResource("6_face")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -0.5773503)
+
+[node name="edge_ring_0" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, 1.5, 0, 0.8660254)
+
+[node name="edge_ring_1" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.7320508)
+
+[node name="edge_ring_2" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(-0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5, -1.5, 0, 0.8660254)
+
+[node name="edge_ring_3" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, -1.5, 0, -0.8660254)
+
+[node name="edge_ring_4" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.7320508)
+
+[node name="edge_ring_5" parent="GrassLayer" instance=ExtResource("5_edge")]
+transform = Transform3D(-0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5, 1.5, 0, -0.8660254)
+
+[node name="ForestLayer" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("Mesh_placeholder")
+
+[node name="corner_0" parent="ForestLayer" instance=ExtResource("7_forest_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
+[node name="corner_1" parent="ForestLayer" instance=ExtResource("7_forest_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1.7320508)
+
+[node name="corner_2" parent="ForestLayer" instance=ExtResource("7_forest_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1.7320508)
+
+[node name="corner_3" parent="ForestLayer" instance=ExtResource("7_forest_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="corner_4" parent="ForestLayer" instance=ExtResource("7_forest_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.7320508)
+
+[node name="corner_5" parent="ForestLayer" instance=ExtResource("7_forest_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1.7320508)
+
+[node name="edge_ring_0" parent="ForestLayer" instance=ExtResource("8_forest_edge")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, 1.5, 0, 0.8660254)
+
+[node name="edge_ring_1" parent="ForestLayer" instance=ExtResource("8_forest_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.7320508)
+
+[node name="edge_ring_2" parent="ForestLayer" instance=ExtResource("8_forest_edge")]
+transform = Transform3D(-0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5, -1.5, 0, 0.8660254)
+
+[node name="edge_ring_3" parent="ForestLayer" instance=ExtResource("8_forest_edge")]
+transform = Transform3D(0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, 0.5, -1.5, 0, -0.8660254)
+
+[node name="edge_ring_4" parent="ForestLayer" instance=ExtResource("8_forest_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.7320508)
+
+[node name="edge_ring_5" parent="ForestLayer" instance=ExtResource("8_forest_edge")]
+transform = Transform3D(-0.5, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.5, 1.5, 0, -0.8660254)
