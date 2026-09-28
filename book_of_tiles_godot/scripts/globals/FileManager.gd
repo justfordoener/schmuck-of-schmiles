@@ -3,14 +3,14 @@ extends Node
 var balancing_data: Dictionary = {}
 var balancing_file_path = "res://Files/balance.json"
 
-const SAVE_FILE_PATH := "res://Files/temp.json"
+const SAVE_FILE_PATH := "user://Files/temp.json"
 # Bumped whenever the record layout below changes, so a loader can refuse a file it predates.
 const SAVE_VERSION := 1
 var load_file_path : String
-const AUTOSAVE_FILE_PATH := "res://Files/autosave.json"
-const SAVEGAME_1_PATH := "res://Files/savegame1.json"
-const SAVEGAME_2_PATH := "res://Files/savegame2.json"
-const SAVEGAME_3_PATH := "res://Files/savegame3.json"
+const AUTOSAVE_FILE_PATH := "user://Files/autosave.json"
+const SAVEGAME_1_PATH := "user://Files/savegame1.json"
+const SAVEGAME_2_PATH := "user://Files/savegame2.json"
+const SAVEGAME_3_PATH := "user://Files/savegame3.json"
 const BEAVER_SCENE : PackedScene = preload("res://scenes/beaver.tscn")
 
 func _ready():
@@ -20,6 +20,7 @@ func _ready():
 	# board is consistent and the snapshot is worth taking.
 	Signals.on_instance_spawned.connect(save_state)
 	load_file_path = AUTOSAVE_FILE_PATH
+	DirAccess.make_dir_recursive_absolute("user://Files")
 
 func _input(event):
 	if event.is_action_pressed("reload_files"):

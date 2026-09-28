@@ -82,6 +82,7 @@ text = "Quit Game"
 layer = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="Savemenu" type="Panel" parent="CanvasLayer"]
 visible = false
