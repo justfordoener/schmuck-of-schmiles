@@ -1,11 +1,13 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3 uid="uid://ddh0dabiuy0rj"]
 
-[ext_resource type="Script" path="res://scripts/grid/landmarks/landmark.gd" id="1_script"]
-[ext_resource type="Script" path="res://scripts/grid/landmarks/landmark_slot.gd" id="2_slot"]
+[ext_resource type="Script" uid="uid://drjkewcej4uhc" path="res://scripts/grid/landmarks/landmark.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://ewrweqptdk3q" path="res://scripts/grid/landmarks/landmark_slot.gd" id="2_slot"]
+[ext_resource type="PackedScene" uid="uid://65qxhvla2nti" path="res://assets/3D/models/landmarks/beavervillagelandmark.glb" id="3_c0l1r"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_water_water_water_water_water_water.tscn" id="4_water_corner"]
+[ext_resource type="PackedScene" path="res://scenes/modules/blockout/edge_water_water_water_water.tscn" id="5_water_edge"]
 
 [sub_resource type="Resource" id="Slot_river"]
 script = ExtResource("2_slot")
-offset = Vector3i(0, 0, 0)
 tile_kind = 3
 
 [sub_resource type="Resource" id="Slot_beaver_low"]
@@ -33,9 +35,29 @@ rings = 1
 script = ExtResource("1_script")
 landmark_id = &"beaver_downhill_village"
 slots = Array[ExtResource("2_slot")]([SubResource("Slot_river"), SubResource("Slot_beaver_low"), SubResource("Slot_beaver_high")])
-allow_rotation = true
 allow_mirror = true
 
 [node name="PlaceholderMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 mesh = SubResource("Mesh_placeholder")
+
+[node name="beavervillagelandmark" parent="." instance=ExtResource("3_c0l1r")]
+transform = Transform3D(-0.5773503, 0, 1, 0, 1, 0, 1, 0, 0.5773503, -1, -0.25, -0.5773503)
+
+[node name="WaterLayer0" type="Node3D" parent="."]
+
+[node name="corner_river" parent="WaterLayer0" instance=ExtResource("4_water_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -0.5773503)
+
+[node name="corner_beaver_low" parent="WaterLayer0" instance=ExtResource("4_water_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -0.5773503)
+
+[node name="edge_river_beaver_low" parent="WaterLayer0" instance=ExtResource("5_water_edge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5773503)
+
+[node name="WaterLayer1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="corner_beaver_high" parent="WaterLayer1" instance=ExtResource("4_water_corner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.1547005)

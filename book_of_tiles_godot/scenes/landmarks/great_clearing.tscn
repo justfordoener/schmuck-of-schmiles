@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://drjkewcej4uhc" path="res://scripts/grid/landmarks/landmark.gd" id="1_script"]
 [ext_resource type="Script" uid="uid://ewrweqptdk3q" path="res://scripts/grid/landmarks/landmark_slot.gd" id="2_slot"]
-[ext_resource type="PackedScene" uid="uid://28td74iuuvya" path="res://assets/3D/models/buildings/thegreatclearingcolor.glb" id="3_mesh"]
+[ext_resource type="PackedScene" uid="uid://28td74iuuvya" path="res://assets/3D/models/landmarks/thegreatclearingcolor.glb" id="3_mesh"]
 [ext_resource type="PackedScene" path="res://scenes/modules/blockout/corner_grass_grass_grass_grass_grass_grass.tscn" id="4_corner"]
 [ext_resource type="PackedScene" uid="uid://cqahk0rq0xve4" path="res://scenes/modules/blockout/edge_grass_grass_grass_grass.tscn" id="5_edge"]
 [ext_resource type="PackedScene" uid="uid://cufy0rls0rpfo" path="res://scenes/modules/blockout/face_grass_grass_grass.tscn" id="6_face"]
